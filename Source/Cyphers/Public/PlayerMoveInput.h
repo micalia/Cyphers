@@ -21,6 +21,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void SetupInputBinding(class UInputComponent* PlayerInputComponent) override;
 
+	int32 debug=0;
 public:
 	//W, A, S, D 키에 따른 값 셋팅
 	float h = 0;

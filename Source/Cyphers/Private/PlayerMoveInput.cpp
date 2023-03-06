@@ -28,9 +28,12 @@ void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
 	MoveAction(DeltaTime);
-	UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *direction.ToString())
-		UE_LOG(LogTemp, Warning, TEXT("H: %f"),h)
-		UE_LOG(LogTemp, Warning, TEXT("V: %f"),v)
+
+	/*debug++;
+	if (debug > 1000) {
+		debug = 0;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("MoveAction : %d"), debug)*/
 }
 
 void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputComponent)
@@ -50,7 +53,7 @@ void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputCompo
 void UPlayerMoveInput::MoveAction(float deltaTime)
 {
 	direction = me->GetActorForwardVector() * v + me->GetActorRightVector() * h;
-
+	
 	me->AddMovementInput(direction.GetSafeNormal());
 }
 

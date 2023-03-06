@@ -26,7 +26,9 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 		dirV = FVector::DotProduct(velocity, forward);
 		dirH = FVector::DotProduct(velocity, right);
-			
+		
+		UE_LOG(LogTemp, Warning, TEXT("dirV : %f"), dirV)
+		UE_LOG(LogTemp, Warning, TEXT("dirH : %f"), dirH)
 		bAir = me->GetCharacterMovement()->IsFalling();
 	}
 }

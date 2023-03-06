@@ -6,6 +6,8 @@
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 #include "PlayerMoveInput.h"
+#include "Cypher_Kaya_Attack.h"
+#include "PlayerAnim.h"
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,8 +37,15 @@ ACypher_Kaya::ACypher_Kaya() {
 	compCam->SetupAttachment(compArm);
 	compCam->SetRelativeLocation(FVector(-110,0, 78));
 
+	ConstructorHelpers::FClassFinder<UPlayerAnim> tempAnim(TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/ABP_Cypher_Kaya.ABP_Cypher_Kaya_C'"));
+	if (tempAnim.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(tempAnim.Class);
+	}
+
 //Component Attach
 	compPlayerMove = CreateDefaultSubobject<UPlayerMoveInput>(TEXT("compPlayerMove"));
+	compKayaAttack = CreateDefaultSubobject<UCypher_Kaya_Attack>(TEXT("compKayaAttack"));
 }
 
 void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -44,4 +53,5 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	compPlayerMove->SetupInputBinding(PlayerInputComponent);
+	compKayaAttack->SetupInputBinding(PlayerInputComponent);
 }

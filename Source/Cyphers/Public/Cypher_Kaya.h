@@ -25,7 +25,8 @@ public:
 //만약 나중에 AI로도 Kaya를 만들경우 수정이 필요할수도 있음
 	UPROPERTY(VisibleAnywhere, Category = Component)
 	class UPlayerMoveInput* compPlayerMove;
-
+	UPROPERTY(VisibleAnywhere, Category = Component)
+		class UCypher_Kaya_Attack* compKayaAttack;
 	UPROPERTY(EditAnywhere)
 		class USpringArmComponent* compArm;
 

@@ -3,7 +3,7 @@
 
 UPlayerBaseComponent::UPlayerBaseComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
