@@ -37,7 +37,7 @@ ACypher_Kaya::ACypher_Kaya() {
 	compCam->SetupAttachment(compArm);
 	compCam->SetRelativeLocation(FVector(-110,0, 78));
 
-	ConstructorHelpers::FClassFinder<UPlayerAnim> tempAnim(TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/ABP_Cypher_Kaya.ABP_Cypher_Kaya_C'"));
+	ConstructorHelpers::FClassFinder<UPlayerAnim> tempAnim(TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/Animation/ABP_Cypher_Kaya.ABP_Cypher_Kaya_C'"));
 	if (tempAnim.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(tempAnim.Class);

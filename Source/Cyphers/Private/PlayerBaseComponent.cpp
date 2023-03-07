@@ -3,7 +3,7 @@
 
 UPlayerBaseComponent::UPlayerBaseComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 
@@ -18,7 +18,6 @@ void UPlayerBaseComponent::BeginPlay()
 void UPlayerBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UPlayerBaseComponent::SetupInputBinding(class UInputComponent* PlayerInputComponent)

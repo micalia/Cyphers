@@ -6,9 +6,11 @@
 #include "Animation/AnimInstance.h"
 #include "PlayerAnim.generated.h"
 
-/**
- *
- */
+UENUM(BlueprintType)
+enum class EPlayerState : uint8 {
+	Move,
+	BasicAttack,
+};
 UCLASS()
 class CYPHERS_API UPlayerAnim : public UAnimInstance
 {
@@ -22,6 +24,8 @@ public:
 
 	UPROPERTY()
 	class ACypher_Kaya* me;
+
+	EPlayerState playerState = EPlayerState::Move;
 
 	FVector velocity;
 	FVector forward;
@@ -43,6 +47,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UAnimMontage* basicAttackAnimMontage;
 
-		int32 basicAttackCombo=0;
 	void BasicAttackPlayAnim();
+
+	UFUNCTION()
+		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };
