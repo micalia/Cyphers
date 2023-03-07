@@ -15,6 +15,8 @@ class CYPHERS_API UPlayerAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	UPlayerAnim();
+
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
@@ -36,4 +38,11 @@ public:
 	//공중에 있는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		bool bAir = false;
+
+public:
+	UPROPERTY(EditAnywhere)
+		class UAnimMontage* basicAttackAnimMontage;
+
+		int32 basicAttackCombo=0;
+	void BasicAttackPlayAnim();
 };

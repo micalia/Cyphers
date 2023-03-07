@@ -18,6 +18,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void SetupInputBinding(class UInputComponent* PlayerInputComponent) override;
 public:
+	UPROPERTY()
+	class UPlayerAnim* kayaAnim;
+public:
 	void InputMouseLeft();	//∆Ú≈∏
 	/*void InputMouseRight();
 	void InputMouseLeftAndRight();
