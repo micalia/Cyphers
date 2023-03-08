@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Cyphers/Cyphers.h"
 #include "PlayerBaseComponent.h"
 #include "Cypher_Kaya_Attack.generated.h"
 
@@ -23,7 +23,25 @@ public:
 	UPROPERTY()
 	class UPlayerAnim* kayaAnim;
 
+	UFUNCTION()
+		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
 //평타
+// 이득우 콤보구현
+	void AttackStartComboState();
+	void AttackEndComboState();
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsAttacking;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool CanNextCombo;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsComboInputOn;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 CurrentCombo;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 MaxCombo = 3;
+//SB 구현
 	UPROPERTY(BlueprintReadWrite)
 	bool bAttackChk = true;
 	UPROPERTY(BlueprintReadWrite)

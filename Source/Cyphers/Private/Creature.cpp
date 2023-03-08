@@ -16,7 +16,6 @@ ACreature::ACreature()
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ACreature::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

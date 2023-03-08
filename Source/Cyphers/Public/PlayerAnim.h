@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+//#include "CoreMinimal.h"
+#include "Cyphers/Cyphers.h"
 #include "Animation/AnimInstance.h"
 #include "PlayerAnim.generated.h"
 
@@ -11,6 +12,10 @@ enum class EPlayerState : uint8 {
 	Move,
 	BasicAttack,
 };
+
+DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
+
 UCLASS()
 class CYPHERS_API UPlayerAnim : public UAnimInstance
 {
@@ -41,14 +46,24 @@ public:
 
 	//공중에 있는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		bool bAir = false;
+		bool bAir = true;
 
 public:
-	UPROPERTY(EditAnywhere)
+//이득우 공격 콤보
+	void BasicAttackMontageSection(int32 NewSection);
+
+	FOnNextAttackCheckDelegate OnNextAttackCheck;
+	FOnAttackHitCheckDelegate OnAttackHitCheck;
+
+	UFUNCTION()
+		void AnimNotify_AttackHitCheck();
+	UFUNCTION()
+		void AnimNotify_NextAttackCheck();
+		FName GetAttackMontageSectionName(int32 Section);
+//SB구현
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* basicAttackAnimMontage;
 
 	void BasicAttackPlayAnim();
 
-	UFUNCTION()
-		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };
