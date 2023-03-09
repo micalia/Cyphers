@@ -41,24 +41,6 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UPlayerAnim::BasicAttackMontageSection(int32 NewSection)
 {
-	UAnimInstance* AnimInstance = me->GetMesh()->GetAnimInstance();
-	if (AnimInstance)
-	{
-		UAnimMontage* CurrentMontage = AnimInstance->GetCurrentActiveMontage();
-		if (CurrentMontage)
-		{
-			FString MontageName = CurrentMontage->GetName();
-			UE_LOG(LogTemp, Log, TEXT("Currently playing montage: %s"), *MontageName);
-		}
-	}
-		if (Montage_IsPlaying(basicAttackAnimMontage)) {
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying(basicAttackAnimMontage) : true"))
-
-		}
-		else {
-
-		UE_LOG(LogTemp, Warning, TEXT("Montage_IsPlaying(basicAttackAnimMontage) : false"))
-		}
 	ABCHECK(Montage_IsPlaying(basicAttackAnimMontage))
 	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), basicAttackAnimMontage);
 }
