@@ -19,7 +19,7 @@ void UCypher_Kaya_Attack::BeginPlay()
 	
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
-		ABLOG(Warning, TEXT("OnNextAttackCheck"));
+		//ABLOG(Warning, TEXT("OnNextAttackCheck"));
 		//CanNextCombo=false;
 		if (IsComboInputOn) {
 			AttackStartComboState();
@@ -45,7 +45,7 @@ void UCypher_Kaya_Attack::AttackStartComboState()
 {
 	//CanNextCombo = true;
 	IsComboInputOn = false;
-	ABCHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 0, MaxCombo-1));
+	//ABCHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 0, MaxCombo-1));
 	CurrentCombo =FMath::Clamp<int32>(CurrentCombo+1, 1, MaxCombo);
 }
 
@@ -59,13 +59,13 @@ void UCypher_Kaya_Attack::AttackEndComboState()
 void UCypher_Kaya_Attack::InputMouseLeft()
 {
 	if (IsAttacking) { //현재 이미 좌클릭 공격이 실행중인데 입력값이 들어오면
-		ABCHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 1, MaxCombo));
+		//ABCHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 1, MaxCombo));
 		//if (CanNextCombo) {
 			IsComboInputOn = true;
 		//}
 	}
 	else { //첫번째 공격
-		ABCHECK(CurrentCombo == 0);
+		//ABCHECK(CurrentCombo == 0);
 		AttackStartComboState();
 		kayaAnim->BasicAttackPlayAnim();
 		kayaAnim->BasicAttackMontageSection(CurrentCombo);
@@ -75,8 +75,8 @@ void UCypher_Kaya_Attack::InputMouseLeft()
 
 void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	ABCHECK(IsAttacking);
-	ABCHECK(CurrentCombo > 0);
+	//ABCHECK(IsAttacking);
+	//ABCHECK(CurrentCombo > 0);
 	IsAttacking = false;
 	AttackEndComboState();
 }
