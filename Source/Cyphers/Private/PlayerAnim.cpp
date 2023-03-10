@@ -10,6 +10,12 @@ UPlayerAnim::UPlayerAnim()
 	{
 		basicAttackAnimMontage = tempBasicAttackMontage.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDashAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_KayaDashAttack.AM_KayaDashAttack'"));
+	if (tempDashAttackMontage.Succeeded())
+	{
+		dashAttackAnimMontage = tempDashAttackMontage.Object;
+	}
 }
 
 void UPlayerAnim::NativeBeginPlay()
@@ -41,7 +47,7 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UPlayerAnim::BasicAttackMontageSection(int32 NewSection)
 {
-	//ABCHECK(Montage_IsPlaying(basicAttackAnimMontage))
+	ABCHECK(Montage_IsPlaying(basicAttackAnimMontage))
 	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), basicAttackAnimMontage);
 }
 
@@ -57,11 +63,16 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 
 FName UPlayerAnim::GetAttackMontageSectionName(int32 Section)
 {
-	//ABCHECK(FMath::IsWithinInclusive<int32>(Section, 1, 3),NAME_None);
+	ABCHECK(FMath::IsWithinInclusive<int32>(Section, 1, 3),NAME_None);
 	return FName(*FString::Printf(TEXT("BasicAttack%d"), Section));
 }
 
 void UPlayerAnim::BasicAttackPlayAnim()
 {	
 	Montage_Play(basicAttackAnimMontage, 1.0f);
+}
+
+void UPlayerAnim::DashAttackPlayAnim()
+{
+	Montage_Play(dashAttackAnimMontage, 1.0f);
 }

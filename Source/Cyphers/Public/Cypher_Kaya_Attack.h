@@ -22,9 +22,30 @@ public:
 public:
 	UPROPERTY()
 	class UPlayerAnim* kayaAnim;
+public:
+	bool bLeftMouseButtonPressed;
+	bool bRightMouseButtonPressed;
 
+	void InitInput();
+	void InputMouseLeft();	//평타	
+	void InputMouseRight();	
+	void InputMouseLeftAndRight();	//대쉬 공격
+	void InputKeyShiftAndMouseLeft();
+	
+	/*void InputMouseLeftAndRight();
+	void InputKeySpace();
+	void InputKeyE();*/
+	UPROPERTY(EditAnywhere)
+	float MouseLRCheckTime = 0.07;
+	float MouseLRCheckCurrentTime = 0;
+	//float ClickTimestamp = 0.0;
+
+	bool bAttackInput = false;
+
+public:
 //평타
 // 이득우 콤보구현
+	void BasicAttack();
 	void AttackStartComboState();
 	void AttackEndComboState();
 	UFUNCTION()
@@ -41,20 +62,6 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	int32 MaxCombo = 3;
 public:
-//SB 구현
-	UPROPERTY(BlueprintReadWrite)
-	bool bAttackChk = true;
-	UPROPERTY(BlueprintReadWrite)
-	int32 basicAttackCombo = 1;
-	UPROPERTY(BlueprintReadWrite)
-	bool basicAttackComboContinueCheckSection = false;
-	UPROPERTY(BlueprintReadWrite)
-	bool basicAttackComboContinue = false;
-public:
-	void InputMouseLeft();	//평타
-	/*void InputMouseRight();
-	void InputMouseLeftAndRight();
-	void InputKeyShiftAndMouseLeft();
-	void InputKeySpace();
-	void InputKeyE();*/
+//대쉬 공격
+	void DashAttack();
 };

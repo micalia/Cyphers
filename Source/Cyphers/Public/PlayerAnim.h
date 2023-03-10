@@ -48,8 +48,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		bool bAir = true;
 
+private:
+//공격 몽타주
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* basicAttackAnimMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = DashAttack, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* dashAttackAnimMontage;
 public:
-//이득우 공격 콤보
+//평타 공격 콤보(좌클릭)
+
 	void BasicAttackMontageSection(int32 NewSection);
 
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
@@ -60,10 +67,8 @@ public:
 	UFUNCTION()
 		void AnimNotify_NextAttackCheck();
 		FName GetAttackMontageSectionName(int32 Section);
-//SB구현
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* basicAttackAnimMontage;
 
 	void BasicAttackPlayAnim();
-
+//대쉬 공격 (양클릭)
+	void DashAttackPlayAnim();
 };
