@@ -5,13 +5,13 @@
 
 UPlayerAnim::UPlayerAnim()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempBasicAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_KayaBasicAttack.AM_KayaBasicAttack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempBasicAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_KayaBasicAttack.AM_KayaBasicAttack'"));
 	if (tempBasicAttackMontage.Succeeded())
 	{
 		basicAttackAnimMontage = tempBasicAttackMontage.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDashAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_KayaDashAttack.AM_KayaDashAttack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDashAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_KayaDashAttack.AM_KayaDashAttack'"));
 	if (tempDashAttackMontage.Succeeded())
 	{
 		dashAttackAnimMontage = tempDashAttackMontage.Object;

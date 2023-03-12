@@ -46,15 +46,15 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 				DashAttack();
 			}
 			else if (bLeftMouseButtonPressed) {
+				InitInput();
 					//마우스 왼쪽공격
 					UE_LOG(LogTemp, Warning, TEXT("mouseLeft"))
 					BasicAttack();
-				InitInput();
 			}
 			else if(bRightMouseButtonPressed){
+				InitInput();
 				//마우스 오른쪽 공격
 				UE_LOG(LogTemp, Warning, TEXT("RightClick"))
-				InitInput();
 			}
 			
 		}
