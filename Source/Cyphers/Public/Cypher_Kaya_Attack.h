@@ -42,6 +42,11 @@ public:
 
 	bool bAttackInput = false;
 
+	void AttackCheck();
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+	float AttackRange = 200;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+		float AttackRadius = 50;
 public:
 //ÆòÅ¸
 // ÀÌµæ¿ì ÄÞº¸±¸Çö

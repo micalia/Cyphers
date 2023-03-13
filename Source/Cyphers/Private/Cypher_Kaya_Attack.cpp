@@ -4,7 +4,8 @@
 #include "Cypher_Kaya_Attack.h"
 #include "PlayerAnim.h"
 #include "Cypher_Kaya.h"
-
+#include "DrawDebugHelpers.h"
+#include "Enemy_Sentinel.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -14,9 +15,11 @@ UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 void UCypher_Kaya_Attack::BeginPlay()
 {
 	Super::BeginPlay();
+
 	AttackEndComboState();
 	kayaAnim = Cast<UPlayerAnim>(me->GetMesh()->GetAnimInstance());
 
+	kayaAnim->OnAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::AttackCheck);
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
 		//UE_LOG(LogTemp, Warning, TEXT("M"))
@@ -79,6 +82,53 @@ void UCypher_Kaya_Attack::InitInput()
 	bRightMouseButtonPressed = false;
 }
 
+
+void UCypher_Kaya_Attack::AttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(me);
+	bool bResult = me->GetWorld()->SweepSingleByChannel(
+		HitResult,
+		me->GetActorLocation(),
+		me->GetActorLocation() + me->GetActorForwardVector() * AttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(AttackRadius),
+		Params
+	);
+
+#if ENABLE_DRAW_DEBUG
+
+	FVector TraceVec = me->GetActorForwardVector() * AttackRange;
+	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
+	float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	float DebugLifeTime = 5.0f;
+
+	DrawDebugCapsule(
+		GetWorld(),
+		Center,
+		HalfHeight,
+		AttackRadius,
+		CapsuleRot,
+		DrawColor,
+		false,
+		DebugLifeTime
+	);
+#endif
+AActor* hitActor = HitResult.GetActor();
+AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	if (bResult)
+	{
+
+		if (sentinel != nullptr)
+		{
+			sentinel->ReceiveDamage();
+		}
+	}
+}
 
 void UCypher_Kaya_Attack::BasicAttack()
 {

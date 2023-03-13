@@ -16,6 +16,9 @@ class CYPHERS_API ACypher_Kaya : public ACreature
 public:
 	ACypher_Kaya();
 
+	UPROPERTY(EditAnywhere)
+		class UStaticMeshComponent* aimMeshComp;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere)

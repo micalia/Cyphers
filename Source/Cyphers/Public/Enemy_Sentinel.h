@@ -26,6 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void ReceiveDamage();
 	//적 AI 관리 하는 컴포넌트(FSM)
 	UPROPERTY(EditAnywhere)
 		class UEnemy_SentinelFSM* fsm;
@@ -40,7 +41,10 @@ public:
 	TSubclassOf<class UEnemy_SentinelHpUI> sentinelUIfactory;
 	UPROPERTY(EditAnywhere)
 	class UWidgetComponent* hpWidget;
-
+	UPROPERTY()
+	class UEnemy_SentinelHpUI* sentinelHpUI;
+	float maxHP;
+	float currHP;
 private:
 	APlayerController* PlayerController;
 	FVector CameraLocation;

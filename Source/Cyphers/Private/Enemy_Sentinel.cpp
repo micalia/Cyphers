@@ -55,6 +55,7 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	hpWidget->SetRelativeLocation(FVector(0,0, 225));
 	hpWidget->SetRelativeRotation(FRotator(0,90, 0));
 	hpWidget->SetRelativeScale3D(FVector(0.399762, 0.399762, 0.329024));
+
 }
 
 // Called when the game starts or when spawned
@@ -66,13 +67,20 @@ void AEnemy_Sentinel::BeginPlay()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	PlayerController = GetWorld()->GetFirstPlayerController();
 	GetWorldTimerManager().SetTimer(TimerHandle_UpdateWidgetRotation, this, &AEnemy_Sentinel::UpdateWidgetRotation, 0.1f, true);
+
+	sentinelHpUI = Cast<UEnemy_SentinelHpUI>(hpWidget->GetWidget());
+	maxHP = health;
+	currHP = health;
 }
 
 // Called every frame
 void AEnemy_Sentinel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (sentinelHpUI != nullptr) {
+		sentinelHpUI->UpdateCurrHP(currHP, maxHP);
 
+	}
 }
 
 // Called to bind functionality to input
@@ -80,6 +88,21 @@ void AEnemy_Sentinel::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy_Sentinel::ReceiveDamage()
+{
+	currHP--;
+	if (currHP > 0)
+	{
+		fsm->ChangeState(EEnemy_SentinelState::Damaged);
+	}
+	//그렇지 않으면 Die 상태로 전환
+	else
+	{
+
+		fsm->ChangeState(EEnemy_SentinelState::Die);
+	}
 }
 
 void AEnemy_Sentinel::SetActive(bool bActive)

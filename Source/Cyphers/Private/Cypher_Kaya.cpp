@@ -8,6 +8,7 @@
 #include "PlayerMoveInput.h"
 #include "Cypher_Kaya_Attack.h"
 #include "PlayerAnim.h"
+#include <Components/StaticMeshComponent.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,7 +17,7 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);
 	}
-
+	
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -86));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
@@ -46,6 +47,7 @@ ACypher_Kaya::ACypher_Kaya() {
 //Component Attach
 	compPlayerMove = CreateDefaultSubobject<UPlayerMoveInput>(TEXT("compPlayerMove"));
 	compKayaAttack = CreateDefaultSubobject<UCypher_Kaya_Attack>(TEXT("compKayaAttack"));
+
 }
 
 void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

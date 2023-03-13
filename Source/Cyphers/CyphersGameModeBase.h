@@ -13,5 +13,10 @@ UCLASS()
 class CYPHERS_API ACyphersGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	ACyphersGameModeBase();
+	virtual void BeginPlay() override;
+	TSubclassOf<class UAimUI> AimUIClass;
+	UPROPERTY()
+		UAimUI* aimUIWidget;
 };
