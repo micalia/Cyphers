@@ -15,10 +15,9 @@ class CYPHERS_API UAimUI : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta = (BindWidget))
-	class UImage* AimImage;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* AimCanvas;
 	UPROPERTY(EditAnywhere)
 		float RotationSpeed = 120;
 		float CurrentRotate;

@@ -20,6 +20,7 @@ void UCypher_Kaya_Attack::BeginPlay()
 	kayaAnim = Cast<UPlayerAnim>(me->GetMesh()->GetAnimInstance());
 
 	kayaAnim->OnAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::AttackCheck);
+	kayaAnim->OnDashAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::DashAttackCheck);
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
 		//UE_LOG(LogTemp, Warning, TEXT("M"))
@@ -72,6 +73,9 @@ void UCypher_Kaya_Attack::SetupInputBinding(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(TEXT("MouseLeft"), IE_Pressed, this, &UCypher_Kaya_Attack::InputMouseLeft);
 	PlayerInputComponent->BindAction(TEXT("MouseRight"), IE_Pressed, this, &UCypher_Kaya_Attack::InputMouseRight);
 	PlayerInputComponent->BindAction(TEXT("MouseLeftAndShift"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft);
+	PlayerInputComponent->BindAction(TEXT("KeyF"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeyF);
+	PlayerInputComponent->BindAction(TEXT("KeyE"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeyE_Pressed);
+	PlayerInputComponent->BindAction(TEXT("KeyE"), IE_Released, this, &UCypher_Kaya_Attack::InputKeyE_Released);
 }
 
 void UCypher_Kaya_Attack::InitInput()
@@ -120,6 +124,53 @@ void UCypher_Kaya_Attack::AttackCheck()
 #endif
 AActor* hitActor = HitResult.GetActor();
 AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	if (bResult)
+	{
+
+		if (sentinel != nullptr)
+		{
+			sentinel->ReceiveDamage();
+		}
+	}
+}
+
+void UCypher_Kaya_Attack::DashAttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(me);
+	bool bResult = me->GetWorld()->SweepSingleByChannel(
+		HitResult,
+		me->GetActorLocation(),
+		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(DashAttackRadius),
+		Params
+	);
+
+#if ENABLE_DRAW_DEBUG
+
+	FVector TraceVec = me->GetActorForwardVector() * DashAttackRange;
+	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
+	float HalfHeight = DashAttackRange * 0.5f + DashAttackRadius;
+	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	float DebugLifeTime = 5.0f;
+
+	DrawDebugCapsule(
+		GetWorld(),
+		Center,
+		HalfHeight,
+		DashAttackRadius,
+		CapsuleRot,
+		DrawColor,
+		false,
+		DebugLifeTime
+	);
+#endif
+	AActor* hitActor = HitResult.GetActor();
+	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
 	if (bResult)
 	{
 
@@ -186,6 +237,24 @@ void UCypher_Kaya_Attack::InputMouseLeftAndRight()
 void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Shift mouse left!"))
+}
+
+void UCypher_Kaya_Attack::InputKeyF()
+{
+	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
+		kayaAnim->GripAttackPlayAnim();
+}
+
+void UCypher_Kaya_Attack::InputKeyE_Pressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("E press"))
+	kayaAnim->PowerAttackReadyAnim();
+}
+
+void UCypher_Kaya_Attack::InputKeyE_Released()
+{
+	UE_LOG(LogTemp, Warning, TEXT("E Release"))
+	kayaAnim->PowerAttackPlayAnim();
 }
 
 void UCypher_Kaya_Attack::InputMouseRight()

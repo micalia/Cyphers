@@ -15,6 +15,7 @@ enum class EPlayerState : uint8 {
 
 DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnDashAttackHitCheckDelegate);
 
 UCLASS()
 class CYPHERS_API UPlayerAnim : public UAnimInstance
@@ -54,6 +55,10 @@ private:
 		class UAnimMontage* basicAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = DashAttack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* dashAttackAnimMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* gripAttackAnimMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* powerAttackAnimMontage;
 public:
 //평타 공격 콤보(좌클릭)
 
@@ -61,14 +66,23 @@ public:
 
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
 	FOnAttackHitCheckDelegate OnAttackHitCheck;
-
+	FOnDashAttackHitCheckDelegate OnDashAttackHitCheck;
 	UFUNCTION()
 		void AnimNotify_AttackHitCheck();
 	UFUNCTION()
 		void AnimNotify_NextAttackCheck();
+	UFUNCTION()
+		void AnimNotify_PowerAttackStart();
+	UFUNCTION()
+		void AnimNotify_PowerAttackEnd();
+	UFUNCTION()
+		void AnimNotify_DashAttackCheck();
 		FName GetAttackMontageSectionName(int32 Section);
 
 	void BasicAttackPlayAnim();
 //대쉬 공격 (양클릭)
 	void DashAttackPlayAnim();
+	void GripAttackPlayAnim();
+	void PowerAttackReadyAnim();
+	void PowerAttackPlayAnim();
 };

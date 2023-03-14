@@ -24,6 +24,7 @@ ACypher_Kaya::ACypher_Kaya() {
 	compSword = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("compSword"));
 	compSword->SetupAttachment(GetMesh(), TEXT("Sword"));
 	compSword->SetRelativeScale3D(FVector(1.183, 1.133, 1));
+	compSword->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempSwordMesh(TEXT("/Script/Engine.StaticMesh'/Game/Resources/Models/NightSkySword/maya2sketchfab.maya2sketchfab'"));
 	if (tempSwordMesh.Succeeded()) {
@@ -48,6 +49,8 @@ ACypher_Kaya::ACypher_Kaya() {
 	compPlayerMove = CreateDefaultSubobject<UPlayerMoveInput>(TEXT("compPlayerMove"));
 	compKayaAttack = CreateDefaultSubobject<UCypher_Kaya_Attack>(TEXT("compKayaAttack"));
 
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Creature"));
 }
 
 void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

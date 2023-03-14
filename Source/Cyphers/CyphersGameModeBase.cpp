@@ -21,7 +21,7 @@ void ACyphersGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	// Crosshair Widget »ý¼º
-	/*if (AimUIClass != nullptr)
+	if (AimUIClass != nullptr)
 	{
 		aimUIWidget = CreateWidget<UAimUI>(GetWorld(), AimUIClass);
 
@@ -29,5 +29,5 @@ void ACyphersGameModeBase::BeginPlay()
 		{
 			aimUIWidget->AddToViewport();
 		}
-	}*/
+	}
 }

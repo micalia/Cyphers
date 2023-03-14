@@ -2,10 +2,10 @@
 
 
 #include "AimUI.h"
-#include <UMG/Public/Components/Image.h>
+#include <UMG/Public/Components/CanvasPanel.h>
 
 void UAimUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	CurrentRotate += RotationSpeed * InDeltaTime;
-	AimImage->SetRenderTransformAngle(CurrentRotate);
+	CurrentRotate += RotationSpeed * InDeltaTime;	
+	AimCanvas->SetRenderTransformAngle(CurrentRotate);
 }

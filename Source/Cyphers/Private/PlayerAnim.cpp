@@ -16,6 +16,17 @@ UPlayerAnim::UPlayerAnim()
 	{
 		dashAttackAnimMontage = tempDashAttackMontage.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempGripAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_Kaya_Grip.AM_Kaya_Grip'"));
+	if (tempGripAttackMontage.Succeeded())
+	{
+		gripAttackAnimMontage = tempGripAttackMontage.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempPowerAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_KayaPowerAttack.AM_KayaPowerAttack'"));
+	if (tempPowerAttackMontage.Succeeded())
+	{
+		powerAttackAnimMontage = tempPowerAttackMontage.Object;
+	}
 }
 
 void UPlayerAnim::NativeBeginPlay()
@@ -61,6 +72,23 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 	OnNextAttackCheck.Broadcast();
 }
 
+void UPlayerAnim::AnimNotify_PowerAttackStart()
+{
+	UE_LOG(LogTemp, Warning, TEXT("attackstart NOtify"))
+	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void UPlayerAnim::AnimNotify_PowerAttackEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
+	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void UPlayerAnim::AnimNotify_DashAttackCheck()
+{
+	OnDashAttackHitCheck.Broadcast();
+}
+
 FName UPlayerAnim::GetAttackMontageSectionName(int32 Section)
 {
 	ABCHECK(FMath::IsWithinInclusive<int32>(Section, 1, 3),NAME_None);
@@ -75,4 +103,20 @@ void UPlayerAnim::BasicAttackPlayAnim()
 void UPlayerAnim::DashAttackPlayAnim()
 {
 	Montage_Play(dashAttackAnimMontage, 1.0f);
+}
+
+void UPlayerAnim::GripAttackPlayAnim()
+{
+	Montage_Play(gripAttackAnimMontage, 1.0f);
+}
+
+void UPlayerAnim::PowerAttackReadyAnim()
+{
+	Montage_Play(powerAttackAnimMontage, 1.0f);
+}
+
+
+void UPlayerAnim::PowerAttackPlayAnim()
+{
+	Montage_JumpToSection(TEXT("PowerAttackPlay"), powerAttackAnimMontage);
 }

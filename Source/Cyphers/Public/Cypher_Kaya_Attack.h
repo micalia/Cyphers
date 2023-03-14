@@ -31,10 +31,13 @@ public:
 	void InputMouseRight();	
 	void InputMouseLeftAndRight();	//대쉬 공격
 	void InputKeyShiftAndMouseLeft();
-	
+	void InputKeyF();
+	void InputKeyE_Pressed();
+	void InputKeyE_Released();
+
 	/*void InputMouseLeftAndRight();
 	void InputKeySpace();
-	void InputKeyE();*/
+	*/
 	UPROPERTY(EditAnywhere)
 	float MouseLRCheckTime = 0.07;
 	float MouseLRCheckCurrentTime = 0;
@@ -43,10 +46,18 @@ public:
 	bool bAttackInput = false;
 
 	void AttackCheck();
+	void DashAttackCheck();
+//기본공격
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	float AttackRange = 200;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 		float AttackRadius = 50;
+//대쉬공격
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+		float DashAttackRange = 450;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+		float DashAttackRadius = 70;
+
 public:
 //평타
 // 이득우 콤보구현
