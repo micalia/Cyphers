@@ -16,7 +16,8 @@ class CYPHERS_API UPlayerMoveInput : public UPlayerBaseComponent
 
 public:	
 	UPlayerMoveInput();
-
+	UPROPERTY()
+	class ACypher_Kaya* kaya;
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void SetupInputBinding(class UInputComponent* PlayerInputComponent) override;
@@ -35,7 +36,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=PlayerSetting)
 	float moveSpeed = 600;
-
+	UPROPERTY(EditAnywhere)
+	float minCamPitch = -30;
+	UPROPERTY(EditAnywhere)
+	float maxCamPitch = 10;
 public:
 	void MoveAction(float deltaTime);
 	void RotateAction();

@@ -9,6 +9,9 @@
 #include "Cypher_Kaya_Attack.h"
 #include "PlayerAnim.h"
 #include <Components/StaticMeshComponent.h>
+#include "PlayerCamera.h"
+#include <Components/ChildActorComponent.h>
+#include <Components/SceneComponent.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,22 +38,56 @@ ACypher_Kaya::ACypher_Kaya() {
 	compArm->SetupAttachment(RootComponent);
 	compArm->SetRelativeLocation(FVector(0,0, 50));
 
-	compCam = CreateDefaultSubobject<UCameraComponent>(TEXT("compCam"));
+	/*compCam = CreateDefaultSubobject<UCameraComponent>(TEXT("compCam"));
 	compCam->SetupAttachment(compArm);
-	compCam->SetRelativeLocation(FVector(-110,0, 78));
+	compCam->SetRelativeLocation(FVector(-110,0, 78));*/
 
 	ConstructorHelpers::FClassFinder<UPlayerAnim> tempAnim(TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/Animation/ABP_Cypher_Kaya.ABP_Cypher_Kaya_C'"));
 	if (tempAnim.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(tempAnim.Class);
 	}
-
 //Component Attach
 	compPlayerMove = CreateDefaultSubobject<UPlayerMoveInput>(TEXT("compPlayerMove"));
 	compKayaAttack = CreateDefaultSubobject<UCypher_Kaya_Attack>(TEXT("compKayaAttack"));
 
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Creature"));
+
+	camTarget = CreateDefaultSubobject<USceneComponent>(TEXT("CameraTarget"));
+	camTarget->SetupAttachment(RootComponent);
+	camTarget->SetRelativeLocation(FVector(0,0,5));
+
+	ConstructorHelpers::FClassFinder<APlayerCamera> tempPlayerCamera(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PlayerCamera.BP_PlayerCamera_C'"));
+	if (tempPlayerCamera.Succeeded())
+	{
+		cameraFactory = tempPlayerCamera.Class;
+	}
+	
+	CameraActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("CameraActorComponent"));
+	CameraActorComponent->SetupAttachment(camTarget);
+
+	// Set the child actor class to the camera actor class we defined earlier
+	CameraActorComponent->SetChildActorClass(cameraFactory);
+
+	// Move the camera actor to the character's head
+	FVector CameraOffset(-510, 0.f, 80.f);
+	CameraActorComponent->SetRelativeLocation(CameraOffset);
+}
+
+void ACypher_Kaya::BeginPlay()
+{
+	Super::BeginPlay();
+	APlayerCamera* Camera = Cast<APlayerCamera>(CameraActorComponent->GetChildActor());
+	if (Camera)
+	{
+		Camera->SetAsMainCamera();
+	}
+}
+
+void ACypher_Kaya::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

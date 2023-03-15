@@ -18,7 +18,7 @@ ACreature::ACreature()
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ACreature::OnHit);
 }
 

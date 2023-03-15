@@ -11,8 +11,11 @@ void UPlayerBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	me = Cast<ACypher_Kaya>(GetOwner());
-	moveComp = me->GetCharacterMovement();
+	me = Cast<ACreature>(GetOwner());
+	if (me != nullptr)
+	{
+		moveComp = me->GetCharacterMovement();
+	}	
 }
 
 void UPlayerBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

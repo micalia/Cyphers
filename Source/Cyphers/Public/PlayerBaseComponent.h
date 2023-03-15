@@ -28,8 +28,11 @@ public:
 public:
 //다른 캐릭터도 이 컴포넌트를 쓴다면 나중에 수정 필요할 수 있음
 	UPROPERTY()
-	class ACypher_Kaya* me;
+	class ACreature* me;
+	/*class ACypher_Kaya* me;*/
 
 	UPROPERTY()
 	class UCharacterMovementComponent* moveComp;
+
+	
 };

@@ -7,7 +7,6 @@
 #include <GameFramework/CharacterMovementComponent.h>
 
 
-
 UPlayerMoveInput::UPlayerMoveInput()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -16,11 +15,11 @@ UPlayerMoveInput::UPlayerMoveInput()
 void UPlayerMoveInput::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	kaya = Cast<ACypher_Kaya>(me);
 	me->GetCharacterMovement()->MaxWalkSpeed = moveSpeed;
 	//Controller 의 회전값을 따라 갈 속성 셋팅
 	me->bUseControllerRotationYaw = true;
-	me->compArm->bUsePawnControlRotation = true;
+	//me->compArm->bUsePawnControlRotation = true;
 }
 
 void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -60,7 +59,7 @@ void UPlayerMoveInput::MoveAction(float deltaTime)
 void UPlayerMoveInput::RotateAction()
 {
 	me->SetActorRotation(FRotator(0, mx, 0));
-	me->compArm->SetRelativeRotation(FRotator(-my, 0, 0));
+	//me->compArm->SetRelativeRotation(FRotator(-my, 0, 0));
 }
 
 void UPlayerMoveInput::InputHorizontal(float value)
@@ -76,6 +75,15 @@ void UPlayerMoveInput::InputVertical(float value)
 void UPlayerMoveInput::InputLookUp(float value)
 {
 	me->AddControllerPitchInput(value);
+	my+=value;
+	UE_LOG(LogTemp, Warning, TEXT("my : %f"), my)
+		if (-my < minCamPitch) {
+			my = -minCamPitch;
+		}
+		else if(-my > maxCamPitch) {
+			my = -maxCamPitch;
+		}
+	kaya->camTarget->SetRelativeRotation(FRotator(FMath::Clamp(-my, minCamPitch, maxCamPitch), 0, 0));
 }
 
 void UPlayerMoveInput::InputTurn(float value)

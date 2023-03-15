@@ -75,12 +75,22 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 void UPlayerAnim::AnimNotify_PowerAttackStart()
 {
 	UE_LOG(LogTemp, Warning, TEXT("attackstart NOtify"))
+		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
+	UE_LOG(LogTemp, Warning, TEXT("MeshLocation : %s"), *MeshLocation.ToString())
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
+		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
+		FVector currLocation = me->GetActorLocation();
+	DrawDebugSphere(GetWorld(), MeshLocation, 20.0f, 32, FColor::Blue, false, 5.0f);
+
+	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
+	
+	DrawDebugSphere(GetWorld(), me->GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
+	UE_LOG(LogTemp, Warning, TEXT("MeshLocation : %s / me->GetActorLocation: %s"), *MeshLocation.ToString(), *me->GetActorLocation().ToString())
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 

@@ -18,12 +18,16 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		class UStaticMeshComponent* aimMeshComp;
-
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* compSword;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+		class UChildActorComponent* CameraActorComponent;
+	TSubclassOf<class APlayerCamera> cameraFactory;
 public:
 //만약 나중에 AI로도 Kaya를 만들경우 수정이 필요할수도 있음
 	UPROPERTY(VisibleAnywhere, Category = Component)
@@ -32,7 +36,10 @@ public:
 		class UCypher_Kaya_Attack* compKayaAttack;
 	UPROPERTY(EditAnywhere)
 		class USpringArmComponent* compArm;
+		UPROPERTY(EditAnywhere)
+		class USceneComponent* camTarget;
+	/*UPROPERTY(EditAnywhere)
+		class UCameraComponent* compCam;*/
 
-	UPROPERTY(EditAnywhere)
-		class UCameraComponent* compCam;
+
 };

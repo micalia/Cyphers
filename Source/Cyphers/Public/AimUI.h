@@ -17,8 +17,11 @@ class CYPHERS_API UAimUI : public UUserWidget
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	UPROPERTY(meta = (BindWidget))
-	class UCanvasPanel* AimCanvas;
+	class UImage* AimImage;
 	UPROPERTY(EditAnywhere)
 		float RotationSpeed = 120;
 		float CurrentRotate;
+
+	UFUNCTION(BlueprintCallable, Category = "YourClass")
+		void MoveAimUI(float DeltaTime, float MoveDistance);
 };
