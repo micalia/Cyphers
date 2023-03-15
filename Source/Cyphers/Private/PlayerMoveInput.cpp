@@ -76,7 +76,7 @@ void UPlayerMoveInput::InputLookUp(float value)
 {
 	me->AddControllerPitchInput(value);
 	my+=value;
-	UE_LOG(LogTemp, Warning, TEXT("my : %f"), my)
+
 		if (-my < minCamPitch) {
 			my = -minCamPitch;
 		}

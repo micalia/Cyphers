@@ -77,6 +77,7 @@ void UPlayerAnim::AnimNotify_PowerAttackStart()
 	UE_LOG(LogTemp, Warning, TEXT("attackstart NOtify"))
 		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
 	UE_LOG(LogTemp, Warning, TEXT("MeshLocation : %s"), *MeshLocation.ToString())
+	me->DetachCameraActor();
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -91,6 +92,7 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	
 	DrawDebugSphere(GetWorld(), me->GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
 	UE_LOG(LogTemp, Warning, TEXT("MeshLocation : %s / me->GetActorLocation: %s"), *MeshLocation.ToString(), *me->GetActorLocation().ToString())
+	me->AttachCameraActor();
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 

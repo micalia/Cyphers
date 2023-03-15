@@ -24,18 +24,22 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* compSword;
-
+	UPROPERTY()
+	class APlayerCamera* Camera;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 		class UChildActorComponent* CameraActorComponent;
 	TSubclassOf<class APlayerCamera> cameraFactory;
+	FVector CameraOffset = FVector(-510, 0.f, 85.f);
+	void DetachCameraActor();
+	void AttachCameraActor();
 public:
 //만약 나중에 AI로도 Kaya를 만들경우 수정이 필요할수도 있음
 	UPROPERTY(VisibleAnywhere, Category = Component)
 	class UPlayerMoveInput* compPlayerMove;
 	UPROPERTY(VisibleAnywhere, Category = Component)
 		class UCypher_Kaya_Attack* compKayaAttack;
-	UPROPERTY(EditAnywhere)
-		class USpringArmComponent* compArm;
+	/*UPROPERTY(EditAnywhere)
+		class USpringArmComponent* compArm;*/
 		UPROPERTY(EditAnywhere)
 		class USceneComponent* camTarget;
 	/*UPROPERTY(EditAnywhere)

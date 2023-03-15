@@ -34,9 +34,9 @@ ACypher_Kaya::ACypher_Kaya() {
 		compSword->SetStaticMesh(tempSwordMesh.Object);
 	}
 
-	compArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("compArm"));
+	/*compArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("compArm"));
 	compArm->SetupAttachment(RootComponent);
-	compArm->SetRelativeLocation(FVector(0,0, 50));
+	compArm->SetRelativeLocation(FVector(0,0, 50));*/
 
 	/*compCam = CreateDefaultSubobject<UCameraComponent>(TEXT("compCam"));
 	compCam->SetupAttachment(compArm);
@@ -56,7 +56,6 @@ ACypher_Kaya::ACypher_Kaya() {
 
 	camTarget = CreateDefaultSubobject<USceneComponent>(TEXT("CameraTarget"));
 	camTarget->SetupAttachment(RootComponent);
-	camTarget->SetRelativeLocation(FVector(0,0,5));
 
 	ConstructorHelpers::FClassFinder<APlayerCamera> tempPlayerCamera(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PlayerCamera.BP_PlayerCamera_C'"));
 	if (tempPlayerCamera.Succeeded())
@@ -71,14 +70,14 @@ ACypher_Kaya::ACypher_Kaya() {
 	CameraActorComponent->SetChildActorClass(cameraFactory);
 
 	// Move the camera actor to the character's head
-	FVector CameraOffset(-510, 0.f, 80.f);
+	
 	CameraActorComponent->SetRelativeLocation(CameraOffset);
 }
 
 void ACypher_Kaya::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerCamera* Camera = Cast<APlayerCamera>(CameraActorComponent->GetChildActor());
+	Camera = Cast<APlayerCamera>(CameraActorComponent->GetChildActor());
 	if (Camera)
 	{
 		Camera->SetAsMainCamera();
@@ -96,4 +95,21 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 	
 	compPlayerMove->SetupInputBinding(PlayerInputComponent);
 	compKayaAttack->SetupInputBinding(PlayerInputComponent);
+}
+
+void ACypher_Kaya::DetachCameraActor()
+{
+	//FVector CameraWorldPos = Camera->GetActorLocation();
+	Camera->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	//CameraActorComponent->DetachFromParent(true);
+	//Camera->SetActorLocation(CameraWorldPos);
+}
+
+void ACypher_Kaya::AttachCameraActor()
+{
+	//CameraActorComponent->AttachToComponent(CameraActorComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	
+	Camera->AttachToComponent(CameraActorComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	//Camera->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, TEXT("CameraTarget"));
+	//Camera->SetActorRelativeLocation(CameraOffset);
 }
