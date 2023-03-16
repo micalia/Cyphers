@@ -21,6 +21,8 @@ public:
 	virtual void SetupInputBinding(class UInputComponent* PlayerInputComponent) override;
 public:
 	UPROPERTY()
+	class ACypher_Kaya* kaya;
+	UPROPERTY()
 	class UPlayerAnim* kayaAnim;
 public:
 	bool bLeftMouseButtonPressed;
@@ -42,8 +44,13 @@ public:
 	float MouseLRCheckTime = 0.07;
 	float MouseLRCheckCurrentTime = 0;
 	//float ClickTimestamp = 0.0;
-
+	//궁극기 사용이후 카메라 원래 위치로 Lerp 이동
+	bool bBackCameraOringinPos;
+	float currCameraBackTime = 0;
+	UPROPERTY(EditAnywhere)
+	float CameraBackTime = 0.2;
 	bool bAttackInput = false;
+	bool bAttackCharge;
 
 	void AttackCheck();
 	void DashAttackCheck();

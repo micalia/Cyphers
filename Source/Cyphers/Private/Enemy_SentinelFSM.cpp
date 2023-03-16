@@ -11,6 +11,7 @@
 #include "Enemy_SentinelAnim.h"
 #include "Enemy_Sentinel.h"
 #include <Components/CapsuleComponent.h>
+#include <UMG/Public/Components/WidgetComponent.h>
 
 // Sets default values for this component's properties
 UEnemy_SentinelFSM::UEnemy_SentinelFSM()
@@ -93,7 +94,6 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UEnemy_SentinelFSM::UpdateIdle()
 {
-return; // 일단 에너미 공격은 보류
 
 
 	//만약에 플레이어를 쫓아 갈 수 있니?
@@ -121,18 +121,18 @@ void UEnemy_SentinelFSM::UpdateMove()
 	//1. 타겟을 향하는 방향을 구하고(target - me)
 	FVector dir = target->GetActorLocation() - me->GetActorLocation();
 
-	//처음 위치, 나의 현재 위치의 거리
-	float dist = FVector::Distance(originPos, me->GetActorLocation());
+	////처음 위치, 나의 현재 위치의 거리
+	//float dist = FVector::Distance(originPos, me->GetActorLocation());
 
-	//만약에 dist 가 moveRange 보다 커지면 (움직일 수 있는 반경을 넘어갔다면)
-	if (dist > moveRange)
-	{
-		//상태를 ReturnPos 로 변경
-		ChangeState(EEnemy_SentinelState::ReturnPos);
-	}
-	//만약에 시야에 들어왔다면
-	else if (bTrace)
-	{
+	////만약에 dist 가 moveRange 보다 커지면 (움직일 수 있는 반경을 넘어갔다면)
+	//if (dist > moveRange)
+	//{
+	//	//상태를 ReturnPos 로 변경
+	//	ChangeState(EEnemy_SentinelState::ReturnPos);
+	//}
+	////만약에 시야에 들어왔다면
+	//else if (bTrace)
+	//{
 		//만약에 target - me 거리가 공격범위보다 작으면
 		if (dir.Length() < attackRange)
 		{
@@ -147,13 +147,13 @@ void UEnemy_SentinelFSM::UpdateMove()
 			//ai 를 이용해서 목적지까지 이동하고 싶다.	
 			ai->MoveToLocation(target->GetActorLocation());
 		}
-	}
-	//시야에 들어오지 않았다면
-	else
-	{
-		// 랜덤한 위치까지 도착한 후 Idle 상태로 전환
-		MoveToPos(randPos);
-	}
+	//}
+	////시야에 들어오지 않았다면
+	//else
+	//{
+	//	// 랜덤한 위치까지 도착한 후 Idle 상태로 전환
+	//	MoveToPos(randPos);
+	//}
 
 }
 
@@ -260,13 +260,13 @@ void UEnemy_SentinelFSM::UpdateReturnPos()
 void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 {
 	//상태 변경 로그를 출력하자
-	/*UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EEnemy_SentinelState"), true);
+	UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EEnemy_SentinelState"), true);
 	if (enumPtr != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s -----> %s"),
 			*enumPtr->GetNameStringByIndex((int32)currState),
 			*enumPtr->GetNameStringByIndex((int32)state));
-	}*/
+	}
 
 	//현재 상태를 갱신
 	currState = state;
@@ -303,14 +303,16 @@ void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 		//2. Damage0, Damage1 이란 문자열을 만든다.
 		FString sectionName = FString::Printf(TEXT("Damage%d"), rand);
 		//3. 몽타주를 플레이한다.
-		//me->PlayAnimMontage(damageMontage, 1.0f, FName(*sectionName));
+		me->PlayAnimMontage(damageMontage, 1.0f, FName(*sectionName));
 	}
 	break; 
 	case EEnemy_SentinelState::Die:
 		//충돌안되게 설정
 		me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		me->hpWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		me->hpWidget->SetVisibility(false);
 		//Die 몽타주 실행
-		//me->PlayAnimMontage(damageMontage, 1.0f, FName(TEXT("Die")));
+		me->PlayAnimMontage(damageMontage, 1.0f, FName(TEXT("Die")));
 		break;
 	}
 }

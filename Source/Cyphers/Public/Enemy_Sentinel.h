@@ -25,6 +25,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UPROPERTY()
+	class ACypher_Kaya* kaya;
 
 	void ReceiveDamage();
 	//적 AI 관리 하는 컴포넌트(FSM)
@@ -41,12 +44,23 @@ public:
 	TSubclassOf<class UEnemy_SentinelHpUI> sentinelUIfactory;
 	UPROPERTY(EditAnywhere)
 	class UWidgetComponent* hpWidget;
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* attackCollision;
 	UPROPERTY()
 	class UEnemy_SentinelHpUI* sentinelHpUI;
 	float maxHP;
 	float currHP;
+
+	UFUNCTION()
+		void OnAttackOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
 private:
-	APlayerController* PlayerController;
+	
 	FVector CameraLocation;
 	FRotator CameraRotation;
 	FRotator WidgetRotation;
@@ -55,4 +69,5 @@ private:
 	FVector GetPlayerCameraLocation();
 	FRotator GetPlayerCameraRotation();
 	FTimerHandle TimerHandle_UpdateWidgetRotation;
+
 };

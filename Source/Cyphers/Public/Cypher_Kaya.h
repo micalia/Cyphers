@@ -18,20 +18,35 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		class UStaticMeshComponent* aimMeshComp;
+
+	UPROPERTY()
+		class ACyphersGameModeBase* CyphersGameMode;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	float maxHP;
+	float currHP;
+
+	void ReceiveDamage(int32 damage);
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* compSword;
 	UPROPERTY()
 	class APlayerCamera* Camera;
+	FVector beforeActCameraPos;
+	FVector afterActCameraPos;
+	FRotator beforeActCameraRot;
+	FRotator afterActCameraRot;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 		class UChildActorComponent* CameraActorComponent;
 	TSubclassOf<class APlayerCamera> cameraFactory;
+	bool bCameraPosFix = false;
 	FVector CameraOffset = FVector(-510, 0.f, 85.f);
 	void DetachCameraActor();
 	void AttachCameraActor();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* powerAttackColl;
 public:
 //만약 나중에 AI로도 Kaya를 만들경우 수정이 필요할수도 있음
 	UPROPERTY(VisibleAnywhere, Category = Component)
@@ -45,5 +60,12 @@ public:
 	/*UPROPERTY(EditAnywhere)
 		class UCameraComponent* compCam;*/
 
-
+	UFUNCTION()
+	void OnPowerAttackOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
 };

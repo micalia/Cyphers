@@ -30,4 +30,6 @@ public:
 
 	UFUNCTION()
 		void AnimNotify_EnemyAttack();
+	UFUNCTION()
+	void AnimNotify_EnemyAttackEnd();
 };

@@ -10,6 +10,9 @@
 #include "Enemy_SentinelHpUI.h"
 #include <Kismet/KismetMathLibrary.h>
 #include <Camera/CameraComponent.h>
+#include "Cypher_Kaya.h"
+#include "PlayerCamera.h"
+#include <Components/BoxComponent.h>
 
 // Sets default values
 AEnemy_Sentinel::AEnemy_Sentinel()
@@ -56,6 +59,12 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	hpWidget->SetRelativeRotation(FRotator(0,90, 0));
 	hpWidget->SetRelativeScale3D(FVector(0.399762, 0.399762, 0.329024));
 
+	attackCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackCollision"));
+	attackCollision->SetupAttachment(RootComponent);
+	attackCollision->SetCollisionProfileName(TEXT("AttackCollision"));
+	attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	attackCollision->SetRelativeLocation(FVector(90,0,0));
+	attackCollision->SetBoxExtent(FVector(44,58,86));
 }
 
 // Called when the game starts or when spawned
@@ -65,12 +74,15 @@ void AEnemy_Sentinel::BeginPlay()
 
 	//움직이는 방향으로 몸을 자동으로 회전하라는 옵션
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	PlayerController = GetWorld()->GetFirstPlayerController();
+	//카메라
+	kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	GetWorldTimerManager().SetTimer(TimerHandle_UpdateWidgetRotation, this, &AEnemy_Sentinel::UpdateWidgetRotation, 0.1f, true);
 
 	sentinelHpUI = Cast<UEnemy_SentinelHpUI>(hpWidget->GetWidget());
 	maxHP = health;
 	currHP = health;
+
+	attackCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy_Sentinel::OnAttackOverlap);
 }
 
 // Called every frame
@@ -134,6 +146,13 @@ void AEnemy_Sentinel::SetActive(bool bActive)
 	fsm->SetActive(bActive);
 }
 
+void AEnemy_Sentinel::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (kaya != nullptr) {
+		kaya->ReceiveDamage(2);
+	}
+}
+
 void AEnemy_Sentinel::UpdateWidgetRotation()
 {
 	if (hpWidget)
@@ -148,14 +167,9 @@ void AEnemy_Sentinel::UpdateWidgetRotation()
 
 FVector AEnemy_Sentinel::GetPlayerCameraLocation()
 {
-	if (PlayerController)
-	{
-		UCameraComponent* CameraComponent = PlayerController->GetPawn()->FindComponentByClass<UCameraComponent>();
-
-		if (CameraComponent)
-		{
-			return CameraComponent->GetComponentLocation();
-		}
+	if (kaya)
+	{ 
+		return kaya->Camera->GetActorLocation();
 	}
 
 	return FVector::ZeroVector;
@@ -163,14 +177,9 @@ FVector AEnemy_Sentinel::GetPlayerCameraLocation()
 
 FRotator AEnemy_Sentinel::GetPlayerCameraRotation()
 {
-	if (PlayerController)
+	if (kaya)
 	{
-		UCameraComponent* CameraComponent = PlayerController->GetPawn()->FindComponentByClass<UCameraComponent>();
-
-		if (CameraComponent)
-		{
-			return CameraComponent->GetComponentRotation();
-		}
+		return kaya->Camera->GetActorRotation();
 	}
 
 	return FRotator::ZeroRotator;

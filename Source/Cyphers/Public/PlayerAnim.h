@@ -59,6 +59,8 @@ private:
 		class UAnimMontage* gripAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* powerAttackAnimMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* damageMontage;
 public:
 //평타 공격 콤보(좌클릭)
 
@@ -72,7 +74,17 @@ public:
 	UFUNCTION()
 		void AnimNotify_NextAttackCheck();
 	UFUNCTION()
-		void AnimNotify_PowerAttackStart();
+		void AnimNotify_PowerAttackCombo1();
+	UFUNCTION()
+		void AnimNotify_PowerAttackCombo2();
+	UFUNCTION()
+		void AnimNotify_PowerAttackCombo3();
+	UFUNCTION()
+		void AnimNotify_PowerAttackCombo4();
+	UFUNCTION()
+		void AnimNotify_PowerAttackCombo5();
+	UFUNCTION()
+		void AnimNotify_PowerAttackCombo6();
 	UFUNCTION()
 		void AnimNotify_PowerAttackEnd();
 	UFUNCTION()
@@ -85,4 +97,14 @@ public:
 	void GripAttackPlayAnim();
 	void PowerAttackReadyAnim();
 	void PowerAttackPlayAnim();
+	void DamagePlayAnim();
+//파워어택
+	/*UPROPERTY(EditAnywhere, Category = PowerAttack)
+	float powerAttackRange= 450;
+	UPROPERTY(EditAnywhere, Category = PowerAttack)
+	float powerAttackRadius= 70;*/
+	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+		float DashAttackRange = 450;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+		float DashAttackRadius = 70;*/
 };

@@ -5,6 +5,7 @@
 #include "Cypher_Kaya.h"
 #include <GameFramework/SpringArmComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
+#include "Cypher_Kaya_Attack.h"
 
 
 UPlayerMoveInput::UPlayerMoveInput()
@@ -51,6 +52,7 @@ void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputCompo
 
 void UPlayerMoveInput::MoveAction(float deltaTime)
 {
+	if(kaya->compKayaAttack->bBackCameraOringinPos)return;
 	direction = me->GetActorForwardVector() * v + me->GetActorRightVector() * h;
 	
 	me->AddMovementInput(direction.GetSafeNormal());
@@ -74,6 +76,8 @@ void UPlayerMoveInput::InputVertical(float value)
 
 void UPlayerMoveInput::InputLookUp(float value)
 {
+	if(kaya->bCameraPosFix) return;
+	if(kaya->compKayaAttack->bAttackCharge) return;
 	me->AddControllerPitchInput(value);
 	my+=value;
 
@@ -88,5 +92,7 @@ void UPlayerMoveInput::InputLookUp(float value)
 
 void UPlayerMoveInput::InputTurn(float value)
 {
+	if (kaya->bCameraPosFix) return;
+	if (kaya->compKayaAttack->bAttackCharge) return;
 	me->AddControllerYawInput(value);
 }

@@ -3,6 +3,7 @@
 
 #include "CyphersGameModeBase.h"
 #include "AimUI.h"
+#include "PlayerWidget.h"
 
 ACyphersGameModeBase::ACyphersGameModeBase()
 {
@@ -14,6 +15,13 @@ ACyphersGameModeBase::ACyphersGameModeBase()
 	{
 		AimUIClass = tempAimUIclass.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UPlayerWidget> tempPlayerWidgetclass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/BP_PlayerWidget.BP_PlayerWidget_C'"));
+	if (tempPlayerWidgetclass.Succeeded())
+	{
+		PlayerWidgetClass = tempPlayerWidgetclass.Class;
+	}
+	
 }
 
 void ACyphersGameModeBase::BeginPlay()
@@ -28,6 +36,16 @@ void ACyphersGameModeBase::BeginPlay()
 		if (aimUIWidget != nullptr)
 		{
 			aimUIWidget->AddToViewport();
+		}
+	}
+
+	if (PlayerWidgetClass != nullptr)
+	{
+		playerWidget = CreateWidget<UPlayerWidget>(GetWorld(), PlayerWidgetClass);
+
+		if (playerWidget != nullptr)
+		{
+			playerWidget->AddToViewport();
 		}
 	}
 }

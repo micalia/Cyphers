@@ -6,6 +6,7 @@
 #include "Cypher_Kaya.h"
 #include "DrawDebugHelpers.h"
 #include "Enemy_Sentinel.h"
+#include "PlayerCamera.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -15,7 +16,7 @@ UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 void UCypher_Kaya_Attack::BeginPlay()
 {
 	Super::BeginPlay();
-
+	kaya = Cast<ACypher_Kaya>(me);
 	AttackEndComboState();
 	kayaAnim = Cast<UPlayerAnim>(me->GetMesh()->GetAnimInstance());
 
@@ -64,6 +65,19 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 
+	//궁극기 사용 후 카메라 월드좌표에서 캐릭터 기존 카메라 위치로 이동
+	if (bBackCameraOringinPos) {
+		if (CameraBackTime > currCameraBackTime) {
+			currCameraBackTime+=DeltaTime;		
+			kaya->Camera->SetActorLocation(FMath::Lerp(kaya->beforeActCameraPos, kaya->afterActCameraPos, currCameraBackTime / CameraBackTime));
+			kaya->Camera->SetActorRotation(FMath::Lerp(kaya->beforeActCameraRot, kaya->afterActCameraRot, currCameraBackTime / CameraBackTime));
+		}
+		else {
+			kaya->bCameraPosFix = false;
+			bBackCameraOringinPos = false;
+			currCameraBackTime = 0;
+		}
+	}
 }
 
 void UCypher_Kaya_Attack::SetupInputBinding(class UInputComponent* PlayerInputComponent)
@@ -248,12 +262,17 @@ void UCypher_Kaya_Attack::InputKeyF()
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
+	bAttackCharge = true;
 	kayaAnim->PowerAttackReadyAnim();
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
 {
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
+
+	kaya->bCameraPosFix = true;
+	kaya->DetachCameraActor();
+	bAttackCharge = false;
 	kayaAnim->PowerAttackPlayAnim();
 }
 

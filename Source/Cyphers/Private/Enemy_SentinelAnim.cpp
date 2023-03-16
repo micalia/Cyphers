@@ -4,6 +4,7 @@
 #include "Enemy_SentinelAnim.h"
 #include "Enemy_Sentinel.h"
 #include "Cypher_Kaya.h"
+#include <Components/BoxComponent.h>
 
 void UEnemy_SentinelAnim::NativeBeginPlay()
 {
@@ -28,6 +29,10 @@ void UEnemy_SentinelAnim::AnimNotify_DieEnd()
 
 void UEnemy_SentinelAnim::AnimNotify_EnemyAttack()
 {
-	//플레이어에게 Damage 를 주자
-	//enemy->fsm->target->ReceiveDamage(1);
+	enemy->attackCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void UEnemy_SentinelAnim::AnimNotify_EnemyAttackEnd()
+{
+	enemy->attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

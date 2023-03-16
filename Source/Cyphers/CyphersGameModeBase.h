@@ -19,4 +19,8 @@ public:
 	TSubclassOf<class UAimUI> AimUIClass;
 	UPROPERTY()
 		UAimUI* aimUIWidget;
+
+	TSubclassOf<class UPlayerWidget> PlayerWidgetClass;
+	UPROPERTY()
+		UPlayerWidget* playerWidget;
 };

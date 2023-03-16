@@ -64,7 +64,8 @@ public:
 	//현재시간
 	float currTime = 0;
 	//대기 상태 기다리는 시간
-	float idleDelayTime = 2;
+	UPROPERTY(EditAnywhere)
+	float idleDelayTime = 1.3;
 
 	//쫓아 갈 수 있는 범위
 	float traceRange = 1000;
@@ -72,9 +73,11 @@ public:
 	//공격범위
 	float attackRange = 200;
 	//공격 대기 시간
-	float attackDelayTime = 4;
+	UPROPERTY(EditAnywhere)
+	float attackDelayTime = 1.8;
 
 	//피격 대기 시간
+	UPROPERTY(EditAnywhere)
 	float damageDelayTime = 2;
 
 	//현재 체력
