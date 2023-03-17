@@ -54,6 +54,18 @@ public:
 
 	void AttackCheck();
 	void DashAttackCheck();
+//쿨타임
+	//양클릭
+	bool startCoolBothMouse;
+	UPROPERTY(EditAnywhere)
+	float bothMouseAttackCool = 3;
+	float currbothMouseAttackCool;
+	//키보드E
+	bool startCoolKeyE;
+	UPROPERTY(EditAnywhere)
+	float keyECool = 5;
+	float currkeyECool;
+
 //기본공격
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	float AttackRange = 200;
@@ -65,6 +77,14 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 		float DashAttackRadius = 70;
 
+		bool CheckCurrState();
+//파워어택
+		FTimerHandle TimerHandle_PowerAttackStart;
+		void StartPowerAttack();
+		UPROPERTY(EditAnywhere)
+		float PowerAttackStartTime=1;
+		float currPowerAttackCheck;
+		bool powerAttackStartCheck;
 public:
 //평타
 // 이득우 콤보구현
@@ -76,6 +96,8 @@ public:
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	bool IsAttacking;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		bool IsNoComboAttacking;
 	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	bool CanNextCombo; => 이득우 선생님 책에는 이 변수를 사용하지만 코드에 흐름을 분석한 결과 굳이 필요없는 변수라 삭제하려고 했으나 혹시 내가 보르는 이득우 선생님의 의도를 나중에 깨달을 수도 있으므로 주석처리 함*/
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))

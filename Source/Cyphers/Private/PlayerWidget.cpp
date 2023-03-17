@@ -9,6 +9,8 @@ void UPlayerWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayerHpBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("PlayerHpBar")));
+	BothMouseCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("BothMouseCoolTimeBar")));
+	KeyECoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("KeyECoolTimeBar")));
 }
 
 void UPlayerWidget::UpdateCurrHP(float curr, float max)
@@ -18,5 +20,25 @@ void UPlayerWidget::UpdateCurrHP(float curr, float max)
 		float hp = curr / max;
 		//Progress bar UI 갱신
 		PlayerHpBar->SetPercent(hp);
+	}
+}
+
+void UPlayerWidget::UpdateBothMouseCoolTime(float curr, float max)
+{
+	if (BothMouseCoolTimeBar != nullptr) {
+		//hp 를 0 ~ 1 사이로 표현
+		float cool = curr / max;
+		//Progress bar UI 갱신
+		BothMouseCoolTimeBar->SetPercent(cool);
+	}
+}
+
+void UPlayerWidget::UpdateKeyECoolTime(float curr, float max)
+{
+	if (KeyECoolTimeBar != nullptr) {
+		//hp 를 0 ~ 1 사이로 표현
+		float cool = curr / max;
+		//Progress bar UI 갱신
+		KeyECoolTimeBar->SetPercent(cool);
 	}
 }

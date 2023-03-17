@@ -68,4 +68,16 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
+public:
+	//카야 사운드
+	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* swing1;
+	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* swing2;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* swing3;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* powerAttackStart;
+	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* powerAttackEnd;
 };

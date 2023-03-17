@@ -71,7 +71,7 @@ public:
 	float traceRange = 1000;
 
 	//공격범위
-	float attackRange = 200;
+	float attackRange = 170;
 	//공격 대기 시간
 	UPROPERTY(EditAnywhere)
 	float attackDelayTime = 1.8;

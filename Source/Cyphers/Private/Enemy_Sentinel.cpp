@@ -26,7 +26,7 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	//Mesh 의 회전을 셋팅
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	//Mesh 외형 셋팅
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Resources/Models/Enemy/Model/vampire_a_lusth.vampire_a_lusth'"));
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Resources/Animations/EnemyRetarget/SM_Sentinel.SM_Sentinel'"));
 	if (tempMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);

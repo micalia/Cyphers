@@ -17,6 +17,14 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	class UProgressBar* PlayerHpBar = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+		class UProgressBar* BothMouseCoolTimeBar = nullptr;
+	UPROPERTY(meta = (BindWidget))
+		class UProgressBar* KeyECoolTimeBar = nullptr;
+
 	void NativeConstruct();
 	void UpdateCurrHP(float curr, float max);
+
+	void UpdateBothMouseCoolTime(float curr, float max);
+	void UpdateKeyECoolTime(float curr, float max);
 };

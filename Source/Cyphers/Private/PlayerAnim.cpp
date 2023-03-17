@@ -4,6 +4,10 @@
 #include "Cypher_Kaya_Attack.h"
 #include "PlayerCamera.h"
 #include "Enemy_Sentinel.h"
+#include <Kismet/GameplayStatics.h>
+#include "../CyphersGameModeBase.h"
+#include "PlayerWidget.h"
+#include <UMG/Public/Components/ProgressBar.h>
 
 UPlayerAnim::UPlayerAnim()
 {
@@ -82,7 +86,6 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 {
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		
 	/*FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(me);
@@ -160,10 +163,16 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 {
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
+	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
+	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
 }
+
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
 {
+	me->compKayaAttack->startCoolKeyE = true;
+	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
+	me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
 		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");

@@ -7,6 +7,10 @@
 #include "DrawDebugHelpers.h"
 #include "Enemy_Sentinel.h"
 #include "PlayerCamera.h"
+#include <Kismet/GameplayStatics.h>
+#include "../CyphersGameModeBase.h"
+#include "PlayerWidget.h"
+#include <UMG/Public/Components/ProgressBar.h>
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -31,23 +35,59 @@ void UCypher_Kaya_Attack::BeginPlay()
 			AttackStartComboState();
 			kayaAnim->BasicAttackMontageSection(CurrentCombo);
 		}
-		});
+	});
+
 }
 
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+	//쿨타임 처리
+	if (startCoolBothMouse) {
+		currbothMouseAttackCool-=DeltaTime;
+		kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
+		if (currbothMouseAttackCool < 0) {
+			kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+			startCoolBothMouse = false;
+		}
+	}
+
+	if (startCoolKeyE) {
+		currkeyECool-=DeltaTime;
+		kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
+		if (currkeyECool < 0) {
+			kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+			startCoolKeyE = false;
+		}
+	}
+
+	if (IsNoComboAttacking == true) {
+		currPowerAttackCheck+=DeltaTime;
+		if(powerAttackStartCheck)return;
+		if (PowerAttackStartTime < currPowerAttackCheck) {
+			powerAttackStartCheck = true;
+		}
+	}
+	else {
+		currPowerAttackCheck = 0;
+	}
 	//마우스 양클릭 체크 후 공격 실행
 	if (bAttackInput == true) {
+		if(IsNoComboAttacking){
+			InitInput();
+			return;
+		}
 		MouseLRCheckCurrentTime += DeltaTime;
 		if (MouseLRCheckCurrentTime > MouseLRCheckTime) {			
 			if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
 				InitInput();
+				if(startCoolBothMouse) return;
 				if(IsAttacking == true) return;
 				AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
 				//마우스 양클릭 공격실행	
 				UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
+				IsNoComboAttacking = true;
 				DashAttack();
 			}
 			else if (bLeftMouseButtonPressed) {
@@ -195,6 +235,23 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 	}
 }
 
+bool UCypher_Kaya_Attack::CheckCurrState()
+{
+	if (IsNoComboAttacking == true || IsAttacking == true) {
+		return true;
+	}
+	return false;
+}
+
+void UCypher_Kaya_Attack::StartPowerAttack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("start powerAttack"))
+	kaya->bCameraPosFix = true;
+	kaya->DetachCameraActor();
+	bAttackCharge = false;
+	kayaAnim->PowerAttackPlayAnim();
+}
+
 void UCypher_Kaya_Attack::BasicAttack()
 {
 	if (IsAttacking) { //현재 이미 좌클릭 공격이 실행중인데 입력값이 들어오면
@@ -235,11 +292,12 @@ void UCypher_Kaya_Attack::InputMouseLeft()
 }
 
 void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
-{
-	UE_LOG(LogTemp, Warning, TEXT("montageEnded"))
-	ABCHECK(IsAttacking);
+{	
+	UE_LOG(LogTemp, Warning, TEXT("end???"))
 	//ABCHECK(CurrentCombo > 0);
 	IsAttacking = false;
+	powerAttackStartCheck = false;
+	IsNoComboAttacking = false;
 	AttackEndComboState();
 }
 
@@ -255,25 +313,39 @@ void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 
 void UCypher_Kaya_Attack::InputKeyF()
 {
+	if (IsAttacking == true) return;
+	if (IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
 		kayaAnim->GripAttackPlayAnim();
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
+	if(startCoolKeyE)return;
+	if(IsAttacking == true) return;
+	if(IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
+	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
+		IsNoComboAttacking = true;
 	bAttackCharge = true;
 	kayaAnim->PowerAttackReadyAnim();
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
 {
+	if (bAttackCharge == false) return;
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
 
-	kaya->bCameraPosFix = true;
-	kaya->DetachCameraActor();
-	bAttackCharge = false;
-	kayaAnim->PowerAttackPlayAnim();
+	if (powerAttackStartCheck) {
+		powerAttackStartCheck = false;
+		StartPowerAttack();
+	}
+	else {
+		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
+		powerAttackStartCheck = false;
+		//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PowerAttackStart);
+	}
 }
 
 void UCypher_Kaya_Attack::InputMouseRight()
@@ -286,6 +358,9 @@ void UCypher_Kaya_Attack::InputMouseRight()
 
 void UCypher_Kaya_Attack::DashAttack()
 {
+	startCoolBothMouse=true;
+	currbothMouseAttackCool = bothMouseAttackCool;
+	kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	IsAttacking=true;
 	kayaAnim->DashAttackPlayAnim();
 }

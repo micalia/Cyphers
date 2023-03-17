@@ -84,6 +84,28 @@ ACypher_Kaya::ACypher_Kaya() {
 	powerAttackColl->SetCapsuleHalfHeight(154);
 	powerAttackColl->SetCapsuleRadius(154);
 	//powerAttackColl->SetSphereRadius(120);
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackStartVoice(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackStartVoice.PowerAttackStartVoice'"));
+	if (tempPowerAttackStartVoice.Succeeded()) {
+		powerAttackStart = tempPowerAttackStartVoice.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackEndVoice(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackEndVoice.PowerAttackEndVoice'"));
+	if (tempPowerAttackEndVoice.Succeeded()) {
+		powerAttackEnd = tempPowerAttackEndVoice.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempSwing1(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/swing1.swing1'"));
+	if (tempSwing1.Succeeded()) {
+		swing1 = tempSwing1.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempSwing2(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/swing2.swing2'"));
+	if (tempSwing2.Succeeded()) {
+		swing2 = tempSwing2.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempSwing3(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/swing3.swing3'"));
+	if (tempSwing3.Succeeded()) {
+		swing3 = tempSwing3.Object;
+	}
+	
 }
 
 void ACypher_Kaya::BeginPlay()
@@ -109,7 +131,6 @@ void ACypher_Kaya::Tick(float DeltaTime)
 	if (CyphersGameMode != nullptr) { 
 		CyphersGameMode->playerWidget->UpdateCurrHP(currHP, maxHP);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("currHP: %f"), currHP)
 }
 
 void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
