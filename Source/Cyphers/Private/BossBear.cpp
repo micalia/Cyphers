@@ -3,3 +3,7 @@
 
 #include "BossBear.h"
 
+ABossBear::ABossBear()
+{
+
+}
