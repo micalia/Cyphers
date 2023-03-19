@@ -5,6 +5,12 @@
 #include "Enemy_Sentinel.h"
 #include "Cypher_Kaya.h"
 #include <Components/BoxComponent.h>
+#include "Golem.h"
+#include <Kismet/GameplayStatics.h>
+#include "../CyphersGameModeBase.h"
+#include "NextStageWall.h"
+#include "PlayerWidget.h"
+#include <UMG/Public/Components/CanvasPanel.h>
 
 void UEnemy_SentinelAnim::NativeBeginPlay()
 {
@@ -23,7 +29,12 @@ void UEnemy_SentinelAnim::AnimNotify_DieEnd()
 {
 	//3. enemy 가 가지고 있는 fsm 을 이용해서 bDieMove 를 true
 	enemy->fsm->bDieMove = true;
-
+	AGolem* golem = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
+	golem->bossAppear = true;  
+	ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
+	CyphersGameMode->playerWidget->BossUI->SetRenderOpacity(1);
+	ANextStageWall* wall = Cast<ANextStageWall>(UGameplayStatics::GetActorOfClass(GetWorld(), ANextStageWall::StaticClass()));
+	wall->Destroy();
 	//Cast<AEnemy>(TryGetPawnOwner())->fsm->bDieMove = true;
 }
 

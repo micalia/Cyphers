@@ -151,7 +151,7 @@ void UCypher_Kaya_Attack::AttackCheck()
 		me->GetActorLocation(),
 		me->GetActorLocation() + me->GetActorForwardVector() * AttackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2,
+		ECollisionChannel::ECC_GameTraceChannel3,
 		FCollisionShape::MakeSphere(AttackRadius),
 		Params
 	);
@@ -177,10 +177,14 @@ void UCypher_Kaya_Attack::AttackCheck()
 	);
 #endif
 AActor* hitActor = HitResult.GetActor();
+if (hitActor != nullptr) {
+
+UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+}
+
 AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
 	if (bResult)
 	{
-
 		if (sentinel != nullptr)
 		{
 			sentinel->ReceiveDamage();
@@ -198,7 +202,7 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		me->GetActorLocation(),
 		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2,
+		ECollisionChannel::ECC_GameTraceChannel3,
 		FCollisionShape::MakeSphere(DashAttackRadius),
 		Params
 	);

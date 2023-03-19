@@ -36,13 +36,13 @@ void ACreature::Tick(float DeltaTime)
 
 void ACreature::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherComp->IsSimulatingPhysics()) {
+	/*if (OtherComp->IsSimulatingPhysics()) {
 
 	UE_LOG(LogTemp, Warning, TEXT("phsics : true"))
 	}
 	else {
 	UE_LOG(LogTemp, Warning, TEXT("phsics : false"))
 
-	}
+	}*/
 	
 }

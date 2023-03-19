@@ -177,11 +177,9 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
 		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
 		FVector currLocation = me->GetActorLocation();
-	DrawDebugSphere(GetWorld(), MeshLocation, 20.0f, 32, FColor::Blue, false, 5.0f);
 
 	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
 	
-	DrawDebugSphere(GetWorld(), me->GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
 	UE_LOG(LogTemp, Warning, TEXT("MeshLocation : %s / me->GetActorLocation: %s"), *MeshLocation.ToString(), *me->GetActorLocation().ToString())
 	me->AttachCameraActor();
 	me->beforeActCameraPos = me->Camera->GetActorLocation();

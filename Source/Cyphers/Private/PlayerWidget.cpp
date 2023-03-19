@@ -3,6 +3,7 @@
 
 #include "PlayerWidget.h"
 #include "Components/ProgressBar.h"
+#include <UMG/Public/Components/CanvasPanel.h>
 
 void UPlayerWidget::NativeConstruct()
 {
@@ -11,6 +12,7 @@ void UPlayerWidget::NativeConstruct()
 	PlayerHpBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("PlayerHpBar")));
 	BothMouseCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("BothMouseCoolTimeBar")));
 	KeyECoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("KeyECoolTimeBar")));
+	BossUI = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("BossUI")));
 }
 
 void UPlayerWidget::UpdateCurrHP(float curr, float max)

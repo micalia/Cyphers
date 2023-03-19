@@ -54,7 +54,7 @@ ACypher_Kaya::ACypher_Kaya() {
 //Component Attach
 	compPlayerMove = CreateDefaultSubobject<UPlayerMoveInput>(TEXT("compPlayerMove"));
 	compKayaAttack = CreateDefaultSubobject<UCypher_Kaya_Attack>(TEXT("compKayaAttack"));
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Creature"));
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 
 	camTarget = CreateDefaultSubobject<USceneComponent>(TEXT("CameraTarget"));
 	camTarget->SetupAttachment(RootComponent);

@@ -13,6 +13,8 @@ UCLASS()
 class CYPHERS_API ABossBear : public ACreature
 {
 	GENERATED_BODY()
+public:
+	ABossBear();
 //protected:
 //	// Called when the game starts or when spawned
 //	virtual void BeginPlay() override;

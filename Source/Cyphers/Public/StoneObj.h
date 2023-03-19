@@ -22,7 +22,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY()
+		class AGolem* enemy;
 	UPROPERTY()
 		class UStaticMesh* rockMesh;
 	UPROPERTY(EditAnywhere)

@@ -7,17 +7,22 @@
 #include <Engine/StaticMesh.h>
 #include <GeometryCollectionEngine/Public/GeometryCollection/GeometryCollectionComponent.h>
 #include <Sound/SoundBase.h>
+#include <Kismet/KismetMaterialLibrary.h>
+#include <Kismet/GameplayStatics.h>
+#include "Cypher_Kaya.h"
+#include "Golem.h"
 
 // Sets default values
 AStoneObj::AStoneObj()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	compCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	compCollision->SetSphereRadius(163);
 	compCollision->SetNotifyRigidBodyCollision(true);
+	compCollision->SetRelativeScale3D(FVector(1.2));
 
 	compRock = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rock"));
 
@@ -54,7 +59,8 @@ AStoneObj::AStoneObj()
 void AStoneObj::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	compCollision->OnComponentHit.AddDynamic(this, &AStoneObj::CrashWithPlayer);
+	enemy = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
 }
 
 // Called every frame
@@ -62,10 +68,60 @@ void AStoneObj::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bIsCrash == true)
+	{
+		if (currTime > destroyTime) {
+			Destroy();
+		}
+		else {
+			currTime += DeltaTime;
+			if (transparentStartTime < currTime) {
+				if (bTransparent == true) {
+					compGcStone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+					transparentCurrTime += DeltaTime;
+					alpha = 1 - transparentCurrTime / transparentTerm;
+					if (alpha > 0) {
+						UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), alpha);
+					}
+					else {
+						UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), 0);
+					}
+				}
+			}
+		}
+	}
 }
 
 void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	ACypher_Kaya* player = Cast<ACypher_Kaya>(OtherActor);
+	if (player) {
+		bIsCrash = true;
+		bTransparent = true;
+		compGcStone->SetVisibility(true);
+		compGcStone->SetSimulatePhysics(true);
+		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		compRock->SetVisibility(false);
+		//player->DamageFromBoss(enemy->currAttackDamage);
+		//enemy->bCameraShake = true;
 
+		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
+							crashEffect,
+							HitComponent->GetComponentLocation(),
+							GetActorRotation());*/
+
+		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
+		//Destroy();
+	}
+	else {
+		bIsCrash = true;
+		bTransparent = true;
+		compGcStone->SetVisibility(true);
+		compGcStone->SetSimulatePhysics(true);
+		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		compRock->SetVisibility(false);
+
+		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
+	}
 }
 
