@@ -49,8 +49,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		bool bAir = true;
 
+		void AttachCamera();
+
+		void DamagePlayAnim();
+		void DiePlayAnim();
 private:
-//공격 몽타주
+//몽타주
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* basicAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = DashAttack, Meta = (AllowPrivateAccess = true))
@@ -97,7 +101,6 @@ public:
 	void GripAttackPlayAnim();
 	void PowerAttackReadyAnim();
 	void PowerAttackPlayAnim();
-	void DamagePlayAnim();
 //파워어택
 	/*UPROPERTY(EditAnywhere, Category = PowerAttack)
 	float powerAttackRange= 450;

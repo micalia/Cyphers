@@ -143,6 +143,8 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
+	compKayaAttack->bAttackCharge = false;
+
 	currHP= currHP- damage;
 	if(currHP>0){
 		compKayaAttack->kayaAnim->DamagePlayAnim();
@@ -150,6 +152,8 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		
 	}
 	else {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		compKayaAttack->kayaAnim->DiePlayAnim();
 		currHP = 0;
 		UE_LOG(LogTemp, Warning, TEXT("Player DIe"))
 	}

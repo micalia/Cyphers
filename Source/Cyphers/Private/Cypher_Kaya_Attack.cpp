@@ -330,7 +330,7 @@ void UCypher_Kaya_Attack::InputKeyE_Pressed()
 	if(IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
-		IsNoComboAttacking = true;
+	IsNoComboAttacking = true;
 	bAttackCharge = true;
 	kayaAnim->PowerAttackReadyAnim();
 }

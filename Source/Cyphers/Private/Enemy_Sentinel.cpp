@@ -63,8 +63,8 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	attackCollision->SetupAttachment(RootComponent);
 	attackCollision->SetCollisionProfileName(TEXT("AttackCollision"));
 	attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	attackCollision->SetRelativeLocation(FVector(90,0,0));
-	attackCollision->SetBoxExtent(FVector(44,58,86));
+	attackCollision->SetRelativeLocation(FVector(116,0,0));
+	attackCollision->SetBoxExtent(FVector(76,58,86));
 }
 
 // Called when the game starts or when spawned
