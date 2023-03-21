@@ -9,6 +9,8 @@
 #include "GolemFSM.h"
 #include <Kismet/GameplayStatics.h>
 #include <Materials/MaterialParameterCollection.h>
+#include "../CyphersGameModeBase.h"
+#include "PlayerWidget.h"
 
 AGolem::AGolem()
 {
@@ -47,6 +49,15 @@ void AGolem::BeginPlay()
 {
 	Super::BeginPlay();
 	mainPlayer = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
+	CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
+	maxHP = health;
+	currHP = maxHP;
+}
+
+void AGolem::Tick(float DeltaTime)
+{ 
+	CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
+	UE_LOG(LogTemp, Warning, TEXT("GolemHP : %f"), currHP)
 }
 
 void AGolem::MoveJumpAttack() {
@@ -80,4 +91,23 @@ FVector AGolem::CalculateBezier(float ratio, FVector start, FVector between, FVe
 	FVector p = FMath::Lerp<FVector, float>(p01, p12, ratio);
 
 	return p;
+}
+
+void AGolem::ReceiveDamage()
+{
+	currHP--;
+	if (currHP > 0)
+	{
+		//fsm->ChangeState(EEnemy_SentinelState::Damaged);
+	}
+	//그렇지 않으면 Die 상태로 전환
+	else
+	{
+		FVector orginPos = GetMesh()->GetRelativeLocation();
+		GetMesh()->SetRelativeLocation(FVector(orginPos.X, orginPos.Y, orginPos.Z+30));
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		fsm->anim->PlayDieAnim();
+		fsm->bDie = true;
+		fsm->mState = EGolemState::Die;
+	}
 }

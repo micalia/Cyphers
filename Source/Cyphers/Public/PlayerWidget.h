@@ -29,4 +29,8 @@ public:
 
 	void UpdateBothMouseCoolTime(float curr, float max);
 	void UpdateKeyECoolTime(float curr, float max);
+
+	UPROPERTY(meta = (BindWidget))
+		class UProgressBar* GolemHP = nullptr;
+	void UpdateBossCurrHP(float curr, float max);
 };

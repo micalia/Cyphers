@@ -34,7 +34,8 @@ public:
 		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION()
 		void AnimNotify_TurnToTarget();
-
+//데미지
+	void PlayDieAnim();
 //점프공격
 
 	UFUNCTION()
@@ -65,4 +66,6 @@ public:
 		UAnimMontage* jumpAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* throwStoneAttackMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UAnimMontage* damageMontage;
 };

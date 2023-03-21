@@ -16,6 +16,9 @@
 #include <Components/CapsuleComponent.h>
 #include "../CyphersGameModeBase.h"
 #include "PlayerWidget.h"
+#include "Golem.h"
+#include "Components/ProgressBar.h"
+#include "PowerAttackDecal.h"
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -105,6 +108,11 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempSwing3.Succeeded()) {
 		swing3 = tempSwing3.Object;
 	}
+
+	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal'"));
+	if (tempDecalObj.Succeeded()) {
+		decalFactory = tempDecalObj.Class;
+	}
 	
 }
 
@@ -143,7 +151,13 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
-	compKayaAttack->bAttackCharge = false;
+	//만약 궁극기 차징중이였다면 궁캔슬 되면서 쿨타임
+	if (compKayaAttack->bAttackCharge) {
+		compKayaAttack->bAttackCharge = false;
+		compKayaAttack->startCoolKeyE = true;
+		compKayaAttack->currkeyECool = compKayaAttack->keyECool;
+		CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	}
 
 	currHP= currHP- damage;
 	if(currHP>0){
@@ -179,9 +193,18 @@ void ACypher_Kaya::AttachCameraActor()
 void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
+
+	//공격 대상마다 체크하는 로직 수정 필요
 	UE_LOG(LogTemp, Warning, TEXT("enemy HIt!!!"))
 	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(OtherActor);
 	if (sentinel != nullptr) {
 		sentinel->ReceiveDamage();
 	}
+
+	AGolem* golem = Cast<AGolem>(OtherActor);
+	if (golem != nullptr)
+	{
+		golem->ReceiveDamage();
+	}
+	
 }

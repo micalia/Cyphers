@@ -11,6 +11,7 @@
 #include "../CyphersGameModeBase.h"
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/ProgressBar.h>
+#include "Golem.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -190,6 +191,15 @@ AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
 			sentinel->ReceiveDamage();
 		}
 	}
+
+	AGolem* golem = Cast<AGolem>(hitActor);
+	if (bResult)
+	{
+		if (golem != nullptr)
+		{
+			golem->ReceiveDamage();
+		}
+	}
 }
 
 void UCypher_Kaya_Attack::DashAttackCheck()
@@ -235,6 +245,14 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		if (sentinel != nullptr)
 		{
 			sentinel->ReceiveDamage();
+		}
+	}
+	AGolem* golem = Cast<AGolem>(hitActor);
+	if (bResult)
+	{
+		if (golem != nullptr)
+		{
+			golem->ReceiveDamage();
 		}
 	}
 }

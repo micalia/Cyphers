@@ -16,6 +16,14 @@ class CYPHERS_API AGolem : public ACreature
 public:
 	AGolem();
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+	float maxHP;
+	float currHP;
+
+	void ReceiveDamage();
+	UPROPERTY()
+		class ACyphersGameModeBase* CyphersGameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = FSMComponent)
 		class UGolemFSM* fsm;

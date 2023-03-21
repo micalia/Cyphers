@@ -47,6 +47,7 @@ public:
 	void AttachCameraActor();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* powerAttackColl;
+
 public:
 //만약 나중에 AI로도 Kaya를 만들경우 수정이 필요할수도 있음
 	UPROPERTY(VisibleAnywhere, Category = Component)
@@ -68,6 +69,11 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class APowerAttackDecal> decalFactory;
+	UPROPERTY()
+		class APowerAttackDecal* powerAttackDecal;
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)

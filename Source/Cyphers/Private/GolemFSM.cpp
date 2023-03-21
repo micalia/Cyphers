@@ -32,6 +32,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (bDie == true) return;
 	//Skill Cool Time
 	jumpAttackCurrentTime += DeltaTime;
 	throwStoneAttackCurrentTime += DeltaTime;
@@ -75,7 +76,6 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 		break;
 	}
 
-	if (bDie == true) return;
 	CheckAttackRangeAndCoolTime();
 
 	if (bTurnComplete != true) return;

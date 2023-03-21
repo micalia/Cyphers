@@ -20,6 +20,10 @@ UGolemAnim::UGolemAnim()
 	if (tempThrowStoneAttackMontage.Succeeded()) {
 		throwStoneAttackMontage = tempThrowStoneAttackMontage.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_Damage.AM_Damage'"));
+	if (tempDamageMontage.Succeeded()) {
+		damageMontage = tempDamageMontage.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempPickStoneSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/rock_spawn.rock_spawn'"));
 	if (tempPickStoneSound.Succeeded()) {
 		pickStoneSound = tempPickStoneSound.Object;
@@ -45,6 +49,12 @@ void UGolemAnim::AnimNotify_TurnToTarget()
 {
 		enemy->fsm->SetNewGoalDirection();
 }
+
+void UGolemAnim::PlayDieAnim()
+{
+	enemy->PlayAnimMontage(damageMontage, 1, TEXT("Die"));
+}
+
 void UGolemAnim::OnEndAttackAnimation() {
 	bAttackPlay = false;
 }
