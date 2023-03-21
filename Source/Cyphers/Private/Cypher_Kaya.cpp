@@ -19,6 +19,7 @@
 #include "Golem.h"
 #include "Components/ProgressBar.h"
 #include "PowerAttackDecal.h"
+#include <Particles/ParticleSystem.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -109,9 +110,18 @@ ACypher_Kaya::ACypher_Kaya() {
 		swing3 = tempSwing3.Object;
 	}
 
-	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal'"));
+	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal_C'"));
 	if (tempDecalObj.Succeeded()) {
 		decalFactory = tempDecalObj.Class;
+	}
+	
+	footPos = CreateDefaultSubobject<USceneComponent>(TEXT("footPos"));
+	footPos->SetupAttachment(RootComponent);
+	footPos->SetRelativeLocation(FVector(0,0, -86));
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> tempPowerAttackEndEffect(TEXT("/Script/Engine.ParticleSystem'/Game/Resources/Effect/GroundAttacks/Fx/Fire/P_FireGroundAttack6.P_FireGroundAttack6'"));
+	if (tempPowerAttackEndEffect.Succeeded()) {
+		powerAttackEndEffect = tempPowerAttackEndEffect.Object;
 	}
 	
 }

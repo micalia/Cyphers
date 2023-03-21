@@ -30,12 +30,14 @@ public:
 
 		FVector currScale;
 		UPROPERTY(EditAnywhere)
-		float RotationSpeed = 100;
+		float RotationSpeed = 20;
 		float CurrentRotate;
 
 		UPROPERTY(EditAnywhere)
-		float biggerSpeed= 2;
-		float currbiggerTime;
+		float biggerSpeed= 26;
+		float currSize;
 		UPROPERTY(EditAnywhere)
-		FVector MaxScale = FVector(14);
+		float MaxScale = 20;
+
+		bool bPowerAttackEnd;
 };

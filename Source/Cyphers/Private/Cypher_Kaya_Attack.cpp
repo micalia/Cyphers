@@ -12,6 +12,7 @@
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/ProgressBar.h>
 #include "Golem.h"
+#include "PowerAttackDecal.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -351,6 +352,8 @@ void UCypher_Kaya_Attack::InputKeyE_Pressed()
 	IsNoComboAttacking = true;
 	bAttackCharge = true;
 	kayaAnim->PowerAttackReadyAnim();
+	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, kaya->footPos->GetComponentLocation(), kaya->footPos->GetComponentRotation());
+	
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
@@ -365,7 +368,7 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 	else {
 		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
-		powerAttackStartCheck = false;
+		powerAttackStartCheck = false;\
 		//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PowerAttackStart);
 	}
 }

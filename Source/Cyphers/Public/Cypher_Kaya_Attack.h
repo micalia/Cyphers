@@ -54,6 +54,9 @@ public:
 
 	void AttackCheck();
 	void DashAttackCheck();
+
+	UPROPERTY()
+	class APowerAttackDecal* decal;
 //쿨타임
 	//양클릭
 	bool startCoolBothMouse;

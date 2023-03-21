@@ -74,6 +74,8 @@ public:
 		TSubclassOf<class APowerAttackDecal> decalFactory;
 	UPROPERTY()
 		class APowerAttackDecal* powerAttackDecal;
+		UPROPERTY(EditAnywhere)
+		class USceneComponent* footPos;
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)
@@ -86,4 +88,7 @@ public:
 		class USoundBase* powerAttackStart;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* powerAttackEnd;
+
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* powerAttackEndEffect;
 };

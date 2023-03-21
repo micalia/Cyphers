@@ -8,6 +8,8 @@
 #include "../CyphersGameModeBase.h"
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/ProgressBar.h>
+#include "PowerAttackDecal.h"
+#include <Particles/ParticleSystemComponent.h>
 
 UPlayerAnim::UPlayerAnim()
 {
@@ -183,11 +185,13 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
 	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
 	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
+	
 }
 
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
 {
+	me->compKayaAttack->decal->bPowerAttackEnd = true;
 	me->compKayaAttack->startCoolKeyE = true;
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
 	me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
@@ -199,6 +203,12 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
 	
 	AttachCamera();
+}
+
+void UPlayerAnim::AnimNotify_PAEndEffect()
+{
+	UParticleSystemComponent* pae =	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
+	pae->SetRelativeScale3D(FVector(paeScale));
 }
 
 void UPlayerAnim::AnimNotify_DashAttackCheck()

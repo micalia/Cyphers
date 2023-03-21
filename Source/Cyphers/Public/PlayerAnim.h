@@ -92,9 +92,14 @@ public:
 	UFUNCTION()
 		void AnimNotify_PowerAttackEnd();
 	UFUNCTION()
+		void AnimNotify_PAEndEffect();
+	UFUNCTION()
 		void AnimNotify_DashAttackCheck();
 		FName GetAttackMontageSectionName(int32 Section);
 
+		//파워 어택 END 이펙트 크기
+		UPROPERTY(EditAnywhere)
+		float paeScale = 0.6;
 	void BasicAttackPlayAnim();
 //대쉬 공격 (양클릭)
 	void DashAttackPlayAnim();

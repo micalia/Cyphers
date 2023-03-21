@@ -37,12 +37,27 @@ void APowerAttackDecal::BeginPlay()
 void APowerAttackDecal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	currbiggerTime+= biggerSpeed * DeltaTime;
+	
+	if (bPowerAttackEnd == false) {
+		if (currSize > MaxScale) {
+			currSize = MaxScale;
+			return;
+		}
+		currSize+= biggerSpeed * DeltaTime;
+		if (currSize < MaxScale) {
+			compDecal->SetRelativeScale3D(FVector(currSize));
+		}
+	}
+	else {
+		currSize -= biggerSpeed * DeltaTime;
+		if (currSize > 0.75) {
+			compDecal->SetRelativeScale3D(FVector(currSize));
+		}
+		else {
+			Destroy();
+		}
+	}
 	CurrentRotate += RotationSpeed * DeltaTime;
 	compDecal->SetRelativeRotation(FRotator(0, CurrentRotate,0));
 	
-	/*if (currScale < MaxScale) {
-
-	}*/
 }
