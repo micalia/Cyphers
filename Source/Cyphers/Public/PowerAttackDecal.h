@@ -40,4 +40,13 @@ public:
 		float MaxScale = 20;
 
 		bool bPowerAttackEnd;
+
+		UPROPERTY(EditAnywhere)
+			class UMaterialParameterCollection* decalOpacity;
+			float currOpacityTime;
+			UPROPERTY(EditAnywhere)
+			float OpacityTermTime = 0.8;
+			float alpha;
+			UPROPERTY(EditAnywhere)
+			float defaultOpacity = 0.3;
 };

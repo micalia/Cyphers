@@ -21,6 +21,10 @@ public:
 	float maxHP;
 	float currHP;
 
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* footSound;
+	void PlayFootSound();
+
 	void ReceiveDamage();
 	UPROPERTY()
 		class ACyphersGameModeBase* CyphersGameMode;
@@ -34,7 +38,7 @@ public:
 		class ACypher_Kaya* mainPlayer;
 //보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
-		bool bossAppear = false;
+		bool bossAppear = true;
 //현재상태
 	UPROPERTY(EditAnywhere)
 		float currAttackDamage = 0;
@@ -56,4 +60,16 @@ public:
 //돌던지기
 	UPROPERTY(EditAnywhere)
 		class UMaterialParameterCollection* stoneOpacity;
+
+//그라운드 어택
+	TSubclassOf<class AGolemGroundAttackCollision> GA_CollisionFactory;
+		UPROPERTY(EditAnywhere)
+		class USceneComponent* groundAttackPoint;
+
+		UPROPERTY(EditAnywhere)
+			class UParticleSystem* groundAttackEffect;
+	void SpawnGroundAttackCollision(FRotator dir);
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* groundAttackSound;
+		void PlayGroundAttackSound();
 };

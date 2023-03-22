@@ -16,6 +16,7 @@ enum class EGolemState :uint8
 	Die,
 	JumpAttack,
 	ThrowStoneAttack,
+	GroundAttack,
 };
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYPHERS_API UGolemFSM : public UActorComponent
@@ -65,7 +66,7 @@ public:
 
 //플레이어와 붙어있을 경우 Move가 아닌 Idle상태로 변경
 	UPROPERTY(EditAnywhere)
-		float closestToTargetRange = 200;
+		float closestToTargetRange = 300;
 	//fix
 	FVector targetDistance;
 	float targetDistanceLength;
@@ -117,5 +118,9 @@ public:
 	//fix
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = ThrowAttack)
 		float throwStoneAttackCurrentTime = 0;
-
+public:
+	UPROPERTY(EditAnywhere, Category = GroundAttack)
+		float groundAttackCoolTime = 3;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = GroundAttack)
+		float groundAttackCurrentTime = 0;
 };

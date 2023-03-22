@@ -11,6 +11,8 @@
 #include <Materials/MaterialParameterCollection.h>
 #include "../CyphersGameModeBase.h"
 #include "PlayerWidget.h"
+#include <Particles/ParticleSystem.h>
+#include "GolemGroundAttackCollision.h"
 
 AGolem::AGolem()
 {
@@ -43,6 +45,30 @@ AGolem::AGolem()
 	if (tempMPC.Succeeded()) {
 		stoneOpacity = tempMPC.Object;
 	}
+
+	groundAttackPoint = CreateDefaultSubobject<USceneComponent>(TEXT("groundAttackPoint"));
+	groundAttackPoint->SetupAttachment(RootComponent);
+	groundAttackPoint->SetRelativeLocation(FVector(164, -34, -190));
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> tempGroundAttackEffect(TEXT("/Script/Engine.ParticleSystem'/Game/Resources/Effect/GroundAttacks/Fx/Earth/P_EarthHexGround5.P_EarthHexGround5'"));
+	if (tempGroundAttackEffect.Succeeded()) {
+		groundAttackEffect = tempGroundAttackEffect.Object;
+	}
+
+	static ConstructorHelpers::FClassFinder<AGolemGroundAttackCollision> tempGACObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_GolemGroundAttackCollision.BP_GolemGroundAttackCollision_C'"));
+	if (tempGACObj.Succeeded()) {
+		GA_CollisionFactory = tempGACObj.Class;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempFootSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GiantFootSound.GiantFootSound'"));
+	if (tempFootSound.Succeeded()) {
+		footSound = tempFootSound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGroundAttackSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GroundAttack.GroundAttack'"));
+	if (tempGroundAttackSound.Succeeded()) {
+		groundAttackSound = tempGroundAttackSound.Object;
+	}
+	
 }
  
 void AGolem::BeginPlay()
@@ -71,6 +97,16 @@ void AGolem::MoveJumpAttack() {
 	JumpAttackPath(startPos, betweenPos, endPos);
 }
 
+void AGolem::SpawnGroundAttackCollision(FRotator dir)
+{
+	GetWorld()->SpawnActor<AGolemGroundAttackCollision>(GA_CollisionFactory, groundAttackPoint->GetComponentLocation(), dir);
+}
+
+void AGolem::PlayGroundAttackSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), groundAttackSound);
+}
+
 void AGolem::JumpAttackPath(FVector start, FVector between, FVector end) {
 	lineLoc.Empty();
 
@@ -90,6 +126,11 @@ FVector AGolem::CalculateBezier(float ratio, FVector start, FVector between, FVe
 	FVector p = FMath::Lerp<FVector, float>(p01, p12, ratio);
 
 	return p;
+}
+
+void AGolem::PlayFootSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), footSound);
 }
 
 void AGolem::ReceiveDamage()

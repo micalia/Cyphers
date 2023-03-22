@@ -34,6 +34,9 @@ public:
 		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION()
 		void AnimNotify_TurnToTarget();
+
+	UFUNCTION()
+		void AnimNotify_FootSound();
 //데미지
 	void PlayDieAnim();
 //점프공격
@@ -61,11 +64,17 @@ public:
 		void AnimNotify_StoneSpawn();
 	UFUNCTION()
 		void AnimNotify_ThrowStone();
+// 그라운드 어택
+	UFUNCTION()
+		void AnimNotify_GroundAttackEffect();
+	void PlayGroundAttackAnim();
 //몽타주
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* jumpAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* throwStoneAttackMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UAnimMontage* groundAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* damageMontage;
 };

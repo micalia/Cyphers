@@ -79,6 +79,8 @@ public:
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* damageSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* swing1;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* swing2;
@@ -91,4 +93,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
+
+	void PlayDamageSound();
 };

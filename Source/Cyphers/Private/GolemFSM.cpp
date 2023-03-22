@@ -36,6 +36,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	//Skill Cool Time
 	jumpAttackCurrentTime += DeltaTime;
 	throwStoneAttackCurrentTime += DeltaTime;
+	groundAttackCurrentTime+=DeltaTime;
 
 	targetDistance = target->GetActorLocation() - me->GetActorLocation();
 	targetDistanceLength = targetDistance.Length();
@@ -67,6 +68,9 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 			SetNewGoalDirection();
 			throwStoneAttackCurrentTime = 0;
 		}
+		break;
+	case EGolemState::GroundAttack:
+		groundAttackCurrentTime = 0;
 		break;
 	case EGolemState::Damage:
 		DamageState();
@@ -211,6 +215,15 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 	/// 
 	/// </summary>
 	if (anim->bAttackPlay == true) return;
+	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength"))
+
+	//그라운드 어택
+	if (groundAttackCurrentTime > groundAttackCoolTime) {
+		anim->bAttackPlay = true;
+		mState = EGolemState::GroundAttack;
+		anim->PlayGroundAttackAnim();
+		return;
+	}
 
 	//돌던지기 범위를 먼저 체크
 	if (targetDistanceLength > throwStoneAttackRangeStart &&

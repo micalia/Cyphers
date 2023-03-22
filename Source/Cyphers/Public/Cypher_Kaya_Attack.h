@@ -27,7 +27,8 @@ public:
 public:
 	bool bLeftMouseButtonPressed;
 	bool bRightMouseButtonPressed;
-
+	
+	bool bNotDamageMotion;
 	void InitInput();
 	void InputMouseLeft();	//∆Ú≈∏	
 	void InputMouseRight();	

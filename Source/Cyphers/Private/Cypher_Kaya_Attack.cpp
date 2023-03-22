@@ -321,6 +321,7 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 	IsAttacking = false;
 	powerAttackStartCheck = false;
 	IsNoComboAttacking = false;
+	bNotDamageMotion = false;
 	AttackEndComboState();
 }
 
@@ -360,7 +361,9 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 {
 	if (bAttackCharge == false) return;
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
-
+	
+	IsAttacking= true;
+	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {
 		powerAttackStartCheck = false;
 		StartPowerAttack();

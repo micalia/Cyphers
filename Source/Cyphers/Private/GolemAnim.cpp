@@ -9,6 +9,8 @@
 #include <Kismet/KismetMaterialLibrary.h>
 #include "StoneObj.h"
 #include <Components/SphereComponent.h>
+#include <Kismet/KismetMathLibrary.h>
+#include <Components/BoxComponent.h>
 
 UGolemAnim::UGolemAnim()
 {
@@ -19,6 +21,10 @@ UGolemAnim::UGolemAnim()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempThrowStoneAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_ThrowStone.AM_ThrowStone'"));
 	if (tempThrowStoneAttackMontage.Succeeded()) {
 		throwStoneAttackMontage = tempThrowStoneAttackMontage.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempGroundAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_GroundAttack.AM_GroundAttack'"));
+	if (tempGroundAttackMontage.Succeeded()) {
+		groundAttackMontage = tempGroundAttackMontage.Object;
 	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_Damage.AM_Damage'"));
 	if (tempDamageMontage.Succeeded()) {
@@ -47,7 +53,12 @@ void UGolemAnim::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 
 void UGolemAnim::AnimNotify_TurnToTarget()
 {
-		enemy->fsm->SetNewGoalDirection();
+	enemy->fsm->SetNewGoalDirection();
+}
+
+void UGolemAnim::AnimNotify_FootSound()
+{
+	enemy->PlayFootSound();
 }
 
 void UGolemAnim::PlayDieAnim()
@@ -105,7 +116,7 @@ void UGolemAnim::AnimNotify_StoneSpawn()
 		spawnStone = GetWorld()->SpawnActor<AStoneObj>(enemy->stoneFactory,
 			enemy->GetMesh()->GetSocketLocation(stoneSpawnSocketName),
 			enemy->GetMesh()->GetSocketRotation(stoneSpawnSocketName));
-			spawnStone->AttachToComponent(enemy->GetMesh(),
+		spawnStone->AttachToComponent(enemy->GetMesh(),
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 			stoneSpawnSocketName);
 	}
@@ -125,4 +136,21 @@ void UGolemAnim::AnimNotify_ThrowStone()
 	FVector dir = distance.GetSafeNormal();
 	FVector force = spawnStone->compCollision->GetMass() * dir * enemy->fsm->throwPower;
 	spawnStone->compCollision->AddForceAtLocation(force, spawnStone->compCollision->GetCenterOfMass());
+}
+
+void UGolemAnim::AnimNotify_GroundAttackEffect()
+{
+	enemy->PlayGroundAttackSound();
+	FRotator dir = UKismetMathLibrary::FindLookAtRotation(enemy->groundAttackPoint->GetComponentLocation(), target->GetActorLocation());
+	dir.Pitch = 0;
+	dir.Roll = 0;
+	enemy->SpawnGroundAttackCollision(dir);
+
+	dir.Yaw = dir.Yaw - 90;
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->groundAttackEffect, enemy->groundAttackPoint->GetComponentLocation(), dir, true, EPSCPoolMethod::AutoRelease);
+}
+
+void UGolemAnim::PlayGroundAttackAnim()
+{
+	Montage_Play(groundAttackMontage, 1.0f);
 }

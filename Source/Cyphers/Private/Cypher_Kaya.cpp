@@ -109,6 +109,10 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempSwing3.Succeeded()) {
 		swing3 = tempSwing3.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDamageSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/kayaDamage.kayaDamage'"));
+	if (tempDamageSound.Succeeded()) {
+		damageSound = tempDamageSound.Object;
+	}
 
 	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal_C'"));
 	if (tempDecalObj.Succeeded()) {
@@ -161,8 +165,12 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
+	if (compKayaAttack->bNotDamageMotion == false) {
+		PlayDamageSound();
+	}
 	//¸¸¾à ±Ã±Ø±â Â÷Â¡ÁßÀÌ¿´´Ù¸é ±ÃÄµ½½ µÇ¸é¼­ ÄðÅ¸ÀÓ
 	if (compKayaAttack->bAttackCharge) {
+		compKayaAttack->decal->bPowerAttackEnd = true;
 		compKayaAttack->bAttackCharge = false;
 		compKayaAttack->startCoolKeyE = true;
 		compKayaAttack->currkeyECool = compKayaAttack->keyECool;
@@ -171,7 +179,9 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 
 	currHP= currHP- damage;
 	if(currHP>0){
-		compKayaAttack->kayaAnim->DamagePlayAnim();
+		if (compKayaAttack->bNotDamageMotion == false) {
+			compKayaAttack->kayaAnim->DamagePlayAnim();
+		}
 		UE_LOG(LogTemp, Warning, TEXT("Damage, currHP : %f"), currHP)
 		
 	}
@@ -217,4 +227,9 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 		golem->ReceiveDamage();
 	}
 	
+}
+
+void ACypher_Kaya::PlayDamageSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), damageSound);
 }
