@@ -256,6 +256,8 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 			golem->ReceiveDamage();
 		}
 	}
+
+	kaya->PlayDashAttackSound();
 }
 
 bool UCypher_Kaya_Attack::CheckCurrState()

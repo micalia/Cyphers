@@ -10,6 +10,7 @@
 #include <UMG/Public/Components/ProgressBar.h>
 #include "PowerAttackDecal.h"
 #include <Particles/ParticleSystemComponent.h>
+#include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
 
 UPlayerAnim::UPlayerAnim()
 {
@@ -57,14 +58,14 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	if (me != nullptr)
-	{		
+	{
 		velocity = me->GetVelocity();
 		forward = me->GetActorForwardVector();
 		right = me->GetActorRightVector();
 
 		dirV = FVector::DotProduct(velocity, forward);
 		dirH = FVector::DotProduct(velocity, right);
-		
+
 		bAir = me->GetCharacterMovement()->IsFalling();
 	}
 }
@@ -90,7 +91,7 @@ void UPlayerAnim::AttachCamera()
 void UPlayerAnim::BasicAttackMontageSection(int32 NewSection)
 {
 	ABCHECK(Montage_IsPlaying(basicAttackAnimMontage))
-	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), basicAttackAnimMontage);
+		Montage_JumpToSection(GetAttackMontageSectionName(NewSection), basicAttackAnimMontage);
 }
 
 void UPlayerAnim::AnimNotify_AttackHitCheck()
@@ -104,7 +105,8 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo1()
-{
+{ 
+	me->compNiagra->Activate(true);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	/*FHitResult HitResult;
 	FCollisionQueryParams Params;
@@ -153,39 +155,44 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo2()
 {
+	me->compNiagra->Activate(true);
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
-		
+
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo3()
 {
+	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		
+
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo4()
 {
+	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		
+
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo5()
 {
+	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		
+
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 {
+	me->compNiagra->Activate(true);
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
 	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
-	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
-	
+		UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
+
 }
 
 
@@ -198,16 +205,16 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
 		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
-		FVector currLocation = me->GetActorLocation();
+	FVector currLocation = me->GetActorLocation();
 
 	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
-	
+
 	AttachCamera();
 }
 
 void UPlayerAnim::AnimNotify_PAEndEffect()
 {
-	UParticleSystemComponent* pae =	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
+	UParticleSystemComponent* pae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
 	pae->SetRelativeScale3D(FVector(paeScale));
 }
 
@@ -218,12 +225,12 @@ void UPlayerAnim::AnimNotify_DashAttackCheck()
 
 FName UPlayerAnim::GetAttackMontageSectionName(int32 Section)
 {
-	ABCHECK(FMath::IsWithinInclusive<int32>(Section, 1, 3),NAME_None);
+	ABCHECK(FMath::IsWithinInclusive<int32>(Section, 1, 3), NAME_None);
 	return FName(*FString::Printf(TEXT("BasicAttack%d"), Section));
 }
 
 void UPlayerAnim::BasicAttackPlayAnim()
-{	
+{
 	Montage_Play(basicAttackAnimMontage, 1.0f);
 }
 
@@ -247,6 +254,26 @@ void UPlayerAnim::PowerAttackPlayAnim()
 {
 	Montage_JumpToSection(TEXT("PowerAttackPlay"), powerAttackAnimMontage);
 }
+
+void UPlayerAnim::AnimNotify_BasicAttack1Sound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), me->swing1);
+}
+
+void UPlayerAnim::AnimNotify_BasicAttack2Sound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), me->swing2);
+}
+
+void UPlayerAnim::AnimNotify_BasicAttack3Sound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), me->swing3);
+}
+
+//void UPlayerAnim::AnimNotify_DashAttackSound()
+//{
+//
+//}
 
 void UPlayerAnim::DamagePlayAnim()
 {

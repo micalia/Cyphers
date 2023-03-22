@@ -115,4 +115,12 @@ public:
 		float DashAttackRange = 450;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 		float DashAttackRadius = 70;*/
+
+		////사운드 재생
+	UFUNCTION()
+	void AnimNotify_BasicAttack1Sound();
+	UFUNCTION()
+		void AnimNotify_BasicAttack2Sound();
+	UFUNCTION()
+		void AnimNotify_BasicAttack3Sound();
 };

@@ -90,9 +90,17 @@ public:
 		class USoundBase* powerAttackStart;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* powerAttackEnd;
+	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* dashAttackSound;
 
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
 
+	void PlayDashAttackSound();
 	void PlayDamageSound();
+
+	UPROPERTY()
+	class UNiagaraSystem* NiagaraSystemAsset;
+	UPROPERTY(EditAnywhere)
+	class UNiagaraComponent* compNiagra;
 };

@@ -20,6 +20,7 @@
 #include "Components/ProgressBar.h"
 #include "PowerAttackDecal.h"
 #include <Particles/ParticleSystem.h>
+#include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -113,6 +114,10 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempDamageSound.Succeeded()) {
 		damageSound = tempDamageSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDashAttackSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/dashAttack.dashAttack'"));
+	if (tempDashAttackSound.Succeeded()) {
+		dashAttackSound = tempDashAttackSound.Object;
+	}
 
 	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal_C'"));
 	if (tempDecalObj.Succeeded()) {
@@ -128,6 +133,16 @@ ACypher_Kaya::ACypher_Kaya() {
 		powerAttackEndEffect = tempPowerAttackEndEffect.Object;
 	}
 	
+	//블루프린트 에디터 창에서 [Mesh]클릭 후 디테일 창에서 tick을 검색한 다음 [Optimization]->[Advanced]->[Visibility Based Anim Tick Option]값을 'Always Tick Pose and Refresh Bones'로 바꿀것
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> tempNiagraSystem(TEXT("/Script/Niagara.NiagaraSystem'/Game/Resources/Effect/NS_AfterImageSystem.NS_AfterImageSystem'"));
+	if (tempNiagraSystem.Succeeded()) {
+		NiagaraSystemAsset = tempNiagraSystem.Object;
+	}
+
+	compNiagra = CreateDefaultSubobject<UNiagaraComponent>(TEXT("AfterImageEffect"));
+	compNiagra->SetupAttachment(RootComponent);
+	compNiagra->SetAsset(NiagaraSystemAsset);
 }
 
 void ACypher_Kaya::BeginPlay()
@@ -227,6 +242,11 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 		golem->ReceiveDamage();
 	}
 	
+}
+
+void ACypher_Kaya::PlayDashAttackSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), dashAttackSound);
 }
 
 void ACypher_Kaya::PlayDamageSound()
