@@ -74,7 +74,6 @@ void UGolemAnim::OnEndAttackAnimation() {
 //점프공격
 void UGolemAnim::PlayJumpAttackAnim(FName sectionName)
 {
-	enemy->fsm->jumpAttackOn = true;
 	enemy->GetCharacterMovement()->GravityScale = 0;
 	enemy->PlayAnimMontage(jumpAttackMontage, 1, sectionName);
 }
@@ -82,6 +81,7 @@ void UGolemAnim::PlayJumpAttackAnim(FName sectionName)
 void UGolemAnim::AnimNotify_JumpAttackStart()
 {
 	enemy->fsm->mState = EGolemState::JumpAttack;
+	enemy->fsm->jumpAttackOn = true;
 }
 
 void UGolemAnim::AnimNotify_JumpAttackEnd()
