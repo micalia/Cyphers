@@ -93,6 +93,7 @@ void UGolemAnim::AnimNotify_JumpAttackEnd()
 
 void UGolemAnim::AnimNotify_JumpAttackImpact()
 {
+	enemy->PlayJumpAttackSound();
 	FVector startPos = enemy->JA_EffectPoint->GetComponentLocation();
 	FVector endPos = startPos -300;
 	FHitResult hitInfo;

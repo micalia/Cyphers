@@ -90,6 +90,8 @@ public:
 	UFUNCTION()
 		void AnimNotify_PowerAttackCombo6();
 	UFUNCTION()
+		void AnimNotify_PowerAttackCombo7();
+	UFUNCTION()
 		void AnimNotify_PowerAttackEnd();
 	UFUNCTION()
 		void AnimNotify_PAEndEffect();

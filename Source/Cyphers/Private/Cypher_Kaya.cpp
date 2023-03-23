@@ -118,6 +118,10 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempDashAttackSound.Succeeded()) {
 		dashAttackSound = tempDashAttackSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackEndGroundSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/powerAttackSound.powerAttackSound'"));
+	if (tempPowerAttackEndGroundSound.Succeeded()) {
+		powerAttackEndGroundSound = tempPowerAttackEndGroundSound.Object;
+	}
 
 	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal_C'"));
 	if (tempDecalObj.Succeeded()) {
@@ -252,6 +256,11 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 		golem->ReceiveDamage();
 	}
 	
+}
+
+void ACypher_Kaya::PlayPowerAttackGroundSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), powerAttackEndGroundSound);
 }
 
 void ACypher_Kaya::PlayDashAttackSound()

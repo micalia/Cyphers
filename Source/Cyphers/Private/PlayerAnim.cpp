@@ -188,6 +188,12 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo5()
 void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 {
 	me->compNiagra->Activate(true);
+}
+
+
+void UPlayerAnim::AnimNotify_PowerAttackCombo7()
+{
+	me->compNiagra->Activate(true);
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
 	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
@@ -195,9 +201,9 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 
 }
 
-
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
 {
+
 	me->compKayaAttack->decal->bPowerAttackEnd = true;
 	me->compKayaAttack->startCoolKeyE = true;
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
@@ -214,6 +220,7 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 
 void UPlayerAnim::AnimNotify_PAEndEffect()
 {
+	me->PlayPowerAttackGroundSound();
 	UParticleSystemComponent* pae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
 	pae->SetRelativeScale3D(FVector(paeScale));
 }

@@ -92,8 +92,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* powerAttackEnd;
 	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundBase* powerAttackEndGroundSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* dashAttackSound;
 
+	void PlayPowerAttackGroundSound();
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
 

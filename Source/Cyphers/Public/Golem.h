@@ -63,6 +63,10 @@ public:
 		class UParticleSystem* jumpAttackEffect;
 	UPROPERTY(EditAnywhere)
 		class USceneComponent* JA_EffectPoint;
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* jumpAttackSound;
+		void PlayJumpAttackSound();
 //돌던지기
 	UPROPERTY(EditAnywhere)
 		class UMaterialParameterCollection* stoneOpacity;

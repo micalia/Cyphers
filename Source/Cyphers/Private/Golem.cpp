@@ -69,6 +69,10 @@ AGolem::AGolem()
 	if (tempFootSound.Succeeded()) {
 		footSound = tempFootSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempJumpAttackSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/JumpAttackSound2.JumpAttackSound2'"));
+	if (tempJumpAttackSound.Succeeded()) {
+		jumpAttackSound = tempJumpAttackSound.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempGroundAttackSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GroundAttack.GroundAttack'"));
 	if (tempGroundAttackSound.Succeeded()) {
 		groundAttackSound = tempGroundAttackSound.Object;
@@ -105,6 +109,11 @@ void AGolem::MoveJumpAttack() {
 	betweenPos.Z += 1700;
 
 	JumpAttackPath(startPos, betweenPos, originEndPos);
+}
+
+void AGolem::PlayJumpAttackSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), jumpAttackSound);
 }
 
 void AGolem::SpawnGroundAttackCollision(FRotator dir)
