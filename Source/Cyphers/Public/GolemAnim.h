@@ -40,13 +40,16 @@ public:
 //데미지
 	void PlayDieAnim();
 //점프공격
-
+	UPROPERTY(EditAnywhere)
+	float jaeScale = 0.9;
 	UFUNCTION()
 		void AnimNotify_JumpAttackStart();
 
 	UFUNCTION()
 		void AnimNotify_JumpAttackEnd();
 
+	UFUNCTION()
+		void AnimNotify_JumpAttackImpact();
 
 	UFUNCTION(BlueprintCallable, Category = FSMEvent)
 		void PlayJumpAttackAnim(FName sectionName);

@@ -27,7 +27,9 @@ void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	MoveAction(DeltaTime);
+	if (kaya->bDamageState == false) {
+		MoveAction(DeltaTime);
+	}
 
 	/*debug++;
 	if (debug > 1000) {

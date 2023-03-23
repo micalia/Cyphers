@@ -123,4 +123,5 @@ public:
 		void AnimNotify_BasicAttack2Sound();
 	UFUNCTION()
 		void AnimNotify_BasicAttack3Sound();
+
 };

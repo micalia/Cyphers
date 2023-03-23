@@ -36,6 +36,7 @@ public:
 		//타겟
 	UPROPERTY()
 		class ACypher_Kaya* mainPlayer;
+
 //보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
 		bool bossAppear = true;
@@ -57,6 +58,11 @@ public:
 	//베지어 오브젝트 경로 만들기
 	void JumpAttackPath(FVector startPos, FVector betweenPos, FVector endPos);
 	void MoveJumpAttack();
+
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* jumpAttackEffect;
+	UPROPERTY(EditAnywhere)
+		class USceneComponent* JA_EffectPoint;
 //돌던지기
 	UPROPERTY(EditAnywhere)
 		class UMaterialParameterCollection* stoneOpacity;

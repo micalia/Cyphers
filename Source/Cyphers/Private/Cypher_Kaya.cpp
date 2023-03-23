@@ -165,6 +165,10 @@ void ACypher_Kaya::BeginPlay()
 void ACypher_Kaya::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
+	currtimer+=DeltaTime;
+	if (currtimer>timer) {
+		float a=0;
+	}
 	if (CyphersGameMode != nullptr) { 
 		CyphersGameMode->playerWidget->UpdateCurrHP(currHP, maxHP);
 	}
@@ -180,6 +184,8 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
+	bDamageState = true;
+	
 	if (compKayaAttack->bNotDamageMotion == false) {
 		PlayDamageSound();
 	}
@@ -192,6 +198,10 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	}
 
+	compKayaAttack->IsComboInputOn = false;
+
+	compKayaAttack->AttackEndComboState();
+	compKayaAttack->InitInput();
 	currHP= currHP- damage;
 	if(currHP>0){
 		if (compKayaAttack->bNotDamageMotion == false) {

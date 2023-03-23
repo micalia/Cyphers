@@ -30,13 +30,17 @@ void UCypher_Kaya_Attack::BeginPlay()
 	kayaAnim->OnDashAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::DashAttackCheck);
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
-		//UE_LOG(LogTemp, Warning, TEXT("M"))
-		ABLOG(Warning, TEXT("OnNextAttackCheck"));
-		//CanNextCombo=false;
-		if (IsComboInputOn) {
-			AttackStartComboState();
-			kayaAnim->BasicAttackMontageSection(CurrentCombo);
+		if (kaya->bDamageState == false) {
+			//UE_LOG(LogTemp, Warning, TEXT("M"))
+			ABLOG(Warning, TEXT("OnNextAttackCheck"));
+			//CanNextCombo=false;
+			if (IsComboInputOn) {
+				AttackStartComboState();
+				kayaAnim->BasicAttackMontageSection(CurrentCombo);
+			}
+
 		}
+		
 	});
 
 }
@@ -47,7 +51,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	
 	//쿨타임 처리
 	if (startCoolBothMouse) {
-		currbothMouseAttackCool-=DeltaTime;
+		currbothMouseAttackCool -= DeltaTime;
 		kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
 		if (currbothMouseAttackCool < 0) {
 			kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
@@ -56,7 +60,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 
 	if (startCoolKeyE) {
-		currkeyECool-=DeltaTime;
+		currkeyECool -= DeltaTime;
 		kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
 		if (currkeyECool < 0) {
 			kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
@@ -65,8 +69,8 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 
 	if (IsNoComboAttacking == true) {
-		currPowerAttackCheck+=DeltaTime;
-		if(powerAttackStartCheck)return;
+		currPowerAttackCheck += DeltaTime;
+		if (powerAttackStartCheck)return;
 		if (PowerAttackStartTime < currPowerAttackCheck) {
 			powerAttackStartCheck = true;
 		}
@@ -74,43 +78,46 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	else {
 		currPowerAttackCheck = 0;
 	}
-	//마우스 양클릭 체크 후 공격 실행
-	if (bAttackInput == true) {
-		if(IsNoComboAttacking){
-			InitInput();
-			return;
-		}
-		MouseLRCheckCurrentTime += DeltaTime;
-		if (MouseLRCheckCurrentTime > MouseLRCheckTime) {			
-			if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
+
+	if (kaya->bDamageState == false) {
+		//마우스 양클릭 체크 후 공격 실행
+		if (bAttackInput == true) {
+			if (IsNoComboAttacking) {
 				InitInput();
-				if(startCoolBothMouse) return;
-				if(IsAttacking == true) return;
-				AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
-				//마우스 양클릭 공격실행	
-				UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
-				IsNoComboAttacking = true;
-				DashAttack();
+				return;
 			}
-			else if (bLeftMouseButtonPressed) {
-				InitInput();
+			MouseLRCheckCurrentTime += DeltaTime;
+			if (MouseLRCheckCurrentTime > MouseLRCheckTime) {
+				if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
+					InitInput();
+					if (startCoolBothMouse) return;
+					if (IsAttacking == true) return;
+					AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
+					//마우스 양클릭 공격실행	
+					UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
+						IsNoComboAttacking = true;
+					DashAttack();
+				}
+				else if (bLeftMouseButtonPressed) {
+					InitInput();
 					//마우스 왼쪽공격
 					UE_LOG(LogTemp, Warning, TEXT("mouseLeft"))
-					BasicAttack();
+						BasicAttack();
+				}
+				else if (bRightMouseButtonPressed) {
+					InitInput();
+					//마우스 오른쪽 공격
+					UE_LOG(LogTemp, Warning, TEXT("RightClick"))
+				}
+
 			}
-			else if(bRightMouseButtonPressed){
-				InitInput();
-				//마우스 오른쪽 공격
-				UE_LOG(LogTemp, Warning, TEXT("RightClick"))
-			}
-			
 		}
 	}
 
 	//궁극기 사용 후 카메라 월드좌표에서 캐릭터 기존 카메라 위치로 이동
 	if (bBackCameraOringinPos) {
 		if (CameraBackTime > currCameraBackTime) {
-			currCameraBackTime+=DeltaTime;		
+			currCameraBackTime += DeltaTime;
 			kaya->Camera->SetActorLocation(FMath::Lerp(kaya->beforeActCameraPos, kaya->afterActCameraPos, currCameraBackTime / CameraBackTime));
 			kaya->Camera->SetActorRotation(FMath::Lerp(kaya->beforeActCameraRot, kaya->afterActCameraRot, currCameraBackTime / CameraBackTime));
 		}
@@ -178,13 +185,13 @@ void UCypher_Kaya_Attack::AttackCheck()
 		DebugLifeTime
 	);
 #endif
-AActor* hitActor = HitResult.GetActor();
-if (hitActor != nullptr) {
+	AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
 
-UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
-}
+		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+	}
 
-AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
 	if (bResult)
 	{
 		if (sentinel != nullptr)
@@ -271,7 +278,7 @@ bool UCypher_Kaya_Attack::CheckCurrState()
 void UCypher_Kaya_Attack::StartPowerAttack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("start powerAttack"))
-	kaya->bCameraPosFix = true;
+		kaya->bCameraPosFix = true;
 	kaya->DetachCameraActor();
 	bAttackCharge = false;
 	kayaAnim->PowerAttackPlayAnim();
@@ -299,7 +306,7 @@ void UCypher_Kaya_Attack::AttackStartComboState()
 	//CanNextCombo = true;
 	IsComboInputOn = false;
 	//ABCHECK(FMath::IsWithinInclusive<int32>(CurrentCombo, 0, MaxCombo-1));
-	CurrentCombo =FMath::Clamp<int32>(CurrentCombo+1, 1, MaxCombo);
+	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
 }
 
 void UCypher_Kaya_Attack::AttackEndComboState()
@@ -313,13 +320,15 @@ void UCypher_Kaya_Attack::InputMouseLeft()
 {
 	//ClickTimestamp = FPlatformTime::Seconds();
 	bAttackInput = true;
-	bLeftMouseButtonPressed = true;	
+	bLeftMouseButtonPressed = true;
 }
 
 void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
-{	
-	UE_LOG(LogTemp, Warning, TEXT("end???"))
-	//ABCHECK(CurrentCombo > 0);
+{
+	if(bInterrupted == true) return;
+		//ABCHECK(CurrentCombo > 0);
+	
+	kaya->bDamageState = false;
 	IsAttacking = false;
 	powerAttackStartCheck = false;
 	IsNoComboAttacking = false;
@@ -347,24 +356,24 @@ void UCypher_Kaya_Attack::InputKeyF()
 
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
-	if(startCoolKeyE)return;
-	if(IsAttacking == true) return;
-	if(IsNoComboAttacking == true) return;
+	if (startCoolKeyE)return;
+	if (IsAttacking == true) return;
+	if (IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
-	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
+		UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
 	IsNoComboAttacking = true;
 	bAttackCharge = true;
 	kayaAnim->PowerAttackReadyAnim();
 	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, kaya->footPos->GetComponentLocation(), kaya->footPos->GetComponentRotation());
-	
+
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
 {
 	if (bAttackCharge == false) return;
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
-	
-	IsAttacking= true;
+
+		IsAttacking = true;
 	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {
 		powerAttackStartCheck = false;
@@ -374,7 +383,7 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
 		powerAttackStartCheck = false;\
-		//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PowerAttackStart);
+			//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PowerAttackStart);
 	}
 }
 
@@ -388,9 +397,9 @@ void UCypher_Kaya_Attack::InputMouseRight()
 
 void UCypher_Kaya_Attack::DashAttack()
 {
-	startCoolBothMouse=true;
+	startCoolBothMouse = true;
 	currbothMouseAttackCool = bothMouseAttackCool;
 	kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
-	IsAttacking=true;
+	IsAttacking = true;
 	kayaAnim->DashAttackPlayAnim();
 }

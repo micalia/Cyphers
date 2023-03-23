@@ -11,6 +11,7 @@
 #include <Components/SphereComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/BoxComponent.h>
+#include <Particles/ParticleSystemComponent.h>
 
 UGolemAnim::UGolemAnim()
 {
@@ -88,6 +89,23 @@ void UGolemAnim::AnimNotify_JumpAttackEnd()
 	//파티클 생성
 	UE_LOG(LogTemp, Warning, TEXT("attackEnd"))
 
+}
+
+void UGolemAnim::AnimNotify_JumpAttackImpact()
+{
+	FVector startPos = enemy->JA_EffectPoint->GetComponentLocation();
+	FVector endPos = startPos -300;
+	FHitResult hitInfo;
+	FCollisionQueryParams param;
+	param.AddIgnoredActor(enemy->GetOwner());
+
+	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
+
+	if (isHit == true) {
+		
+	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
+	jae->SetRelativeScale3D(FVector(jaeScale));
+	}
 }
 
 //돌던지기

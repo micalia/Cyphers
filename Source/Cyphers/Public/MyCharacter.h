@@ -23,8 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//// Called to bind functionality to input
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
 //내가 선언
@@ -34,36 +34,62 @@ public:
 		UStaticMeshComponent* smCannonComp;
 	UPROPERTY(EditAnywhere)
 		USceneComponent* cannonPos;
+//public:
+////GPT
+//	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		TSubclassOf<AGrenade> GrenadeClass;*/
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		float GrenadeVelocity = 1000;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		float GrenadeLifetime = 5;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		float GrenadeFuseTime=3;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		float GrenadeThrowAngle =45;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		FName GrenadeSocketName;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
+//		USoundBase* GrenadeThrowSound;
+//
+//protected:
+//	void ClearGrenadeTrajectory();
+//	void ShowGrenadeTrajectory();
+//	void OnGrenadeStart();
+//	void OnGrenadeRelease();
+//
+//	//TArray<ADebugSphereActor*> GrenadeTrajectoryPoints;
+//	FVector GrenadeStartLocation;
+//	FRotator GrenadeStartRotation;
+
 public:
-//GPT
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		TSubclassOf<AGrenade> GrenadeClass;*/
+//UPROPERTY(EditAnywhere)
+//float StartTime = 3;
+//float startCurrTime;
+//bool bStart;
+	UPROPERTY(EditAnywhere, Category = "Jump")
+		float JumpHeight = 500;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		float GrenadeVelocity = 1000;
+	UPROPERTY(EditAnywhere, Category = "Jump")
+		float JumpDuration = 2;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		float GrenadeLifetime = 5;
+	UPROPERTY(EditAnywhere, Category = "Jump")
+		float JumpDistance = 1000;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		float GrenadeFuseTime=3;
+	float JumpStartTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		float GrenadeThrowAngle =45;
+	FVector JumpStartPos;
+	FVector JumpEndPos;
+	FVector JumpMidPos;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		FName GrenadeSocketName;
+	bool bIsJumping;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Grenade)
-		USoundBase* GrenadeThrowSound;
+	void StartJump();
 
-protected:
-	void ClearGrenadeTrajectory();
-	void ShowGrenadeTrajectory();
-	void OnGrenadeStart();
-	void OnGrenadeRelease();
-
-	//TArray<ADebugSphereActor*> GrenadeTrajectoryPoints;
-	FVector GrenadeStartLocation;
-	FRotator GrenadeStartRotation;
+	void MoveAlongPath(float DeltaTime);
 };

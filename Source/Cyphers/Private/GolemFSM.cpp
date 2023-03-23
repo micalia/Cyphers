@@ -129,28 +129,49 @@ void UGolemFSM::MoveState(float DeltaTime) {
 void UGolemFSM::JumpAttackState()
 {
 	jumpAttackDeltaTime += GetWorld()->DeltaTimeSeconds;
-	if (jumpAttackDeltaTime > jumpMovingTime)
-	{
+
+	//DrawDebugSphere(GetWorld(), me->lineLoc[jumpAttackIdx], 20.0f, 32, FColor::Red, false, 5.0f);
+
+	float alpha = jumpAttackDeltaTime/JM_Point_BetweentMoveTime;
+	if (alpha<1) {
+		
+		me->SetActorLocation(FMath::Lerp(me->lineLoc[jumpAttackIdx], me->lineLoc[jumpAttackIdx+1], alpha));
+
+	}
+	else {
 		jumpAttackDeltaTime = 0;
-		//DrawDebugSphere(GetWorld(), me->lineLoc[jumpAttackIdx], 10.0f, 32, FColor::Red, false, 5.0f);
-		/*DrawDebugLine(GetWorld(), me->lineLoc[jumpAttackIdx], 
-			FVector(me->lineLoc[jumpAttackIdx].X, 
-					me->lineLoc[jumpAttackIdx].Y,
-					me->lineLoc[jumpAttackIdx].Z - 1500),
-				FColor::Blue, false, 3, 0, 8);
-		FHitResult hitInfo;
-		FCollisionQueryParams params;
-		params.AddIgnoredActor(this);*/
-		//bool bHit = GetWorld()->LineTraceSingleByChannel(hitInfo, start)
-		me->SetActorLocation(me->lineLoc[jumpAttackIdx]);
 		jumpAttackIdx++;
-		if (jumpAttackIdx == me->lineLoc.Num())
+		if (jumpAttackIdx + 1 == me->lineLoc.Num())
 		{
 			jumpAttackIdx = 0;
 			jumpAttackOn = false;
 			me->GetCharacterMovement()->GravityScale = 1;
-		} 
+		}
 	}
+	
+	/// 이전버전
+	//if (jumpAttackDeltaTime > jumpMovingTime)
+	//{
+	//	jumpAttackDeltaTime = 0;
+	//	//DrawDebugSphere(GetWorld(), me->lineLoc[jumpAttackIdx], 10.0f, 32, FColor::Red, false, 5.0f);
+	//	/*DrawDebugLine(GetWorld(), me->lineLoc[jumpAttackIdx], 
+	//		FVector(me->lineLoc[jumpAttackIdx].X, 
+	//				me->lineLoc[jumpAttackIdx].Y,
+	//				me->lineLoc[jumpAttackIdx].Z - 1500),
+	//			FColor::Blue, false, 3, 0, 8);
+	//	FHitResult hitInfo;
+	//	FCollisionQueryParams params;
+	//	params.AddIgnoredActor(this);*/
+	//	//bool bHit = GetWorld()->LineTraceSingleByChannel(hitInfo, start)
+	//	me->SetActorLocation(me->lineLoc[jumpAttackIdx]);
+	//	jumpAttackIdx++;
+	//	if (jumpAttackIdx == me->lineLoc.Num())
+	//	{
+	//		jumpAttackIdx = 0;
+	//		jumpAttackOn = false;
+	//		me->GetCharacterMovement()->GravityScale = 1;
+	//	} 
+	//}
 }
 
 

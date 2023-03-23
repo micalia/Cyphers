@@ -4,6 +4,7 @@
 #include "MyCharacter.h"
 #include <Components/BoxComponent.h>
 #include <Components/StaticMeshComponent.h>
+#include <Kismet/KismetMathLibrary.h>
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -36,6 +37,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	StartJump();
 }
 
 // Called every frame
@@ -43,66 +45,113 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
+	/*startCurrTime+= DeltaTime;
+	if (startCurrTime > StartTime && bStart == false) {
+		bStart = true;
+		StartJump();
+	}*/
 
-void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// Bind grenade throw inputs
-	PlayerInputComponent->BindAction("Grenade", IE_Pressed, this, &AMyCharacter::OnGrenadeStart);
-	PlayerInputComponent->BindAction("Grenade", IE_Released, this, &AMyCharacter::OnGrenadeRelease);
-}
-
-void AMyCharacter::ClearGrenadeTrajectory()
-{
-	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("ClearGrenadeTrajectory")), true, FVector2D(2, 2));
-	//UE_LOG(LogTemp, Warning, TEXT("ClearGrenadeTrajectory"))
-	/*for (ADebugSphereActor* Sphere : GrenadeTrajectoryPoints)
+	if (bIsJumping)
 	{
-		if (Sphere != nullptr)
+		MoveAlongPath(DeltaTime);
+
+		/*if (GetWorld()->GetTimeSeconds() - JumpStartTime >= JumpDuration)
 		{
-			Sphere->Destroy();
-		}
+			SetActorLocation(JumpEndPos);
+			bIsJumping = false;
+		}*/
 	}
-	GrenadeTrajectoryPoints.Empty();*/
 }
 
-void AMyCharacter::ShowGrenadeTrajectory()
+void AMyCharacter::StartJump()
 {
-	//// Calculate initial velocity vector
-	//FVector StartPos = GetActorLocation() + GetCapsuleComponent()->GetUpVector() * 50.f;
-	//FVector LaunchVelocity = GetCapsuleComponent()->GetForwardVector().RotateAngleAxis(GrenadeThrowAngle, GetCapsuleComponent()->GetRightVector()) * GrenadeVelocity;
-
-	//// Simulate grenade trajectory
-	//TArray<FVector> TrajectoryPoints;
-	//UGameplayStatics::PredictProjectilePath(this, StartPos, LaunchVelocity, GrenadeLifetime, UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic), this, TrajectoryPoints);
-
-	//// Draw debug spheres along the predicted trajectory
-	//for (FVector Point : TrajectoryPoints)
-	//{
-	//	ADebugSphereActor* Sphere = GetWorld()->SpawnActor<ADebugSphereActor>(ADebugSphereActor::StaticClass(), Point, FRotator::ZeroRotator);
-	//	if (Sphere != nullptr)
-	//	{
-	//		Sphere->SetSphereRadius(5.f);
-	//		Sphere->SetSphereColor(FColor::Red);
-	//		GrenadeTrajectoryPoints.Add(Sphere);
-	//	}
-	//}
+	if (!bIsJumping)
+	{
+		JumpStartPos = GetActorLocation();
+		JumpEndPos = JumpStartPos + JumpDistance * FVector::ForwardVector;
+		JumpMidPos = JumpStartPos + FVector(0.0f, 0.0f, JumpHeight);
+		JumpStartTime = GetWorld()->GetTimeSeconds();
+		bIsJumping = true;
+	}
 }
 
-void AMyCharacter::OnGrenadeStart()
+void AMyCharacter::MoveAlongPath(float DeltaTime)
 {
-	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("OnGrenadeStart"), 3), true, FVector2D(2, 2));
-	//// Clear previous trajectory visualization
-	//ClearGrenadeTrajectory();
+	float TimeElapsed = GetWorld()->GetTimeSeconds() - JumpStartTime;
 
-	//// Save initial grenade throw state
-	//GrenadeStartLocation = GetActorLocation() + GetCapsuleComponent()->GetUpVector() * 50.f;
-	//GrenadeStartRotation = GetActorRotation();
+	/*if (TimeElapsed >= JumpDuration)
+	{
+		SetActorLocation(JumpEndPos);
+		return;
+	}*/
+
+	float Height = UKismetMathLibrary::FInterpTo(0.0f, JumpHeight, TimeElapsed, JumpDuration);
+	FVector NewPos = GetActorLocation();
+	NewPos.Z = UKismetMathLibrary::FInterpTo(NewPos.Z, JumpMidPos.Z, DeltaTime, JumpDuration / 2.0f);
+	NewPos += JumpDistance * FVector::ForwardVector * DeltaTime / (JumpDuration / 2.0f);
+	NewPos.Z = UKismetMathLibrary::FInterpTo(NewPos.Z, JumpEndPos.Z, DeltaTime, JumpDuration / 2.0f);
+	SetActorLocation(NewPos);
 }
 
-void AMyCharacter::OnGrenadeRelease()
-{
-	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("OnGrenadeRelease")), true, FVector2D(2, 2));
-}
+//void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//
+//	// Bind grenade throw inputs
+//	PlayerInputComponent->BindAction("Grenade", IE_Pressed, this, &AMyCharacter::OnGrenadeStart);
+//	PlayerInputComponent->BindAction("Grenade", IE_Released, this, &AMyCharacter::OnGrenadeRelease);
+//}
+//
+//void AMyCharacter::ClearGrenadeTrajectory()
+//{
+//	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("ClearGrenadeTrajectory")), true, FVector2D(2, 2));
+//	//UE_LOG(LogTemp, Warning, TEXT("ClearGrenadeTrajectory"))
+//	/*for (ADebugSphereActor* Sphere : GrenadeTrajectoryPoints)
+//	{
+//		if (Sphere != nullptr)
+//		{
+//			Sphere->Destroy();
+//		}
+//	}
+//	GrenadeTrajectoryPoints.Empty();*/
+//}
+//
+//void AMyCharacter::ShowGrenadeTrajectory()
+//{
+//	//// Calculate initial velocity vector
+//	//FVector StartPos = GetActorLocation() + GetCapsuleComponent()->GetUpVector() * 50.f;
+//	//FVector LaunchVelocity = GetCapsuleComponent()->GetForwardVector().RotateAngleAxis(GrenadeThrowAngle, GetCapsuleComponent()->GetRightVector()) * GrenadeVelocity;
+//
+//	//// Simulate grenade trajectory
+//	//TArray<FVector> TrajectoryPoints;
+//	//UGameplayStatics::PredictProjectilePath(this, StartPos, LaunchVelocity, GrenadeLifetime, UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic), this, TrajectoryPoints);
+//
+//	//// Draw debug spheres along the predicted trajectory
+//	//for (FVector Point : TrajectoryPoints)
+//	//{
+//	//	ADebugSphereActor* Sphere = GetWorld()->SpawnActor<ADebugSphereActor>(ADebugSphereActor::StaticClass(), Point, FRotator::ZeroRotator);
+//	//	if (Sphere != nullptr)
+//	//	{
+//	//		Sphere->SetSphereRadius(5.f);
+//	//		Sphere->SetSphereColor(FColor::Red);
+//	//		GrenadeTrajectoryPoints.Add(Sphere);
+//	//	}
+//	//}
+//}
+//
+//void AMyCharacter::OnGrenadeStart()
+//{
+//	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("OnGrenadeStart"), 3), true, FVector2D(2, 2));
+//	//// Clear previous trajectory visualization
+//	//ClearGrenadeTrajectory();
+//
+//	//// Save initial grenade throw state
+//	//GrenadeStartLocation = GetActorLocation() + GetCapsuleComponent()->GetUpVector() * 50.f;
+//	//GrenadeStartRotation = GetActorRotation();
+//}
+//
+//void AMyCharacter::OnGrenadeRelease()
+//{
+//	GEngine->AddOnScreenDebugMessage(0, 3, FColor::Purple, FString::Printf(TEXT("OnGrenadeRelease")), true, FVector2D(2, 2));
+//}
+

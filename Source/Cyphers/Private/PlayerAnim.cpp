@@ -105,7 +105,7 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo1()
-{ 
+{
 	me->compNiagra->Activate(true);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	/*FHitResult HitResult;

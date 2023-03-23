@@ -94,6 +94,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackDamage = 40;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
+		float JM_Point_BetweentMoveTime = 0.6f;
+	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpMovingTime = 0.015f;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackCoolTime = 3.8;

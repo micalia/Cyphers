@@ -28,6 +28,7 @@ public:
 	float maxHP;
 	float currHP;
 
+	bool bDamageState;
 	void ReceiveDamage(int32 damage);
 
 	UPROPERTY(EditAnywhere)
@@ -103,4 +104,8 @@ public:
 	class UNiagaraSystem* NiagaraSystemAsset;
 	UPROPERTY(EditAnywhere)
 	class UNiagaraComponent* compNiagra;
+
+	UPROPERTY(EditAnywhere)
+	float timer = 6;
+	float currtimer;
 };
