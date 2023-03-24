@@ -16,6 +16,7 @@ enum class EPlayerState : uint8 {
 DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnDashAttackHitCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnNextDashCheckDelegate);
 
 UCLASS()
 class CYPHERS_API UPlayerAnim : public UAnimInstance
@@ -61,9 +62,11 @@ private:
 		class UAnimMontage* dashAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* gripAttackAnimMontage;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PowerAttack, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* powerAttackAnimMontage;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
+		class UAnimMontage* dashMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Damage, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* damageMontage;
 public:
 //평타 공격 콤보(좌클릭)
@@ -73,6 +76,7 @@ public:
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
 	FOnAttackHitCheckDelegate OnAttackHitCheck;
 	FOnDashAttackHitCheckDelegate OnDashAttackHitCheck;
+	FOnNextDashCheckDelegate OnNextDashCheck;
 	UFUNCTION()
 		void AnimNotify_AttackHitCheck();
 	UFUNCTION()
@@ -117,7 +121,10 @@ public:
 		float DashAttackRange = 450;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 		float DashAttackRadius = 70;*/
-
+//대쉬
+	void PlayDashAnim();
+	UFUNCTION()
+		void AnimNotify_NextDashCheck();
 		////사운드 재생
 	UFUNCTION()
 	void AnimNotify_BasicAttack1Sound();
@@ -126,4 +133,7 @@ public:
 	UFUNCTION()
 		void AnimNotify_BasicAttack3Sound();
 
+// 잔상 이펙트
+	UFUNCTION()
+		void AnimNotify_AfterImage();
 };

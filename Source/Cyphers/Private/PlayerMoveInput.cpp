@@ -98,3 +98,9 @@ void UPlayerMoveInput::InputTurn(float value)
 	if (kaya->compKayaAttack->bAttackCharge) return;
 	me->AddControllerYawInput(value);
 }
+
+float UPlayerMoveInput::GetH()
+{
+	return h;
+}
+

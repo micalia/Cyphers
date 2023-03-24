@@ -11,6 +11,7 @@
 #include "PowerAttackDecal.h"
 #include <Particles/ParticleSystemComponent.h>
 #include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
+#include "PlayerMoveInput.h"
 
 UPlayerAnim::UPlayerAnim()
 {
@@ -35,6 +36,11 @@ UPlayerAnim::UPlayerAnim()
 	if (tempPowerAttackMontage.Succeeded())
 	{
 		powerAttackAnimMontage = tempPowerAttackMontage.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDashFowardMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_KayaDash.AM_KayaDash'"));
+	if (tempDashFowardMontage.Succeeded())
+	{
+		dashMontage = tempDashFowardMontage.Object;
 	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Cypher_Kaya/AM_KayaDamage.AM_KayaDamage'"));
 	if (tempDamageMontage.Succeeded())
@@ -198,12 +204,11 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo7()
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
 	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
 		UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
-
+	
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
 {
-
 	me->compKayaAttack->decal->bPowerAttackEnd = true;
 	me->compKayaAttack->startCoolKeyE = true;
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
@@ -262,6 +267,27 @@ void UPlayerAnim::PowerAttackPlayAnim()
 	Montage_JumpToSection(TEXT("PowerAttackPlay"), powerAttackAnimMontage);
 }
 
+void UPlayerAnim::PlayDashAnim()
+{ 
+	if (me->compKayaAttack->dashHorizontal == -1) {
+		UE_LOG(LogTemp, Warning, TEXT("DashFL45"))
+		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFL45"));
+	}
+	else if (me->compKayaAttack->dashHorizontal == 1) {
+		UE_LOG(LogTemp, Warning, TEXT("DashFR45"))
+		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFR45"));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("DashFront"))
+		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFront"));
+	}
+}
+
+void UPlayerAnim::AnimNotify_NextDashCheck()
+{	
+	OnNextDashCheck.Broadcast();
+}
+
 void UPlayerAnim::AnimNotify_BasicAttack1Sound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), me->swing1);
@@ -277,10 +303,10 @@ void UPlayerAnim::AnimNotify_BasicAttack3Sound()
 	UGameplayStatics::PlaySound2D(GetWorld(), me->swing3);
 }
 
-//void UPlayerAnim::AnimNotify_DashAttackSound()
-//{
-//
-//}
+void UPlayerAnim::AnimNotify_AfterImage()
+{
+	me->compNiagra->Activate(true);
+}
 
 void UPlayerAnim::DamagePlayAnim()
 {

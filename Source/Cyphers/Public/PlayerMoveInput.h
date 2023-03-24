@@ -48,4 +48,8 @@ public:
 	void InputVertical(float value);
 	void InputLookUp(float value);
 	void InputTurn(float value);
+
+	float GetH();
+	float setV;
+	float setH;
 };

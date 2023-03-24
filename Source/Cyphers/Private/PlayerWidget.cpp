@@ -46,6 +46,17 @@ void UPlayerWidget::UpdateKeyECoolTime(float curr, float max)
 	}
 }
 
+
+void UPlayerWidget::UpdateSpaceBarCoolTime(float curr, float max)
+{
+	if (SpaceBarCoolTimerBar != nullptr) {
+		//hp 를 0 ~ 1 사이로 표현
+		float cool = curr / max;
+		//Progress bar UI 갱신
+		SpaceBarCoolTimerBar->SetPercent(cool);
+	}
+}
+
 void UPlayerWidget::UpdateBossCurrHP(float curr, float max)
 {
 	if (GolemHP != nullptr) {

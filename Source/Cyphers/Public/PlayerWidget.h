@@ -23,12 +23,15 @@ public:
 		class UProgressBar* BothMouseCoolTimeBar = nullptr;
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* KeyECoolTimeBar = nullptr;
+	UPROPERTY(meta = (BindWidget))
+		class UProgressBar* SpaceBarCoolTimerBar = nullptr;
 
 	void NativeConstruct();
 	void UpdateCurrHP(float curr, float max);
 
 	void UpdateBothMouseCoolTime(float curr, float max);
 	void UpdateKeyECoolTime(float curr, float max);
+	void UpdateSpaceBarCoolTime(float curr, float max);
 
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* GolemHP = nullptr;

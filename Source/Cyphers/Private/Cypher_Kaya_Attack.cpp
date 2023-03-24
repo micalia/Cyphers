@@ -13,6 +13,7 @@
 #include <UMG/Public/Components/ProgressBar.h>
 #include "Golem.h"
 #include "PowerAttackDecal.h"
+#include "PlayerMoveInput.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -38,11 +39,23 @@ void UCypher_Kaya_Attack::BeginPlay()
 				AttackStartComboState();
 				kayaAnim->BasicAttackMontageSection(CurrentCombo);
 			}
-
 		}
-		
 	});
 
+	kayaAnim->OnNextDashCheck.AddLambda([this]()->void {
+		if (kaya->bDamageState == false) {
+			if (bDashComboOn) {
+				UE_LOG(LogTemp, Warning, TEXT("NextDash"))
+					UE_LOG(LogTemp, Warning, TEXT("CurrentDashCombo : %d"), CurrentDashCombo)
+   				if(CurrentDashCombo < 1) {
+					bNextDirValCheck = false;
+					DashStartComboState();
+					kayaAnim->PlayDashAnim();
+					
+				}
+			}
+		}
+	});
 }
 
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -65,6 +78,15 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		if (currkeyECool < 0) {
 			kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
 			startCoolKeyE = false;
+		}
+	}
+
+	if (startCoolSpaceBar) {
+		currSpaceBarCool -= DeltaTime;
+		kaya->CyphersGameMode->playerWidget->UpdateSpaceBarCoolTime(currSpaceBarCool, spaceBarCool);
+		if (currSpaceBarCool < 0) {
+			kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Hidden);
+			startCoolSpaceBar = false;
 		}
 	}
 
@@ -139,6 +161,7 @@ void UCypher_Kaya_Attack::SetupInputBinding(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(TEXT("KeyF"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeyF);
 	PlayerInputComponent->BindAction(TEXT("KeyE"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeyE_Pressed);
 	PlayerInputComponent->BindAction(TEXT("KeyE"), IE_Released, this, &UCypher_Kaya_Attack::InputKeyE_Released);
+	PlayerInputComponent->BindAction(TEXT("SpaceBar"), IE_Pressed, this, &UCypher_Kaya_Attack::InputKeySpaceBar);
 }
 
 void UCypher_Kaya_Attack::InitInput()
@@ -267,6 +290,32 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 	kaya->PlayDashAttackSound();
 }
 
+void UCypher_Kaya_Attack::DashStartComboState()
+{
+	bDashComboOn = false;
+	CurrentDashCombo = FMath::Clamp<int32>(CurrentDashCombo + 1, 1, MaxDashCombo);
+}
+
+void UCypher_Kaya_Attack::DashEndComboState()
+{
+	bDashComboOn = false;
+	CurrentDashCombo=0;
+}
+
+void UCypher_Kaya_Attack::Dash()
+{
+ 	if (bDashOn) {
+		bDashComboOn = true;
+		if (bNextDirValCheck == false) {
+			bNextDirValCheck = true;
+		}
+	}
+	else {
+		bDashOn = true;
+		kayaAnim->PlayDashAnim();
+	}
+}
+
 bool UCypher_Kaya_Attack::CheckCurrState()
 {
 	if (IsNoComboAttacking == true || IsAttacking == true) {
@@ -327,7 +376,13 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 {
 	if(bInterrupted == true) return;
 		//ABCHECK(CurrentCombo > 0);
-	
+	//대쉬 상태였다면
+	if (bDashOn) {
+		bDashOn = false;
+		DashEndComboState();
+		startCoolSpaceBar = true;
+		kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Visible);
+	}
 	kaya->bDamageState = false;
 	IsAttacking = false;
 	powerAttackStartCheck = false;
@@ -382,9 +437,23 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 	else {
 		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
-		powerAttackStartCheck = false;\
+		powerAttackStartCheck = false;
 			//GetWorld()->GetTimerManager().ClearTimer(TimerHandle_PowerAttackStart);
 	}
+}
+
+void UCypher_Kaya_Attack::InputKeySpaceBar()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Spacebar!"))
+	if (startCoolSpaceBar)return;
+	if (IsAttacking == true) return;
+	if (IsNoComboAttacking == true) return;
+	if(CurrentDashCombo > MaxDashCombo) return;
+  	
+	currSpaceBarCool = spaceBarCool;
+	dashHorizontal = kaya->compPlayerMove->GetH();
+	UE_LOG(LogTemp, Warning, TEXT("hor: %f"), dashHorizontal)
+	Dash();
 }
 
 void UCypher_Kaya_Attack::InputMouseRight()

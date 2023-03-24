@@ -37,6 +37,7 @@ public:
 	void InputKeyF();
 	void InputKeyE_Pressed();
 	void InputKeyE_Released();
+	void InputKeySpaceBar();
 
 	/*void InputMouseLeftAndRight();
 	void InputKeySpace();
@@ -70,6 +71,25 @@ public:
 	float keyECool = 5;
 	float currkeyECool;
 
+//대쉬
+	UPROPERTY(EditAnywhere)
+	float spaceBarCool = 4;
+	UPROPERTY(VisibleAnywhere)
+	float currSpaceBarCool;
+	bool startCoolSpaceBar;
+	bool bDashOn;
+	bool bDashComboOn;
+	void DashStartComboState();
+	void DashEndComboState();
+	float dashHorizontal;
+	bool bNextDirValCheck;
+	void Dash();
+private:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
+		int32 CurrentDashCombo;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
+		int32 MaxDashCombo = 2;
+public:
 //기본공격
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	float AttackRange = 200;
