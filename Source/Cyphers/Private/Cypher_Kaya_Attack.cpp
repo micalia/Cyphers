@@ -415,6 +415,7 @@ void UCypher_Kaya_Attack::InputKeyE_Pressed()
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
+		kaya->PlayPowerAttackSwordReadySound();
 		UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
 	IsNoComboAttacking = true;
 	bAttackCharge = true;

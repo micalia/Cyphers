@@ -114,6 +114,8 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 {
 	me->compNiagra->Activate(true);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
+	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 	/*FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(me);
@@ -164,7 +166,7 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo2()
 	me->compNiagra->Activate(true);
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
-
+	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo3()
@@ -172,7 +174,7 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo3()
 	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
+	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo4()
@@ -180,7 +182,7 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo4()
 	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
+	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo5()
@@ -188,12 +190,13 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo5()
 	me->compNiagra->Activate(true);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
+	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 {
 	me->compNiagra->Activate(true);
+	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 
@@ -204,7 +207,6 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo7()
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
 	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
 		UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
-	
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
@@ -269,6 +271,8 @@ void UPlayerAnim::PowerAttackPlayAnim()
 
 void UPlayerAnim::PlayDashAnim()
 { 
+	me->PlayDashSound();
+
 	if (me->compKayaAttack->dashHorizontal == -1) {
 		UE_LOG(LogTemp, Warning, TEXT("DashFL45"))
 		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFL45"));

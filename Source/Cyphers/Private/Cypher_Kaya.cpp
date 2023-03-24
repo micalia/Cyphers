@@ -120,9 +120,21 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempDashAttackSound.Succeeded()) {
 		dashAttackSound = tempDashAttackSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDashSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/DashSound.DashSound'"));
+	if (tempDashSound.Succeeded()) {
+		dashSound = tempDashSound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackComboSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackComboSound.PowerAttackComboSound'"));
+	if (tempPowerAttackComboSound.Succeeded()) {
+		powerAttackComboSound = tempPowerAttackComboSound.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackEndGroundSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/powerAttackSound.powerAttackSound'"));
 	if (tempPowerAttackEndGroundSound.Succeeded()) {
 		powerAttackEndGroundSound = tempPowerAttackEndGroundSound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackSwordReday(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackSwordReady.PowerAttackSwordReady'"));
+	if (tempPowerAttackSwordReday.Succeeded()) {
+		powerAttackSwordReday = tempPowerAttackSwordReday.Object;
 	}
 
 	static ConstructorHelpers::FClassFinder<APowerAttackDecal> tempDecalObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_PowerAttackDecal.BP_PowerAttackDecal_C'"));
@@ -263,9 +275,19 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 	
 }
 
+void ACypher_Kaya::PlayPowerAttackSwordReadySound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), powerAttackSwordReday);
+}
+
 void ACypher_Kaya::PlayPowerAttackGroundSound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), powerAttackEndGroundSound);
+}
+
+void ACypher_Kaya::PlayDashSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), dashSound);
 }
 
 void ACypher_Kaya::PlayDashAttackSound()

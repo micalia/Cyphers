@@ -88,15 +88,24 @@ public:
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* swing3;
 	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* dashSound;
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* powerAttackSwordReday;
+	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* powerAttackStart;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* powerAttackEnd;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* powerAttackEndGroundSound;
 	UPROPERTY(EditAnywhere, Category = Sound)
-	class USoundBase* dashAttackSound;
+		class USoundBase* dashAttackSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* powerAttackComboSound;
 
+	void PlayPowerAttackSwordReadySound();
 	void PlayPowerAttackGroundSound();
+	void PlayDashSound();
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
 
