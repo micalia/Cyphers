@@ -96,6 +96,7 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 {
 	ACypher_Kaya* player = Cast<ACypher_Kaya>(OtherActor);
 	if (player) {
+		player->bCameraShake = true;
 		bIsCrash = true;
 		bTransparent = true;
 		compGcStone->SetVisibility(true);

@@ -12,6 +12,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/BoxComponent.h>
 #include <Particles/ParticleSystemComponent.h>
+#include "PlayerCamera.h"
 
 UGolemAnim::UGolemAnim()
 {
@@ -92,7 +93,8 @@ void UGolemAnim::AnimNotify_JumpAttackEnd()
 }
 
 void UGolemAnim::AnimNotify_JumpAttackImpact()
-{
+{ 
+	target->bCameraShake = true;
 	enemy->PlayJumpAttackSound();
 	FVector startPos = enemy->JA_EffectPoint->GetComponentLocation();
 	FVector endPos = startPos -300;
@@ -122,6 +124,8 @@ void UGolemAnim::AnimNotify_SpawnSound()
 
 void UGolemAnim::AnimNotify_StoneSpawn()
 {
+	target->bCameraShake = true;
+
 	FName stoneSpawnSocketName(TEXT("SpawnStoneSocket"));
 	if (enemy->stoneOpacity != nullptr) {
 		UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), 1);
@@ -159,6 +163,8 @@ void UGolemAnim::AnimNotify_ThrowStone()
 
 void UGolemAnim::AnimNotify_GroundAttackEffect()
 {
+	target->bCameraShake = true;
+
 	enemy->PlayGroundAttackSound();
 	FRotator dir = UKismetMathLibrary::FindLookAtRotation(enemy->groundAttackPoint->GetComponentLocation(), target->GetActorLocation());
 	dir.Pitch = 0;

@@ -17,4 +17,5 @@ public:
 	virtual void Tick(float DeltaSeconds);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class UCameraComponent* CameraComponent;
+	
 };

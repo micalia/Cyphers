@@ -3,6 +3,7 @@
 
 #include "PlayerCamera.h"
 #include <Camera/CameraComponent.h>
+#include <Kismet/KismetMathLibrary.h>
 
 // Sets default values
 APlayerCamera::APlayerCamera()
@@ -22,6 +23,6 @@ void APlayerCamera::SetAsMainCamera()
 
 void APlayerCamera::Tick(float DeltaSeconds)
 {
-Super::Tick(DeltaSeconds);
-}
+	Super::Tick(DeltaSeconds);
 
+}

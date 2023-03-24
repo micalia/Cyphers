@@ -21,6 +21,7 @@
 #include "PowerAttackDecal.h"
 #include <Particles/ParticleSystem.h>
 #include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
+#include <Kismet/KismetMathLibrary.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -79,6 +80,7 @@ ACypher_Kaya::ACypher_Kaya() {
 	// Move the camera actor to the character's head
 	
 	CameraActorComponent->SetRelativeLocation(CameraOffset);
+	cameraOriginPos = CameraOffset;
 
 	powerAttackColl = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PowerAttackCollision"));
 	powerAttackColl->SetupAttachment(GetMesh());
@@ -169,6 +171,9 @@ void ACypher_Kaya::BeginPlay()
 void ACypher_Kaya::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
+
+	if (bCameraShake == true)CameraShakeRandom();
+
 	currtimer+=DeltaTime;
 	if (currtimer>timer) {
 		float a=0;
@@ -271,4 +276,19 @@ void ACypher_Kaya::PlayDashAttackSound()
 void ACypher_Kaya::PlayDamageSound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), damageSound);
+}
+
+void ACypher_Kaya::CameraShakeRandom()
+{
+	if (camCurrTime < cameraShakeTime) {
+		camCurrTime += GetWorld()->GetDeltaSeconds();
+		float y = UKismetMathLibrary::RandomFloatInRange(-4, 4);
+		float z = UKismetMathLibrary::RandomFloatInRange(-4, 4);
+		CameraActorComponent->SetRelativeLocation(cameraOriginPos + FVector(0, y, z));
+	}
+	else {
+		bCameraShake = false;
+		CameraActorComponent->SetRelativeLocation(cameraOriginPos);
+		camCurrTime = 0;
+	}
 }

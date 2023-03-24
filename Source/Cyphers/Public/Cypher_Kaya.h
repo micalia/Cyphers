@@ -111,4 +111,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	float timer = 6;
 	float currtimer;
+public:
+//카메라 흔들림
+	bool bCameraShake = false;
+	FVector cameraOriginPos;
+	void CameraShakeRandom();
+	UPROPERTY(EditAnywhere)
+	float cameraShakeTime = 0.7;
+	float camCurrTime;
 };

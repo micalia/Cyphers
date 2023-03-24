@@ -39,7 +39,7 @@ public:
 
 //보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
-		bool bossAppear = false;
+		bool bossAppear = true;
 //현재상태
 	UPROPERTY(EditAnywhere)
 		float currAttackDamage = 0;
