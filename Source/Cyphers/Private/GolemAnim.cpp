@@ -28,6 +28,11 @@ UGolemAnim::UGolemAnim()
 	if (tempGroundAttackMontage.Succeeded()) {
 		groundAttackMontage = tempGroundAttackMontage.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempCloseKnockDownAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_CloseKnockDownAttackMontage.AM_CloseKnockDownAttackMontage'"));
+	if (tempCloseKnockDownAttackMontage.Succeeded()) {
+		closeKnockDownAttackMontage = tempCloseKnockDownAttackMontage.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_Damage.AM_Damage'"));
 	if (tempDamageMontage.Succeeded()) {
 		damageMontage = tempDamageMontage.Object;
@@ -50,7 +55,6 @@ void UGolemAnim::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	bAttackPlay = false;
 	enemy->fsm->mState = EGolemState::Idle;
-	UE_LOG(LogTemp, Warning, TEXT("OnAtkEnded!!!"))
 }
 
 void UGolemAnim::AnimNotify_TurnToTarget()
@@ -85,15 +89,10 @@ void UGolemAnim::AnimNotify_JumpAttackStart()
 	enemy->fsm->jumpAttackOn = true;
 }
 
-void UGolemAnim::AnimNotify_JumpAttackEnd()
-{
-	//파티클 생성
-	UE_LOG(LogTemp, Warning, TEXT("attackEnd"))
-
-}
-
 void UGolemAnim::AnimNotify_JumpAttackImpact()
-{ 
+{
+	enemy->fsm->jumpAttackCurrentTime = 0;
+
 	target->bCameraShake = true;
 	enemy->PlayJumpAttackSound();
 	FVector startPos = enemy->JA_EffectPoint->GetComponentLocation();
@@ -107,7 +106,7 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	if (isHit == true) {
 		
 	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
-	jae->SetRelativeScale3D(FVector(jaeScale));
+	jae->SetRelativeScale3D(FVector(jaeScale*3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
 	}
 }
 
@@ -149,13 +148,14 @@ void UGolemAnim::AnimNotify_StoneSpawn()
 
 void UGolemAnim::AnimNotify_ThrowStone()
 {
+	enemy->fsm->SetNewGoalDirection();
+	enemy->fsm->throwStoneAttackCurrentTime = 0;
+
 	spawnStone->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	spawnStone->compCollision->SetCollisionProfileName(TEXT("StoneObj"));
 	spawnStone->compCollision->SetSimulatePhysics(true);
 
-	UE_LOG(LogTemp, Warning, TEXT("player : %s / enemy socket : %s"), *target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))).ToString(), *enemy->GetMesh()->GetSocketLocation(FName(TEXT("Bip001-L-Hand"))).ToString())
-		//FVector distance = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - enemy->GetMesh()->GetSocketLocation(FName(TEXT("Bip001-L-Hand")));
-		FVector distance = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - spawnStone->GetActorLocation();
+	FVector distance = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - spawnStone->GetActorLocation();
 	FVector dir = distance.GetSafeNormal();
 	FVector force = spawnStone->compCollision->GetMass() * dir * enemy->fsm->throwPower;
 	spawnStone->compCollision->AddForceAtLocation(force, spawnStone->compCollision->GetCenterOfMass());
@@ -172,10 +172,16 @@ void UGolemAnim::AnimNotify_GroundAttackEffect()
 	enemy->SpawnGroundAttackCollision(dir);
 
 	dir.Yaw = dir.Yaw - 90;
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->groundAttackEffect, enemy->groundAttackPoint->GetComponentLocation(), dir, true, EPSCPoolMethod::AutoRelease);
+	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->groundAttackEffect, enemy->groundAttackPoint->GetComponentLocation(), dir, true, EPSCPoolMethod::AutoRelease);
+	jae->SetRelativeScale3D(FVector(3));
 }
 
 void UGolemAnim::PlayGroundAttackAnim()
 {
 	Montage_Play(groundAttackMontage, 1.0f);
+}
+
+void UGolemAnim::PlayCloseKnockDownAttack()
+{
+	Montage_Play(closeKnockDownAttackMontage, 1.0f);
 }

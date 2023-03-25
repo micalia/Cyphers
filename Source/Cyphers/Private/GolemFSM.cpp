@@ -33,13 +33,13 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (bDie == true) return;
-	//Skill Cool Time
-	jumpAttackCurrentTime += DeltaTime;
-	throwStoneAttackCurrentTime += DeltaTime;
-	groundAttackCurrentTime+=DeltaTime;
+
+	CalculateCurrentTime(DeltaTime);
 
 	targetDistance = target->GetActorLocation() - me->GetActorLocation();
 	targetDistanceLength = targetDistance.Length();
+
+	UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
 
 	switch (mState) {
 	case EGolemState::AppearBoss:
@@ -56,18 +56,18 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 		me->currAttackDamage = jumpAttackDamage;
 		//UE_LOG(LogTemp, Warning, TEXT("JumpAttack - currTime : %f"), jumpAttackCurrentTime);
 		if (jumpAttackOn == true)JumpAttackState();
-		if (anim->bAttackPlay == false && bTurnComplete == false) {
+		/*if (anim->bAttackPlay == false && bTurnComplete == false) {
 			SetNewGoalDirection();
 			jumpAttackCurrentTime = 0;
-		}
+		}*/
 		break;
 	case EGolemState::ThrowStoneAttack:
 		me->currAttackDamage = throwStoneAttackDamage;
 		//UE_LOG(LogTemp, Warning, TEXT("ThrowStoneAttack - currTime : %f"), throwStoneAttackCurrentTime);
-		if (anim->bAttackPlay == false && bTurnComplete == false) {
+		/*if (anim->bAttackPlay == false && bTurnComplete == false) {
 			SetNewGoalDirection();
 			throwStoneAttackCurrentTime = 0;
-		}
+		}*/
 		break;
 	case EGolemState::GroundAttack:
 		groundAttackCurrentTime = 0;
@@ -130,8 +130,6 @@ void UGolemFSM::JumpAttackState()
 {
 	jumpAttackDeltaTime += GetWorld()->DeltaTimeSeconds;
 
-	//DrawDebugSphere(GetWorld(), me->lineLoc[jumpAttackIdx], 20.0f, 32, FColor::Red, false, 5.0f);
-
 	float alpha = jumpAttackDeltaTime/JM_Point_BetweentMoveTime;
 	if (alpha<1) {
 		
@@ -148,30 +146,6 @@ void UGolemFSM::JumpAttackState()
 			me->GetCharacterMovement()->GravityScale = 1;
 		}
 	}
-	
-	/// 이전버전
-	//if (jumpAttackDeltaTime > jumpMovingTime)
-	//{
-	//	jumpAttackDeltaTime = 0;
-	//	//DrawDebugSphere(GetWorld(), me->lineLoc[jumpAttackIdx], 10.0f, 32, FColor::Red, false, 5.0f);
-	//	/*DrawDebugLine(GetWorld(), me->lineLoc[jumpAttackIdx], 
-	//		FVector(me->lineLoc[jumpAttackIdx].X, 
-	//				me->lineLoc[jumpAttackIdx].Y,
-	//				me->lineLoc[jumpAttackIdx].Z - 1500),
-	//			FColor::Blue, false, 3, 0, 8);
-	//	FHitResult hitInfo;
-	//	FCollisionQueryParams params;
-	//	params.AddIgnoredActor(this);*/
-	//	//bool bHit = GetWorld()->LineTraceSingleByChannel(hitInfo, start)
-	//	me->SetActorLocation(me->lineLoc[jumpAttackIdx]);
-	//	jumpAttackIdx++;
-	//	if (jumpAttackIdx == me->lineLoc.Num())
-	//	{
-	//		jumpAttackIdx = 0;
-	//		jumpAttackOn = false;
-	//		me->GetCharacterMovement()->GravityScale = 1;
-	//	} 
-	//}
 }
 
 
@@ -186,6 +160,14 @@ void UGolemFSM::DamageState() {
 	}*/
 }
 void UGolemFSM::DieState() {}
+
+void UGolemFSM::CalculateCurrentTime(float DeltaTime)
+{
+	jumpAttackCurrentTime += DeltaTime;
+	throwStoneAttackCurrentTime += DeltaTime;
+	groundAttackCurrentTime += DeltaTime;
+	closeKnockDownAttackCurrentTime += DeltaTime;
+}
 
 //void UGolemFSM::OnDamageProcess(float damage) {
 //	me->hp -= damage;
@@ -238,14 +220,31 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 	if (anim->bAttackPlay == true) return;
 	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength"))
 
-	//그라운드 어택
-	if (groundAttackCurrentTime > groundAttackCoolTime) {
-		anim->bAttackPlay = true;
-		mState = EGolemState::GroundAttack;
-		anim->PlayGroundAttackAnim();
-		return;
+//근거리 공격
+	//근거리 땅 내려찍기
+	if (closeKnockDownAttackCurrentTime > closeKnockDownAttackCoolTime) {
+		if (targetDistanceLength > closeKnockDownAttackRangeStart &&
+			targetDistanceLength < closeKnockDownAttackRangeEnd) {
+			anim->bAttackPlay = true;
+			mState = EGolemState::CloseKnockDownAttack;
+			anim->PlayCloseKnockDownAttack();
+			return;
+		}
 	}
 
+	//그라운드 어택
+	if (groundAttackCurrentTime > groundAttackCoolTime) {
+		if (targetDistanceLength > groundAttackRangeStart &&
+			targetDistanceLength < groundAttackRangeEnd) {
+				anim->bAttackPlay = true;
+				mState = EGolemState::GroundAttack;
+				anim->PlayGroundAttackAnim();
+				return;
+		}
+	}
+
+
+//원거리 공격
 	//돌던지기 범위를 먼저 체크
 	if (targetDistanceLength > throwStoneAttackRangeStart &&
 		targetDistanceLength < throwStoneAttackRangeEnd)

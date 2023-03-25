@@ -134,6 +134,8 @@ void AGolem::JumpAttackPath(FVector start, FVector between, FVector end) {
 	{
 		FVector p = CalculateBezier(ratio * i, start, between, end);
 		lineLoc.Add(p);
+
+		DrawDebugSphere(GetWorld(), p, 20.0f, 32, FColor::Red, false, 5.0f);
 	}
 }
 

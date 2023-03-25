@@ -46,9 +46,6 @@ public:
 		void AnimNotify_JumpAttackStart();
 
 	UFUNCTION()
-		void AnimNotify_JumpAttackEnd();
-
-	UFUNCTION()
 		void AnimNotify_JumpAttackImpact();
 
 	UFUNCTION(BlueprintCallable, Category = FSMEvent)
@@ -71,6 +68,8 @@ public:
 	UFUNCTION()
 		void AnimNotify_GroundAttackEffect();
 	void PlayGroundAttackAnim();
+// ±Ù°Å¸® °ø°Ý - ¶¥³»·ÁÂï±â
+	void PlayCloseKnockDownAttack();
 //¸ùÅ¸ÁÖ
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* jumpAttackMontage;
@@ -78,6 +77,8 @@ public:
 		UAnimMontage* throwStoneAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* groundAttackMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UAnimMontage* closeKnockDownAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* damageMontage;
 };

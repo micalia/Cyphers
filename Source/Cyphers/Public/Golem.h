@@ -53,7 +53,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float endPosSub = -40;
 	UPROPERTY(EditAnywhere, Category = Bezier)
-		float curvePointCount = 60;
+		float curvePointCount = 7;
 	FVector CalculateBezier(float ratio, FVector startPos, FVector betweenPos, FVector endPos);
 	//베지어 오브젝트 경로 만들기
 	void JumpAttackPath(FVector startPos, FVector betweenPos, FVector endPos);
