@@ -17,6 +17,7 @@ DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnDashAttackHitCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnNextDashCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnGripAttackCheckDelegate);
 
 UCLASS()
 class CYPHERS_API UPlayerAnim : public UAnimInstance
@@ -77,10 +78,14 @@ public:
 	FOnAttackHitCheckDelegate OnAttackHitCheck;
 	FOnDashAttackHitCheckDelegate OnDashAttackHitCheck;
 	FOnNextDashCheckDelegate OnNextDashCheck;
+	FOnGripAttackCheckDelegate OnGripAttackCheck;
+
 	UFUNCTION()
 		void AnimNotify_AttackHitCheck();
 	UFUNCTION()
 		void AnimNotify_NextAttackCheck();
+	UFUNCTION()
+		void AnimNotify_GripAttackCheck();
 	UFUNCTION()
 		void AnimNotify_PowerAttackCombo1();
 	UFUNCTION()

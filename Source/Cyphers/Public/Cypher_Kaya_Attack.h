@@ -107,6 +107,10 @@ public:
 	float grip2MoveDistance = 350;
 	UPROPERTY(EditAnywhere, Category = GripAttack)
 	float grip3MoveDistance = 480;
+
+	UPROPERTY(EditAnywhere)
+	FVector gripAttackRange = FVector(300);
+	void GripAttackCheck();
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 		int32 CurrentDashCombo;

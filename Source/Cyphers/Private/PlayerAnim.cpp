@@ -110,6 +110,11 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 	OnNextAttackCheck.Broadcast();
 }
 
+void UPlayerAnim::AnimNotify_GripAttackCheck()
+{
+	OnGripAttackCheck.Broadcast();
+}
+
 void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 {
 	me->compNiagra->Activate(true);

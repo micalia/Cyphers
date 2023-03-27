@@ -29,6 +29,7 @@ void UCypher_Kaya_Attack::BeginPlay()
 
 	kayaAnim->OnAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::AttackCheck);
 	kayaAnim->OnDashAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::DashAttackCheck);
+	kayaAnim->OnGripAttackCheck.AddUObject(this, &UCypher_Kaya_Attack::GripAttackCheck);
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
 		if (kaya->bDamageState == false) {
@@ -371,6 +372,72 @@ FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
 	}
 
 	return endPos;
+}
+
+void UCypher_Kaya_Attack::GripAttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(me);
+
+	FVector StartLocation = me->GetActorLocation();
+	FVector EndLocation = me->GetActorLocation() + me->GetActorForwardVector() * gripAttackRange;
+	FRotator collisionRot = me->GetActorRotation();
+	FQuat QuatRotation = FQuat(collisionRot);
+
+	FCollisionShape CollisionBox = FCollisionShape::MakeBox(gripAttackRange);
+	
+	bool bResult = me->GetWorld()->SweepSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		QuatRotation,
+		ECollisionChannel::ECC_Visibility,
+		CollisionBox,
+		Params
+	);
+
+#if ENABLE_DRAW_DEBUG
+
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	float DebugLifeTime = 5.0f;
+
+	FVector TraceVec = me->GetActorForwardVector() * gripAttackRange;
+	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
+
+	DrawDebugBox(
+		GetWorld(),
+		Center,
+		CollisionBox.GetExtent(),
+		QuatRotation,
+		DrawColor,
+		false,
+		DebugLifeTime
+	);
+#endif
+	AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
+
+		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+	}
+
+	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	if (bResult)
+	{
+		if (sentinel != nullptr)
+		{
+			sentinel->ReceiveDamage();
+		}
+	}
+
+	AGolem* golem = Cast<AGolem>(hitActor);
+	if (bResult)
+	{
+		if (golem != nullptr)
+		{
+			golem->ReceiveDamage();
+		}
+	}
 }
 
 bool UCypher_Kaya_Attack::CheckCurrState()
