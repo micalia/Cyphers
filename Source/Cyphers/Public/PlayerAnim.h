@@ -10,7 +10,7 @@
 UENUM(BlueprintType)
 enum class EPlayerState : uint8 {
 	Move,
-	BasicAttack,
+	BasicAttack,	
 };
 
 DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);

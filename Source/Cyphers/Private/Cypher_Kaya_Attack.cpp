@@ -62,6 +62,47 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+	//잡기공격
+	if (bIsGripAttacking) {
+		gripMoveCurrTime +=DeltaTime;
+		
+		switch (gripIndex)
+		{
+		case 1:
+			GA_alpha = gripMoveCurrTime / grip1MoveTime;
+			if (GA_alpha > 1) {
+				gripMoveCurrTime = 0;
+				gripIndex++;
+			}
+			kaya->SetActorLocation(FMath::Lerp(GAMovePoints[0], GAMovePoints[1], GA_alpha));
+			break;
+		case 2:
+			GA_alpha = gripMoveCurrTime / grip2MoveTime;
+			if (GA_alpha > 1) {
+				gripMoveCurrTime = 0;
+				gripIndex++;
+			}
+			kaya->SetActorLocation(FMath::Lerp(GAMovePoints[1], GAMovePoints[2], GA_alpha));
+			break;
+		case 3:
+			GA_alpha = gripMoveCurrTime / grip3MoveTime;
+			if (GA_alpha > 1) {
+				gripMoveCurrTime = 0;
+				gripIndex = 0;
+				bIsGripAttacking = false;
+				GAMovePoints.Empty();
+				break;
+			}
+			kaya->SetActorLocation(FMath::Lerp(GAMovePoints[2], GAMovePoints[3], GA_alpha));
+			break;
+		default:
+			gripMoveCurrTime = 0;
+			gripIndex = 0;
+			break;
+		}
+
+	}
+
 	//쿨타임 처리
 	if (startCoolBothMouse) {
 		currbothMouseAttackCool -= DeltaTime;
@@ -181,18 +222,18 @@ void UCypher_Kaya_Attack::AttackCheck()
 	bool bResult = me->GetWorld()->SweepSingleByChannel(
 		HitResult,
 		me->GetActorLocation(),
-		me->GetActorLocation() + me->GetActorForwardVector() * AttackRange,
+		me->GetActorLocation() + me->GetActorForwardVector() * AttackRange * 3,
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel3,
-		FCollisionShape::MakeSphere(AttackRadius),
+		FCollisionShape::MakeSphere(AttackRadius * 3 * 3),
 		Params
 	);
 
 #if ENABLE_DRAW_DEBUG
 
-	FVector TraceVec = me->GetActorForwardVector() * AttackRange;
+	FVector TraceVec = me->GetActorForwardVector() * AttackRange * 3;
 	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
-	float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	float HalfHeight = AttackRange * 3 * 0.5f + AttackRadius * 3;
 	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
 	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
 	float DebugLifeTime = 5.0f;
@@ -201,7 +242,7 @@ void UCypher_Kaya_Attack::AttackCheck()
 		GetWorld(),
 		Center,
 		HalfHeight,
-		AttackRadius,
+		AttackRadius * 3,
 		CapsuleRot,
 		DrawColor,
 		false,
@@ -241,18 +282,18 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 	bool bResult = me->GetWorld()->SweepSingleByChannel(
 		HitResult,
 		me->GetActorLocation(),
-		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange,
+		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange * 3,
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel3,
-		FCollisionShape::MakeSphere(DashAttackRadius),
+		FCollisionShape::MakeSphere(DashAttackRadius * 3),
 		Params
 	);
 
 #if ENABLE_DRAW_DEBUG
 
-	FVector TraceVec = me->GetActorForwardVector() * DashAttackRange;
+	FVector TraceVec = me->GetActorForwardVector() * DashAttackRange * 3;
 	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
-	float HalfHeight = DashAttackRange * 0.5f + DashAttackRadius;
+	float HalfHeight = DashAttackRange * 3 * 0.5f + DashAttackRadius * 3;
 	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
 	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
 	float DebugLifeTime = 5.0f;
@@ -261,7 +302,7 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		GetWorld(),
 		Center,
 		HalfHeight,
-		DashAttackRadius,
+		DashAttackRadius * 3,
 		CapsuleRot,
 		DrawColor,
 		false,
@@ -314,6 +355,22 @@ void UCypher_Kaya_Attack::Dash()
 		bDashOn = true;
 		kayaAnim->PlayDashAnim();
 	}
+}
+
+FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
+{
+	FHitResult hitInfo;
+	FCollisionQueryParams param;
+	param.AddIgnoredActor(kaya);
+
+	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
+	//DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 3, 0, 8);
+
+	if (isHit) {
+		return hitInfo.ImpactPoint;
+	}
+
+	return endPos;
 }
 
 bool UCypher_Kaya_Attack::CheckCurrState()
@@ -406,7 +463,29 @@ void UCypher_Kaya_Attack::InputKeyF()
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
-		kayaAnim->GripAttackPlayAnim();
+	//잡기 공격 거리 계산
+	//전방에 벽이 있는지 체크
+
+	FVector P0 = kaya->GetActorLocation();
+	FVector dir = kaya->GetActorForwardVector();
+	dir.Z = P0.Z;
+	FVector distance;
+
+	GAMovePoints.Insert(P0, 0);
+
+	distance = P0 + FVector(dir.X * grip1MoveDistance, dir.Y * grip1MoveDistance, 0);
+	GAMovePoints.Insert(GA_MoveNextPoint(GAMovePoints[0],distance),1);
+
+	distance += FVector(dir.X * grip2MoveDistance,dir.Y * grip2MoveDistance, 0);
+	GAMovePoints.Insert(GA_MoveNextPoint(GAMovePoints[1], distance), 2);
+
+	distance += FVector(dir.X * grip3MoveDistance, dir.Y * grip3MoveDistance, 0);
+	GAMovePoints.Insert(GA_MoveNextPoint(GAMovePoints[2], distance), 3);
+
+	bIsGripAttacking = true;
+	gripIndex = 1;
+
+	kayaAnim->GripAttackPlayAnim();
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Pressed()

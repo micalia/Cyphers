@@ -16,7 +16,6 @@ enum class EEnemy_SentinelState : uint8
 	AttackDelay,
 	Damaged,
 	Die,
-	ReturnPos
 };
 
 
@@ -68,10 +67,12 @@ public:
 	float idleDelayTime = 1.3;
 
 	//쫓아 갈 수 있는 범위
+	UPROPERTY(EditAnywhere)
 	float traceRange = 1000;
 
 	//공격범위
-	float attackRange = 170;
+	UPROPERTY(EditAnywhere)
+	float attackRange = 680;
 	//공격 대기 시간
 	UPROPERTY(EditAnywhere)
 	float attackDelayTime = 1.8;
@@ -91,12 +92,11 @@ public:
 	bool bDieMove = false;
 
 	//이동할 수 있는 반경
+	UPROPERTY(EditAnywhere)
 	float moveRange = 2000;
 	//처음 위치를 담아놓을 변수
 	FVector originPos;
 
-	//랜덤한 위치
-	FVector randPos;
 
 public:
 	//대기
@@ -111,8 +111,6 @@ public:
 	void UpdateDamaged();
 	//죽음
 	void UpdateDie();
-	//리턴
-	void UpdateReturnPos();
 
 
 	//상태 변경시 한번만!!! 호출 되는 함수
@@ -127,6 +125,4 @@ public:
 	//타겟을 쫓아 갈 수 있니?
 	bool IsTargetTrace();
 
-	//해당 위치까지 도착하면 상태를 Idle 로 전환하는 함수
-	void MoveToPos(FVector pos);
 };

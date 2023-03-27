@@ -25,7 +25,7 @@
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Resources/Models/Unity_Kaya/reCharacter.reCharacter'"));
 	if (tempMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);

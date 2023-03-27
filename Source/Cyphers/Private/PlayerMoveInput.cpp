@@ -31,11 +31,6 @@ void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		MoveAction(DeltaTime);
 	}
 
-	/*debug++;
-	if (debug > 1000) {
-		debug = 0;
-	}
-	UE_LOG(LogTemp, Warning, TEXT("MoveAction : %d"), debug)*/
 }
 
 void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputComponent)

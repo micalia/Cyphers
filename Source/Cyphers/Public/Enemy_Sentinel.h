@@ -34,8 +34,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UEnemy_SentinelFSM* fsm;
 
-	// 활성 / 비활성 하는 기능
-	void SetActive(bool bActive);
 
 	//죽었을 때 호출되는 함수를 담는 변수
 	FEnemySentinelDieDelegate dieDelegate;

@@ -84,6 +84,29 @@ public:
 	float dashHorizontal;
 	bool bNextDirValCheck;
 	void Dash();
+
+public:
+//잡기공격
+	bool bIsGripAttacking;
+	float GA_alpha;
+	TArray<FVector> GAMovePoints;
+	int32 gripIndex = 0;
+	float gripMoveCurrTime;
+	FVector GA_MoveNextPoint(FVector startPos, FVector endPos);
+
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip1MoveTime = 0.36;
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip2MoveTime = 0.41;
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip3MoveTime = 0.39;
+
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip1MoveDistance = 560;
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip2MoveDistance = 350;
+	UPROPERTY(EditAnywhere, Category = GripAttack)
+	float grip3MoveDistance = 480;
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 		int32 CurrentDashCombo;

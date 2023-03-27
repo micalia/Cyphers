@@ -55,8 +55,6 @@ void UEnemy_SentinelFSM::BeginPlay()
 	//나의 초기 체력을 셋팅하자
 	currHP = maxHP;
 
-	//나의 초기 위치를 저장하자
-	originPos = me->GetActorLocation();
 
 }
 
@@ -86,9 +84,6 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	case EEnemy_SentinelState::Die:
 		UpdateDie();
 		break;
-	case EEnemy_SentinelState::ReturnPos:
-		UpdateReturnPos();
-		break;
 	}
 }
 
@@ -97,20 +92,20 @@ void UEnemy_SentinelFSM::UpdateIdle()
 
 
 	//만약에 플레이어를 쫓아 갈 수 있니?
-	if (IsTargetTrace())
-	{
-		//상태를 Move 로 전환
-		ChangeState(EEnemy_SentinelState::Move);
-	}
-	else
-	{
+	//if (IsTargetTrace())
+	//{
+	//	//상태를 Move 로 전환
+	//	ChangeState(EEnemy_SentinelState::Move);
+	//}
+	//else
+	//{
 		//idleDelayTime 이 지나면	
 		if (IsWaitComplete(idleDelayTime))
 		{
 			//현재상태를 Move 로 한다.
 			ChangeState(EEnemy_SentinelState::Move);
 		}
-	}
+    //	}
 }
 
 void UEnemy_SentinelFSM::UpdateMove()
@@ -133,6 +128,7 @@ void UEnemy_SentinelFSM::UpdateMove()
 	////만약에 시야에 들어왔다면
 	//else if (bTrace)
 	//{
+	
 		//만약에 target - me 거리가 공격범위보다 작으면
 		if (dir.Length() < attackRange)
 		{
@@ -143,9 +139,9 @@ void UEnemy_SentinelFSM::UpdateMove()
 		else
 		{
 			//2. 그 방향으로 이동하고 싶다.
-			//me->AddMovementInput(dir.GetSafeNormal());
+			me->AddMovementInput(dir.GetSafeNormal());
 			//ai 를 이용해서 목적지까지 이동하고 싶다.	
-			ai->MoveToLocation(target->GetActorLocation());
+			//ai->MoveToLocation(target->GetActorLocation());
 		}
 	//}
 	////시야에 들어오지 않았다면
@@ -209,22 +205,8 @@ void UEnemy_SentinelFSM::UpdateDie()
 	//2. 만약에 p.Z 가 -200 보다 작으면 파괴한다
 	if (p.Z < -200)
 	{
-		//me->Destroy();
+		me->Destroy();
 
-		//나를 비활성화
-		me->SetActive(false);
-		////EnemyManager 찾자
-		//AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), AEnemyManager::StaticClass());
-		//AEnemyManager* am = Cast<AEnemyManager>(actor);
-		////찾은 놈에서 enemyArray 에 나를 다시 담자
-		//am->enemyArray.Add(me);
-		//currHP 를 maxHP
-		currHP = maxHP;
-		//상태를 Idle
-		ChangeState(EEnemy_SentinelState::Idle);
-		//몽타주를 멈춰준다
-		//me->StopAnimMontage(damageMontage);
-		//bDieMove 를 false 로!
 		bDieMove = false;
 	}
 	//3. 그렇지 않으면 해당 위치로 셋팅한다
@@ -234,28 +216,7 @@ void UEnemy_SentinelFSM::UpdateDie()
 	}
 }
 
-void UEnemy_SentinelFSM::UpdateReturnPos()
-{
-	// 처음 위치로 가서 도착하면 Idle 상태로 전환한다.
-	MoveToPos(originPos);
 
-
-	////1. 나 ----> 처음위치를 향하는 방향을 구한다.
-	//FVector dir = originPos - me->GetActorLocation();
-
-	////2. 만약에 나 --- 처음위치의 거리가 10보다 작으면
-	//if (dir.Length() < 10)
-	//{
-	//	//3. Idle 상태로 전환
-	//	ChangeState(EEnemy_SentinelState::Idle);
-	//}
-	////4. 그렇지 않으면 
-	//else
-	//{
-	//	//5. 계속 1번에서 구한 방향으로 이동한다
-	//	me->AddMovementInput(dir.GetSafeNormal());
-	//}
-}
 
 void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 {
@@ -287,15 +248,8 @@ void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 		//currTime = attackDelayTime;
 		break;
 	case EEnemy_SentinelState::Move:
-	{
-		//네비게이션 시스템 가져오자
-		UNavigationSystemV1* ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-		//랜덤한 위치를 얻오자
-		FNavLocation loc;
-		ns->GetRandomReachablePointInRadius(originPos, 1000, loc);
-		randPos = loc.Location;
-	}
-	break;
+	
+		break;
 	case EEnemy_SentinelState::Damaged:
 	{
 		//1. 랜덤한 값을 뽑는다 (0, 1 중)
@@ -395,17 +349,4 @@ bool UEnemy_SentinelFSM::IsTargetTrace()
 	//6. 그렇지 않으면 false 반환	
 	return false;
 
-}
-
-void UEnemy_SentinelFSM::MoveToPos(FVector pos)
-{
-	//해당 위치(pos) 로 간다
-	EPathFollowingRequestResult::Type result = ai->MoveToLocation(pos);
-
-	//만약에 목적지에 도착했다면
-	if (result == EPathFollowingRequestResult::AlreadyAtGoal)
-	{
-		//Idle 상태로 전환
-		ChangeState(EEnemy_SentinelState::Idle);
-	}
 }
