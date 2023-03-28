@@ -118,6 +118,7 @@ public:
 
 	//공격 받았을 때 처리하는 함수
 	void ReceiveDamage();
+	void ReceiveGripAttackDamage();
 
 	//Delay 함수
 	bool IsWaitComplete(float delayTime);

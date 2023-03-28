@@ -58,6 +58,7 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	hpWidget->SetRelativeLocation(FVector(0,0, 225));
 	hpWidget->SetRelativeRotation(FRotator(0,90, 0));
 	hpWidget->SetRelativeScale3D(FVector(0.399762, 0.399762, 0.329024));
+	hpWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	attackCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackCollision"));
 	attackCollision->SetupAttachment(RootComponent);

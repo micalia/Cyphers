@@ -36,7 +36,7 @@ ACypher_Kaya::ACypher_Kaya() {
 
 	compSword = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("compSword"));
 	compSword->SetupAttachment(GetMesh(), TEXT("Sword"));
-	compSword->SetRelativeScale3D(FVector(1.183, 1.133, 1));
+	compSword->SetRelativeScale3D(FVector(1, 1.34052, 1.3));
 	compSword->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempSwordMesh(TEXT("/Script/Engine.StaticMesh'/Game/Resources/Models/NightSkySword/maya2sketchfab.maya2sketchfab'"));

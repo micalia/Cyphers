@@ -115,6 +115,11 @@ void UPlayerAnim::AnimNotify_GripAttackCheck()
 	OnGripAttackCheck.Broadcast();
 }
 
+void UPlayerAnim::AnimNotify_GripAttackCheck2()
+{
+	OnGripAttackCheck2.Broadcast();
+}
+
 void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 {
 	me->compNiagra->Activate(true);

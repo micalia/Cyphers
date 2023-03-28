@@ -290,6 +290,11 @@ void UEnemy_SentinelFSM::ReceiveDamage()
 	}
 }
 
+void UEnemy_SentinelFSM::ReceiveGripAttackDamage()
+{
+	currHP--;
+}
+
 bool UEnemy_SentinelFSM::IsWaitComplete(float delayTime)
 {
 	//1. 시간을 흐르게 한다.

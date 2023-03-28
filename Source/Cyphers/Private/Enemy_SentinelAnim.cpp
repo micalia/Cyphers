@@ -54,3 +54,8 @@ void UEnemy_SentinelAnim::PlayGripAttackDamageAnim()
 {
 	enemy->PlayAnimMontage(enemy->fsm->damageMontage, 1.0f, FName(TEXT("GripAttackDamage")));
 }
+
+void UEnemy_SentinelAnim::PlayGripAttackDamage2Anim()
+{
+	enemy->PlayAnimMontage(enemy->fsm->damageMontage, 1.0f, FName(TEXT("GripDamage2")));
+}

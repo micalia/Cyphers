@@ -17,6 +17,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Enemy_SentinelFSM.h"
 #include "Enemy_SentinelAnim.h"
+#include <Kismet/KismetMathLibrary.h>
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -33,6 +34,7 @@ void UCypher_Kaya_Attack::BeginPlay()
 	kayaAnim->OnAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::AttackCheck);
 	kayaAnim->OnDashAttackHitCheck.AddUObject(this, &UCypher_Kaya_Attack::DashAttackCheck);
 	kayaAnim->OnGripAttackCheck.AddUObject(this, &UCypher_Kaya_Attack::GripAttackCheck);
+	kayaAnim->OnGripAttackCheck2.AddUObject(this, &UCypher_Kaya_Attack::GripAttackCheck2);
 	kayaAnim->OnMontageEnded.AddDynamic(this, &UCypher_Kaya_Attack::OnAttackMontageEnded);
 	kayaAnim->OnNextAttackCheck.AddLambda([this]()->void {
 		if (kaya->bDamageState == false) {
@@ -503,9 +505,14 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 	{
 		if (sentinel != nullptr)
 		{
+			ga1Check = true;
+			FVector destination = sentinel->GetActorLocation();
+			FVector myPos = me->GetActorLocation();
+			FVector moveEnemyPos = me->GetActorLocation() + me->GetActorForwardVector() * moveHitEnemyPos;
+			sentinel->SetActorLocation(moveEnemyPos);
+			FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(destination, myPos).Yaw);
+			sentinel->SetActorRotation(rotDir);
 			sentinel->fsm->anim->PlayGripAttackDamageAnim();
-			//sentinel->fsm->anim->
-			//sentinel->ReceiveDamage();
 		}
 	}
 	/*FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
@@ -556,6 +563,64 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 			golem->ReceiveDamage();
 		}
 	}*/
+}
+
+void UCypher_Kaya_Attack::GripAttackCheck2()
+{
+	FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
+	FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
+	FVector EndLocation = StartLocation + AddDistance;
+	FVector halfSize = gripAttackRange / 2;
+	FRotator collisionRot = me->GetActorRotation();
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
+
+	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		false,
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		3
+	);
+	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
+		AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
+
+		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+	}
+
+	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	if (bResult)
+	{
+		if (sentinel != nullptr)
+		{
+			if (ga1Check == false) {
+				FVector destination = sentinel->GetActorLocation();
+				FVector myPos = me->GetActorLocation();
+				/* 보스 걷기 루트모션 이동으로 이동 로직이 필요없어짐
+				FVector P0 = me->GetActorLocation();
+				FVector vt = targetDistance.GetSafeNormal() * bossSpeed * DeltaTime;
+				me->SetActorLocation(P0 + vt);*/
+				FVector moveEnemyPos = me->GetActorLocation() + me->GetActorForwardVector() * moveHitEnemyPos;
+				sentinel->SetActorLocation(moveEnemyPos);
+				FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(destination, myPos).Yaw);
+				sentinel->SetActorRotation(rotDir);
+
+				sentinel->fsm->anim->PlayGripAttackDamage2Anim();
+			}
+			ga1Check = false;
+			sentinel->fsm->ReceiveGripAttackDamage();
+		}
+	}
 }
 
 bool UCypher_Kaya_Attack::CheckCurrState()
