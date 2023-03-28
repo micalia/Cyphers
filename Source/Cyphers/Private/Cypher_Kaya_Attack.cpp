@@ -14,6 +14,9 @@
 #include "Golem.h"
 #include "PowerAttackDecal.h"
 #include "PlayerMoveInput.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include "Enemy_SentinelFSM.h"
+#include "Enemy_SentinelAnim.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -62,7 +65,95 @@ void UCypher_Kaya_Attack::BeginPlay()
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+	//(const UObject* WorldContextObject, 
+	/*const FVector Start, const FVector End, const FVector HalfSize, 
+	const FRotator Orientation, 
+	ETraceTypeQuery TraceChannel,
+	bool bTraceComplex, 
+	const TArray<AActor*>& ActorsToIgnore, 
+	EDrawDebugTrace::Type DrawDebugType, 
+	FHitResult& OutHit, bool bIgnoreSelf, 
+	FLinearColor TraceColor, 
+	FLinearColor TraceHitColor, 
+	float DrawTime)*/
+	/////////////////////////////////////////
+	/*FVector StartLocation = me->GetActorLocation();
+	FVector AddDistance = me->GetActorForwardVector() * gripAttackRange;
+	FVector EndLocation = StartLocation + AddDistance;
+	UE_LOG(LogTemp, Warning, TEXT("EndLocation : %s"), *EndLocation.ToString())
+	FVector halfSize = gripAttackRange / 2;
+	FRotator collisionRot = me->GetActorRotation();
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
+
+	UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		false,
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::ForOneFrame,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		0.1
+	);*/
+
+	/////////////////////////////////////////
+//	FHitResult HitResult;
+//	FCollisionQueryParams Params;
+//	Params.AddIgnoredActor(me);
+//
+//	FVector StartLocation = me->GetActorLocation();
+//	FVector AddDistance = me->GetActorForwardVector() * gripAttackRange;
+//	FVector EndLocation = StartLocation + AddDistance;
+//	UE_LOG(LogTemp, Warning, TEXT("EndLoc ADd: %s"), *AddDistance.ToString())
+//	FRotator collisionRot = me->GetActorRotation();
+//	FQuat QuatRotation = FQuat(collisionRot);
+//	FCollisionShape CollisionBox = FCollisionShape::MakeBox(gripAttackRange);
+//	UE_LOG(LogTemp, Warning, TEXT("GripAttackRange : %s / StartLocation : %s / EndLocation : %s / CollisionBox Ext: %s"), *gripAttackRange.ToString(),*StartLocation.ToString(), *EndLocation.ToString(), *CollisionBox.GetExtent().ToString())
+//	
+//	bool bResult = me->GetWorld()->SweepSingleByChannel(
+//		HitResult,
+//		StartLocation,
+//		EndLocation,
+//		QuatRotation,
+//		ECollisionChannel::ECC_Visibility,
+//		CollisionBox,
+//		Params
+//	);
+//
+//	if (bResult) {
+//		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("Hit Actor Name : %s"), *HitResult.GetActor()->GetName()), true, FVector2D(1, 1));
+//		
+//	}
+//
+//#if ENABLE_DRAW_DEBUG
+//
+//	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+//	float DebugLifeTime = 0.1f;
+//
+//	/*FVector TraceVec = me->GetActorForwardVector() * gripAttackRange;
+//	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;*/
+//	FVector Center = me->GetActorLocation();
+//
+//	//UE_LOG(LogTemp, Warning, TEXT("TraceVec : %s / Center : %s"), *TraceVec.ToString(), *Center.ToString())
+//	DrawDebugBox(
+//		GetWorld(),
+//		Center,
+//		CollisionBox.GetExtent(),
+//		QuatRotation,
+//		DrawColor,
+//		false,
+//		DebugLifeTime
+//	);
+//#endif
+////////////////////////////////////////////////////////////////////
+
 	//잡기공격
 	if (bIsGripAttacking) {
 		gripMoveCurrTime +=DeltaTime;
@@ -376,45 +467,72 @@ FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
 
 void UCypher_Kaya_Attack::GripAttackCheck()
 {
-	FHitResult HitResult;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(me);
-
-	FVector StartLocation = me->GetActorLocation();
-	FVector EndLocation = me->GetActorLocation() + me->GetActorForwardVector() * gripAttackRange;
+	FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
+	FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
+	FVector EndLocation = StartLocation + AddDistance;
+	FVector halfSize = gripAttackRange / 2;
 	FRotator collisionRot = me->GetActorRotation();
-	FQuat QuatRotation = FQuat(collisionRot);
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
 
-	FCollisionShape CollisionBox = FCollisionShape::MakeBox(gripAttackRange);
-	
-	bool bResult = me->GetWorld()->SweepSingleByChannel(
-		HitResult,
+	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
 		StartLocation,
 		EndLocation,
-		QuatRotation,
-		ECollisionChannel::ECC_Visibility,
-		CollisionBox,
-		Params
-	);
-
-#if ENABLE_DRAW_DEBUG
-
-	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-	float DebugLifeTime = 5.0f;
-
-	FVector TraceVec = me->GetActorForwardVector() * gripAttackRange;
-	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
-
-	DrawDebugBox(
-		GetWorld(),
-		Center,
-		CollisionBox.GetExtent(),
-		QuatRotation,
-		DrawColor,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
 		false,
-		DebugLifeTime
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		3
 	);
-#endif
+	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
+		AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
+
+		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+	}
+
+	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	if (bResult)
+	{
+		if (sentinel != nullptr)
+		{
+			sentinel->fsm->anim->PlayGripAttackDamageAnim();
+			//sentinel->fsm->anim->
+			//sentinel->ReceiveDamage();
+		}
+	}
+	/*FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
+	FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
+	FVector EndLocation = StartLocation + AddDistance;
+	FVector halfSize = gripAttackRange / 2;
+	FRotator collisionRot = me->GetActorRotation();
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
+
+	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		false,
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		3
+	);
+	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
 	AActor* hitActor = HitResult.GetActor();
 	if (hitActor != nullptr) {
 
@@ -437,7 +555,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 		{
 			golem->ReceiveDamage();
 		}
-	}
+	}*/
 }
 
 bool UCypher_Kaya_Attack::CheckCurrState()
@@ -551,6 +669,48 @@ void UCypher_Kaya_Attack::InputKeyF()
 
 	bIsGripAttacking = true;
 	gripIndex = 1;
+
+	//FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
+	//FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
+	//FVector EndLocation = StartLocation + AddDistance;
+	//FVector halfSize = gripAttackRange / 2;
+	//FRotator collisionRot = me->GetActorRotation();
+	//TArray<AActor*> EmptyActorsToIgnore;
+	//FHitResult HitResult;
+
+	//bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+	//	GetWorld(),
+	//	StartLocation,
+	//	EndLocation,
+	//	halfSize,
+	//	collisionRot,
+	//	UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+	//	false,
+	//	EmptyActorsToIgnore,
+	//	EDrawDebugTrace::ForDuration,
+	//	HitResult,
+	//	true,
+	//	FLinearColor::Red,
+	//	FLinearColor::Green,
+	//	3
+	//);
+	//UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
+	//	AActor* hitActor = HitResult.GetActor();
+	//if (hitActor != nullptr) {
+
+	//	UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
+	//}
+
+	//AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+	//if (bResult)
+	//{
+	//	if (sentinel != nullptr)
+	//	{  
+	//		sentinel->fsm->anim->PlayGripAttackDamageAnim();
+	//		//sentinel->fsm->anim->
+	//		//sentinel->ReceiveDamage();
+	//	}
+	//}
 
 	kayaAnim->GripAttackPlayAnim();
 }

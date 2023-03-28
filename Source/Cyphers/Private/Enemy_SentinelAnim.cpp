@@ -49,3 +49,8 @@ void UEnemy_SentinelAnim::AnimNotify_EnemyAttackEnd()
 {
 	enemy->attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
+
+void UEnemy_SentinelAnim::PlayGripAttackDamageAnim()
+{
+	enemy->PlayAnimMontage(enemy->fsm->damageMontage, 1.0f, FName(TEXT("GripAttackDamage")));
+}

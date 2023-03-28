@@ -279,15 +279,12 @@ void UPlayerAnim::PlayDashAnim()
 	me->PlayDashSound();
 
 	if (me->compKayaAttack->dashHorizontal == -1) {
-		UE_LOG(LogTemp, Warning, TEXT("DashFL45"))
 		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFL45"));
 	}
 	else if (me->compKayaAttack->dashHorizontal == 1) {
-		UE_LOG(LogTemp, Warning, TEXT("DashFR45"))
 		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFR45"));
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("DashFront"))
 		me->PlayAnimMontage(dashMontage, 1, TEXT("DashFront"));
 	}
 }

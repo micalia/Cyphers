@@ -100,11 +100,9 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	FHitResult hitInfo;
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(enemy->GetOwner());
-
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
 
 	if (isHit == true) {
-		
 	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
 	jae->SetRelativeScale3D(FVector(jaeScale*3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
 	}
@@ -179,6 +177,11 @@ void UGolemAnim::AnimNotify_GroundAttackEffect()
 void UGolemAnim::PlayGroundAttackAnim()
 {
 	Montage_Play(groundAttackMontage, 1.0f);
+}
+
+void UGolemAnim::AnimNotify_KnockDownAttackCheck()
+{
+	OnKnockDownAttackCheck.Broadcast();
 }
 
 void UGolemAnim::PlayCloseKnockDownAttack()

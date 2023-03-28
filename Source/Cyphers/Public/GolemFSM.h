@@ -144,4 +144,5 @@ public:
 		float closeKnockDownAttackCoolTime = 3;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = CloseKnockDownAttack)
 		float closeKnockDownAttackCurrentTime = 0;
+	void KnockDownAttackCheck();
 };

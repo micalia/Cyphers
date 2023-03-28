@@ -64,6 +64,8 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	return;
+
 	switch (currState)
 	{
 	case EEnemy_SentinelState::Idle:

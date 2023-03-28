@@ -32,4 +32,6 @@ public:
 		void AnimNotify_EnemyAttack();
 	UFUNCTION()
 	void AnimNotify_EnemyAttackEnd();
+
+	void PlayGripAttackDamageAnim();
 };

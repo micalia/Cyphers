@@ -185,7 +185,7 @@ void ACypher_Kaya::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (bCameraShake == true)CameraShakeRandom();
-
+	
 	currtimer+=DeltaTime;
 	if (currtimer>timer) {
 		float a=0;

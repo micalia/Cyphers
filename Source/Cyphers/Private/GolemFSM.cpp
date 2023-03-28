@@ -24,6 +24,7 @@ void UGolemFSM::BeginPlay()
 	me = Cast<AGolem>(GetOwner());
 	target = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
 	anim = Cast<UGolemAnim>(me->GetMesh()->GetAnimInstance());
+	anim->OnKnockDownAttackCheck.AddUObject(this, &UGolemFSM::KnockDownAttackCheck);
 }
 
 
@@ -378,7 +379,7 @@ void UGolemFSM::SetNewGoalDirection()
 	if (cross.Z > 0)
 	{
 		lr = "Right    //";
-
+		
 		NextTurnAngle = angle;
 	}
 	else if (cross.Z < 0)
@@ -392,4 +393,9 @@ void UGolemFSM::SetNewGoalDirection()
 	//출력해보기
 	/*GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Green, str + lr + GoalDirection.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("AcosAngle : %f, angle : %f // "), AcosAngle, angle)*/
+}
+
+void UGolemFSM::KnockDownAttackCheck()
+{
+	
 }

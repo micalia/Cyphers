@@ -109,7 +109,11 @@ public:
 	float grip3MoveDistance = 480;
 
 	UPROPERTY(EditAnywhere)
-	FVector gripAttackRange = FVector(300);
+	float startGripAtkPos = 170;
+	UPROPERTY(EditAnywhere)
+	float startToEndDistance = 300;
+	UPROPERTY(EditAnywhere)
+	FVector gripAttackRange = FVector(250, 250, 200);
 	void GripAttackCheck();
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))

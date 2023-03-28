@@ -9,6 +9,8 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE(FOnKnockDownAttackCheckDelegate);
+
 UCLASS()
 class CYPHERS_API UGolemAnim : public UAnimInstance
 {
@@ -24,6 +26,8 @@ public:
 	virtual void NativeBeginPlay() override;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = FSM)
 		EGolemState animState;
+
+	FOnKnockDownAttackCheckDelegate OnKnockDownAttackCheck;
 
 	UPROPERTY(VisibleAnywhere, Category = CheckBool)
 		bool bAttackPlay = false;
@@ -69,6 +73,8 @@ public:
 		void AnimNotify_GroundAttackEffect();
 	void PlayGroundAttackAnim();
 // ±Ù°Å¸® °ø°Ý - ¶¥³»·ÁÂï±â
+	UFUNCTION()
+		void AnimNotify_KnockDownAttackCheck();
 	void PlayCloseKnockDownAttack();
 //¸ùÅ¸ÁÖ
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)

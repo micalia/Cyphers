@@ -45,22 +45,39 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*startCurrTime+= DeltaTime;
-	if (startCurrTime > StartTime && bStart == false) {
-		bStart = true;
-		StartJump();
-	}*/
+	float AttackRange = 50;
+		FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_Visibility,
+		FCollisionShape::MakeBox(FVector(50, 30, 20)),
+		Params
+	);
 
-	if (bIsJumping)
-	{
-		MoveAlongPath(DeltaTime);
+#if ENABLE_DRAW_DEBUG
 
-		/*if (GetWorld()->GetTimeSeconds() - JumpStartTime >= JumpDuration)
-		{
-			SetActorLocation(JumpEndPos);
-			bIsJumping = false;
-		}*/
-	}
+	FVector TraceVec = GetActorForwardVector() * AttackRange;
+	FVector Center = GetActorLocation() + TraceVec * 0.5f;
+	FQuat BoxRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	float DebugLifeTime = 0.1f;
+
+	DrawDebugBox(
+		GetWorld(),
+		Center,
+		FVector(50, 30, 20),
+		BoxRot,
+		DrawColor,
+		false,
+		DebugLifeTime
+	);
+
+#endif
 }
 
 void AMyCharacter::StartJump()
