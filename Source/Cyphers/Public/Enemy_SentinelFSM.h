@@ -18,6 +18,7 @@ enum class EEnemy_SentinelState : uint8
 	Die,
 	LieFloor,
 	Rise,
+	Flying,
 };
 
 

@@ -88,6 +88,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* swing3;
 	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* gaUpAtkSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* gaDownAtkSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* dashSound;
 
 	UPROPERTY(EditAnywhere, Category = Sound)
@@ -106,6 +110,8 @@ public:
 	void PlayPowerAttackSwordReadySound();
 	void PlayPowerAttackGroundSound();
 	void PlayDashSound();
+	void PlayGaUpAtkSound();
+	void PlayGaDownAtkSound();
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
 

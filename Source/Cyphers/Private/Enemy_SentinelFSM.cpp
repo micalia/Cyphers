@@ -218,8 +218,16 @@ void UEnemy_SentinelFSM::UpdateLieFloor()
 {
 	if (IsWaitComplete(damageDelayTime))
 	{
-		//Move 상태
-		ChangeState(EEnemy_SentinelState::Rise);
+		if (me->currHP <= 0) {
+			me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			me->hpWidget->SetVisibility(false);
+			currState = EEnemy_SentinelState::Die;
+			bDieMove = true;
+		}
+		else {
+			//Move 상태
+			ChangeState(EEnemy_SentinelState::Rise);
+		}
 	}
 }
 

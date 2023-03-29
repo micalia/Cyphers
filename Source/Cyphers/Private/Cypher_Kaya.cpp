@@ -112,6 +112,14 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempSwing3.Succeeded()) {
 		swing3 = tempSwing3.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGaUpAtkSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_UpAtk.GA_UpAtk'"));
+	if (tempGaUpAtkSound.Succeeded()) {
+		gaUpAtkSound = tempGaUpAtkSound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGaDownAtkSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_DownAtk.GA_DownAtk'"));
+	if (tempGaDownAtkSound.Succeeded()) {
+		gaDownAtkSound = tempGaDownAtkSound.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempDamageSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/kayaDamage.kayaDamage'"));
 	if (tempDamageSound.Succeeded()) {
 		damageSound = tempDamageSound.Object;
@@ -288,6 +296,16 @@ void ACypher_Kaya::PlayPowerAttackGroundSound()
 void ACypher_Kaya::PlayDashSound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), dashSound);
+}
+
+void ACypher_Kaya::PlayGaUpAtkSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), gaUpAtkSound);
+}
+
+void ACypher_Kaya::PlayGaDownAtkSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), gaDownAtkSound);
 }
 
 void ACypher_Kaya::PlayDashAttackSound()

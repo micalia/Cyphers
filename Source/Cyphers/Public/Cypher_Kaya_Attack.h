@@ -114,16 +114,16 @@ public:
 	float grip3MoveDistance = 480;
 
 	UPROPERTY(EditAnywhere)
-	float startGripAtkPos = 170;
+	float startGripAtkPos = 70;
 	UPROPERTY(EditAnywhere)
-	float startToEndDistance = 350;
+	float startToEndDistance = 670;
 	UPROPERTY(EditAnywhere)
-	FVector gripAttackRange = FVector(250, 250, 200);
+	FVector gripAttackRange = FVector(20, 250, 200);
 	bool ga1Check;
 	void GripAttackCheck();
 	void GripAttackCheck2();
 	UPROPERTY(EditAnywhere)
-	float moveHitEnemyPos = 400;
+	float moveHitEnemyPos = 500;
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 		int32 CurrentDashCombo;

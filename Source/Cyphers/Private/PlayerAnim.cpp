@@ -276,6 +276,16 @@ void UPlayerAnim::AnimNotify_AfterImage()
 	me->compNiagra->Activate(true);
 }
 
+void UPlayerAnim::AnimNotify_GaUpAtkSound()
+{
+	me->PlayGaUpAtkSound();
+}
+
+void UPlayerAnim::AnimNotify_GaDownAtkSound()
+{
+	me->PlayGaDownAtkSound();
+}
+
 void UPlayerAnim::DamagePlayAnim()
 {
 	Montage_Play(damageMontage, 1.0f);

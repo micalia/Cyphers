@@ -145,4 +145,10 @@ public:
 // ¿‹ªÛ ¿Ã∆Â∆Æ
 	UFUNCTION()
 		void AnimNotify_AfterImage();
+
+//Input F∞¯∞›
+	UFUNCTION()
+		void AnimNotify_GaUpAtkSound();
+	UFUNCTION()
+		void AnimNotify_GaDownAtkSound();
 };

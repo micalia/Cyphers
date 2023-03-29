@@ -239,7 +239,7 @@ void UCypher_Kaya_Attack::AttackCheck()
 		me->GetActorLocation(),
 		me->GetActorLocation() + me->GetActorForwardVector() * AttackRange * 3,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel3,
+		ECollisionChannel::ECC_GameTraceChannel5,
 		FCollisionShape::MakeSphere(AttackRadius * 3 * 3),
 		Params
 	);
@@ -299,7 +299,7 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		me->GetActorLocation(),
 		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange * 3,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel3,
+		ECollisionChannel::ECC_GameTraceChannel5,
 		FCollisionShape::MakeSphere(DashAttackRadius * 3),
 		Params
 	);
@@ -406,7 +406,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 		EndLocation,
 		halfSize,
 		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel5),
 		false,
 		EmptyActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
@@ -435,6 +435,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 			sentinel->SetActorLocation(moveEnemyPos);
 			FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(destination, myPos).Yaw);
 			sentinel->SetActorRotation(rotDir);
+			sentinel->fsm->ChangeState(EEnemy_SentinelState::Flying);
 			sentinel->fsm->anim->PlayGripAttackDamageAnim();
 			sentinel->ReceiveGripAttackDamage();
 		}
@@ -516,7 +517,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 		EndLocation,
 		halfSize,
 		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel5),
 		false,
 		EmptyActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
@@ -549,7 +550,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 				sentinel->SetActorLocation(moveEnemyPos);
 				FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(destination, myPos).Yaw);
 				sentinel->SetActorRotation(rotDir);
-
+				sentinel->fsm->ChangeState(EEnemy_SentinelState::Flying);
 				sentinel->fsm->anim->PlayGripAttackDamage2Anim();
 			}
 			ga1Check = false;
