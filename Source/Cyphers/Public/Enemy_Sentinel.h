@@ -45,6 +45,8 @@ public:
 	class UWidgetComponent* hpWidget;
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* attackCollision;
+	UPROPERTY(EditAnywhere)
+	FVector atKCollisionSize = FVector(92, 58, 86);
 	UPROPERTY()
 	class UEnemy_SentinelHpUI* sentinelHpUI;
 	float maxHP;

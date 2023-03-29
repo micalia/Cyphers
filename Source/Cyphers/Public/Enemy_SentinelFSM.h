@@ -78,7 +78,7 @@ public:
 	float attackRange = 680;
 	//공격 대기 시간
 	UPROPERTY(EditAnywhere)
-	float attackDelayTime = 1.8;
+	float attackDelayTime = 0.8;
 
 	//피격 대기 시간
 	UPROPERTY(EditAnywhere)
