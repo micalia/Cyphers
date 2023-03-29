@@ -16,6 +16,8 @@ enum class EEnemy_SentinelState : uint8
 	AttackDelay,
 	Damaged,
 	Die,
+	LieFloor,
+	Rise,
 };
 
 
@@ -93,7 +95,8 @@ public:
 	//처음 위치를 담아놓을 변수
 	FVector originPos;
 
-
+	//데미지로 누워있는시간
+	float LieFloorDelayTime=2;
 public:
 	//대기
 	void UpdateIdle();
@@ -107,7 +110,8 @@ public:
 	void UpdateDamaged();
 	//죽음
 	void UpdateDie();
-
+	//누워있음
+	void UpdateLieFloor();
 
 	//상태 변경시 한번만!!! 호출 되는 함수
 	void ChangeState(EEnemy_SentinelState state);

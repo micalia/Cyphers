@@ -32,6 +32,10 @@ public:
 		void AnimNotify_EnemyAttack();
 	UFUNCTION()
 	void AnimNotify_EnemyAttackEnd();
+	UFUNCTION()
+		void AnimNotify_CheckRiseDelayTime();
+	UFUNCTION()
+		void AnimNotify_ChangeToIdle();
 
 	void PlayGripAttackDamageAnim();
 	void PlayGripAttackDamage2Anim();

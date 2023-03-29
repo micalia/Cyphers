@@ -397,6 +397,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 	FVector halfSize = gripAttackRange / 2;
 	FRotator collisionRot = me->GetActorRotation();
 	TArray<AActor*> EmptyActorsToIgnore;
+	EmptyActorsToIgnore.Add(GetOwner());
 	FHitResult HitResult;
 
 	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
@@ -405,7 +406,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 		EndLocation,
 		halfSize,
 		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
 		false,
 		EmptyActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
@@ -436,6 +437,16 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 			sentinel->SetActorRotation(rotDir);
 			sentinel->fsm->anim->PlayGripAttackDamageAnim();
 			sentinel->ReceiveGripAttackDamage();
+		}
+	}
+
+
+	AGolem* golem = Cast<AGolem>(hitActor);
+	if (bResult)
+	{
+		if (golem != nullptr)
+		{
+			golem->ReceiveDamage();
 		}
 	}
 	/*FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
@@ -496,6 +507,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 	FVector halfSize = gripAttackRange / 2;
 	FRotator collisionRot = me->GetActorRotation();
 	TArray<AActor*> EmptyActorsToIgnore;
+	EmptyActorsToIgnore.Add(GetOwner());
 	FHitResult HitResult;
 
 	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
@@ -504,7 +516,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 		EndLocation,
 		halfSize,
 		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
 		false,
 		EmptyActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
@@ -542,6 +554,15 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 			}
 			ga1Check = false;
 			sentinel->ReceiveGripAttackDamage();
+		}
+	}
+
+	AGolem* golem = Cast<AGolem>(hitActor);
+	if (bResult)
+	{
+		if (golem != nullptr)
+		{
+			golem->ReceiveDamage();
 		}
 	}
 }

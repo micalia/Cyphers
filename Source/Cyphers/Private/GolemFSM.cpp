@@ -40,7 +40,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	targetDistance = target->GetActorLocation() - me->GetActorLocation();
 	targetDistanceLength = targetDistance.Length();
 
-	UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
+	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
 
 	switch (mState) {
 	case EGolemState::AppearBoss:

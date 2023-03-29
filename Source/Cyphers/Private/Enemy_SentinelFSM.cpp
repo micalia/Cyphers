@@ -79,13 +79,14 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	case EEnemy_SentinelState::Die:
 		UpdateDie();
 		break;
+	case EEnemy_SentinelState::LieFloor:
+		UpdateLieFloor();
+		break;
 	}
 }
 
 void UEnemy_SentinelFSM::UpdateIdle()
 {
-
-
 	//만약에 플레이어를 쫓아 갈 수 있니?
 	//if (IsTargetTrace())
 	//{
@@ -213,6 +214,15 @@ void UEnemy_SentinelFSM::UpdateDie()
 
 
 
+void UEnemy_SentinelFSM::UpdateLieFloor()
+{
+	if (IsWaitComplete(damageDelayTime))
+	{
+		//Move 상태
+		ChangeState(EEnemy_SentinelState::Rise);
+	}
+}
+
 void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 {
 	//상태 변경 로그를 출력하자
@@ -262,6 +272,11 @@ void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 		me->hpWidget->SetVisibility(false);
 		//Die 몽타주 실행
 		me->PlayAnimMontage(damageMontage, 1.0f, FName(TEXT("Die")));
+		break;
+	case EEnemy_SentinelState::LieFloor:
+		break;
+	case EEnemy_SentinelState::Rise:
+		me->PlayAnimMontage(damageMontage, 1.0f, TEXT("Rise"));
 		break;
 	}
 }

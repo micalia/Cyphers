@@ -98,6 +98,7 @@ void AGolem::BeginPlay()
 void AGolem::Tick(float DeltaTime)
 { 
 	CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
+	UE_LOG(LogTemp, Warning, TEXT("GolemCurrHP : %f / GolemFullHP : %f"), currHP, maxHP)
 }
 
 void AGolem::MoveJumpAttack() {
