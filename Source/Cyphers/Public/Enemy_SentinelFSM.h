@@ -64,7 +64,7 @@ public:
 	float currTime = 0;
 	//대기 상태 기다리는 시간
 	UPROPERTY(EditAnywhere)
-	float idleDelayTime = 1.3;
+	float idleDelayTime = 0.5;
 
 	//쫓아 갈 수 있는 범위
 	UPROPERTY(EditAnywhere)
@@ -79,12 +79,8 @@ public:
 
 	//피격 대기 시간
 	UPROPERTY(EditAnywhere)
-	float damageDelayTime = 2;
+	float damageDelayTime = 0.4;
 
-	//현재 체력
-	float currHP;
-	//최대 체력
-	float maxHP = 1;
 
 	//죽었을 때 내려가는 속력
 	float dieSpeed = 100;
@@ -115,10 +111,6 @@ public:
 
 	//상태 변경시 한번만!!! 호출 되는 함수
 	void ChangeState(EEnemy_SentinelState state);
-
-	//공격 받았을 때 처리하는 함수
-	void ReceiveDamage();
-	void ReceiveGripAttackDamage();
 
 	//Delay 함수
 	bool IsWaitComplete(float delayTime);

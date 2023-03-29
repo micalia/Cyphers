@@ -30,6 +30,7 @@ public:
 	class ACypher_Kaya* kaya;
 
 	void ReceiveDamage();
+	void ReceiveGripAttackDamage();
 	//적 AI 관리 하는 컴포넌트(FSM)
 	UPROPERTY(EditAnywhere)
 		class UEnemy_SentinelFSM* fsm;

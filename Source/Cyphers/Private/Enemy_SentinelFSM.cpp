@@ -52,10 +52,6 @@ void UEnemy_SentinelFSM::BeginPlay()
 	ai = Cast<AAIController>(me->GetController());
 	//ai = UAIBlueprintHelperLibrary::GetAIController(me);
 
-	//나의 초기 체력을 셋팅하자
-	currHP = maxHP;
-
-
 }
 
 
@@ -63,9 +59,6 @@ void UEnemy_SentinelFSM::BeginPlay()
 void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	return;
-
 	switch (currState)
 	{
 	case EEnemy_SentinelState::Idle:
@@ -140,10 +133,10 @@ void UEnemy_SentinelFSM::UpdateMove()
 		//그렇지 않으면
 		else
 		{
-			//2. 그 방향으로 이동하고 싶다.
-			me->AddMovementInput(dir.GetSafeNormal());
+			//2. 그 방향으S로 이동하고 싶다.
+			//////me->AddMovementInput(dir.GetSafeNormal());
 			//ai 를 이용해서 목적지까지 이동하고 싶다.	
-			//ai->MoveToLocation(target->GetActorLocation());
+			EPathFollowingRequestResult::Type re = ai->MoveToActor(target);
 		}
 	//}
 	////시야에 들어오지 않았다면
@@ -271,28 +264,6 @@ void UEnemy_SentinelFSM::ChangeState(EEnemy_SentinelState state)
 		me->PlayAnimMontage(damageMontage, 1.0f, FName(TEXT("Die")));
 		break;
 	}
-}
-
-void UEnemy_SentinelFSM::ReceiveDamage()
-{
-	//피를 줄이자
-	currHP--;
-	//hp 가 0보다 크면 Damage 상태로 전환
-	if (currHP > 0)
-	{
-		ChangeState(EEnemy_SentinelState::Damaged);
-	}
-	//그렇지 않으면 Die 상태로 전환
-	else
-	{
-
-		ChangeState(EEnemy_SentinelState::Die);
-	}
-}
-
-void UEnemy_SentinelFSM::ReceiveGripAttackDamage()
-{
-	currHP--;
 }
 
 bool UEnemy_SentinelFSM::IsWaitComplete(float delayTime)

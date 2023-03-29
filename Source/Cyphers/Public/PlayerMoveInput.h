@@ -37,9 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, Category=PlayerSetting)
 	float moveSpeed = 600;
 	UPROPERTY(EditAnywhere)
-	float minCamPitch = -30;
+	float minCamPitch = -35;
 	UPROPERTY(EditAnywhere)
-	float maxCamPitch = 10;
+	float maxCamPitch = 15;
 public:
 	void MoveAction(float deltaTime);
 	void RotateAction();

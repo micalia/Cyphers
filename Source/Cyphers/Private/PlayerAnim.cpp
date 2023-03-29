@@ -126,49 +126,6 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	
 	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
-	/*FHitResult HitResult;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(me);
-	bool bResult = me->GetWorld()->SweepSingleByChannel(
-		HitResult,
-		me->GetActorLocation(),
-		me->GetActorLocation() + me->GetActorForwardVector() * powerAttackRange,
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2,
-		FCollisionShape::MakeSphere(powerAttackRange),
-		Params
-	);
-
-#if ENABLE_DRAW_DEBUG
-
-	FVector TraceVec = me->GetActorForwardVector() * powerAttackRange;
-	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
-	float HalfHeight = powerAttackRange * 0.5f + powerAttackRadius;
-	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
-	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-	float DebugLifeTime = 5.0f;
-
-	DrawDebugCapsule(
-		GetWorld(),
-		Center,
-		HalfHeight,
-		powerAttackRadius,
-		CapsuleRot,
-		DrawColor,
-		false,
-		DebugLifeTime
-	);
-#endif
-	AActor* hitActor = HitResult.GetActor();
-	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
-	if (bResult)
-	{
-
-		if (sentinel != nullptr)
-		{
-			sentinel->ReceiveDamage();
-		}
-	}*/
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo2()

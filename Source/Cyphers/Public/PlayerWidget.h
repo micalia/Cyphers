@@ -24,6 +24,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* KeyECoolTimeBar = nullptr;
 	UPROPERTY(meta = (BindWidget))
+		class UProgressBar* KeyFCoolTimeBar = nullptr;
+	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* SpaceBarCoolTimerBar = nullptr;
 
 	void NativeConstruct();
@@ -31,6 +33,7 @@ public:
 
 	void UpdateBothMouseCoolTime(float curr, float max);
 	void UpdateKeyECoolTime(float curr, float max);
+	void UpdateKeyFCoolTime(float curr, float max);
 	void UpdateSpaceBarCoolTime(float curr, float max);
 
 	UPROPERTY(meta = (BindWidget))

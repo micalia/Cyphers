@@ -67,94 +67,6 @@ void UCypher_Kaya_Attack::BeginPlay()
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	//(const UObject* WorldContextObject, 
-	/*const FVector Start, const FVector End, const FVector HalfSize, 
-	const FRotator Orientation, 
-	ETraceTypeQuery TraceChannel,
-	bool bTraceComplex, 
-	const TArray<AActor*>& ActorsToIgnore, 
-	EDrawDebugTrace::Type DrawDebugType, 
-	FHitResult& OutHit, bool bIgnoreSelf, 
-	FLinearColor TraceColor, 
-	FLinearColor TraceHitColor, 
-	float DrawTime)*/
-	/////////////////////////////////////////
-	/*FVector StartLocation = me->GetActorLocation();
-	FVector AddDistance = me->GetActorForwardVector() * gripAttackRange;
-	FVector EndLocation = StartLocation + AddDistance;
-	UE_LOG(LogTemp, Warning, TEXT("EndLocation : %s"), *EndLocation.ToString())
-	FVector halfSize = gripAttackRange / 2;
-	FRotator collisionRot = me->GetActorRotation();
-	TArray<AActor*> EmptyActorsToIgnore;
-	FHitResult HitResult;
-
-	UKismetSystemLibrary::BoxTraceSingle(
-		GetWorld(),
-		StartLocation,
-		EndLocation,
-		halfSize,
-		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
-		false,
-		EmptyActorsToIgnore,
-		EDrawDebugTrace::ForOneFrame,
-		HitResult,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		0.1
-	);*/
-
-	/////////////////////////////////////////
-//	FHitResult HitResult;
-//	FCollisionQueryParams Params;
-//	Params.AddIgnoredActor(me);
-//
-//	FVector StartLocation = me->GetActorLocation();
-//	FVector AddDistance = me->GetActorForwardVector() * gripAttackRange;
-//	FVector EndLocation = StartLocation + AddDistance;
-//	UE_LOG(LogTemp, Warning, TEXT("EndLoc ADd: %s"), *AddDistance.ToString())
-//	FRotator collisionRot = me->GetActorRotation();
-//	FQuat QuatRotation = FQuat(collisionRot);
-//	FCollisionShape CollisionBox = FCollisionShape::MakeBox(gripAttackRange);
-//	UE_LOG(LogTemp, Warning, TEXT("GripAttackRange : %s / StartLocation : %s / EndLocation : %s / CollisionBox Ext: %s"), *gripAttackRange.ToString(),*StartLocation.ToString(), *EndLocation.ToString(), *CollisionBox.GetExtent().ToString())
-//	
-//	bool bResult = me->GetWorld()->SweepSingleByChannel(
-//		HitResult,
-//		StartLocation,
-//		EndLocation,
-//		QuatRotation,
-//		ECollisionChannel::ECC_Visibility,
-//		CollisionBox,
-//		Params
-//	);
-//
-//	if (bResult) {
-//		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("Hit Actor Name : %s"), *HitResult.GetActor()->GetName()), true, FVector2D(1, 1));
-//		
-//	}
-//
-//#if ENABLE_DRAW_DEBUG
-//
-//	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-//	float DebugLifeTime = 0.1f;
-//
-//	/*FVector TraceVec = me->GetActorForwardVector() * gripAttackRange;
-//	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;*/
-//	FVector Center = me->GetActorLocation();
-//
-//	//UE_LOG(LogTemp, Warning, TEXT("TraceVec : %s / Center : %s"), *TraceVec.ToString(), *Center.ToString())
-//	DrawDebugBox(
-//		GetWorld(),
-//		Center,
-//		CollisionBox.GetExtent(),
-//		QuatRotation,
-//		DrawColor,
-//		false,
-//		DebugLifeTime
-//	);
-//#endif
-////////////////////////////////////////////////////////////////////
 
 	//잡기공격
 	if (bIsGripAttacking) {
@@ -213,6 +125,15 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		if (currkeyECool < 0) {
 			kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
 			startCoolKeyE = false;
+		}
+	}
+
+	if (startCoolKeyF) {
+		currkeyFCool -= DeltaTime;
+		kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
+		if (currkeyFCool < 0) {
+			kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+			startCoolKeyF = false;
 		}
 	}
 
@@ -461,6 +382,7 @@ FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
 	//DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 3, 0, 8);
 
 	if (isHit) {
+		//UE_LOG(LogTemp, Warning, TEXT("GA_HitName : %s"), *hitInfo.GetComponent()->GetName())
 		return hitInfo.ImpactPoint;
 	}
 
@@ -513,6 +435,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 			FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(destination, myPos).Yaw);
 			sentinel->SetActorRotation(rotDir);
 			sentinel->fsm->anim->PlayGripAttackDamageAnim();
+			sentinel->ReceiveGripAttackDamage();
 		}
 	}
 	/*FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
@@ -618,7 +541,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 				sentinel->fsm->anim->PlayGripAttackDamage2Anim();
 			}
 			ga1Check = false;
-			sentinel->fsm->ReceiveGripAttackDamage();
+			sentinel->ReceiveGripAttackDamage();
 		}
 	}
 }
@@ -710,9 +633,13 @@ void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 
 void UCypher_Kaya_Attack::InputKeyF()
 {
+	if(startCoolKeyF)return;
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
+	startCoolKeyF = true;
+	currkeyFCool = keyFCool;
+	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	//잡기 공격 거리 계산
 	//전방에 벽이 있는지 체크
 
@@ -734,48 +661,6 @@ void UCypher_Kaya_Attack::InputKeyF()
 
 	bIsGripAttacking = true;
 	gripIndex = 1;
-
-	//FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
-	//FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
-	//FVector EndLocation = StartLocation + AddDistance;
-	//FVector halfSize = gripAttackRange / 2;
-	//FRotator collisionRot = me->GetActorRotation();
-	//TArray<AActor*> EmptyActorsToIgnore;
-	//FHitResult HitResult;
-
-	//bool bResult = UKismetSystemLibrary::BoxTraceSingle(
-	//	GetWorld(),
-	//	StartLocation,
-	//	EndLocation,
-	//	halfSize,
-	//	collisionRot,
-	//	UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
-	//	false,
-	//	EmptyActorsToIgnore,
-	//	EDrawDebugTrace::ForDuration,
-	//	HitResult,
-	//	true,
-	//	FLinearColor::Red,
-	//	FLinearColor::Green,
-	//	3
-	//);
-	//UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
-	//	AActor* hitActor = HitResult.GetActor();
-	//if (hitActor != nullptr) {
-
-	//	UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
-	//}
-
-	//AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
-	//if (bResult)
-	//{
-	//	if (sentinel != nullptr)
-	//	{  
-	//		sentinel->fsm->anim->PlayGripAttackDamageAnim();
-	//		//sentinel->fsm->anim->
-	//		//sentinel->ReceiveDamage();
-	//	}
-	//}
 
 	kayaAnim->GripAttackPlayAnim();
 }

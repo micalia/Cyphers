@@ -71,6 +71,11 @@ public:
 	float keyECool = 5;
 	float currkeyECool;
 
+	//키보드F
+	bool startCoolKeyF;
+	UPROPERTY(EditAnywhere)
+		float keyFCool = 2;
+	float currkeyFCool;
 //대쉬
 	UPROPERTY(EditAnywhere)
 	float spaceBarCool = 4;

@@ -84,6 +84,8 @@ void AEnemy_Sentinel::BeginPlay()
 	currHP = health;
 
 	attackCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy_Sentinel::OnAttackOverlap);
+
+	
 }
 
 // Called every frame
@@ -94,6 +96,7 @@ void AEnemy_Sentinel::Tick(float DeltaTime)
 		sentinelHpUI->UpdateCurrHP(currHP, maxHP);
 
 	}
+	
 }
 
 // Called to bind functionality to input
@@ -116,6 +119,11 @@ void AEnemy_Sentinel::ReceiveDamage()
 
 		fsm->ChangeState(EEnemy_SentinelState::Die);
 	}
+}
+
+void AEnemy_Sentinel::ReceiveGripAttackDamage()
+{
+	currHP--;
 }
 
 void AEnemy_Sentinel::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
