@@ -91,6 +91,8 @@ public:
 		class UParticleSystem* knockDownAttackEffect;
 	UPROPERTY(EditAnywhere)
 	FVector KD_atk_effect_size = FVector(2.4);
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* KD_Sound;
 
 	//Á×À½
 	UPROPERTY(EditAnywhere, Category = Sound)

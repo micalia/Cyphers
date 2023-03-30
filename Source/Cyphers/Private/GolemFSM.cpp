@@ -467,5 +467,6 @@ void UGolemFSM::KnockDownAttackCheck()
 			kaya->ReceiveDamage(2);
 		}
 	}
-
+	
+	UGameplayStatics::PlaySound2D(GetWorld(), me->KD_Sound);
 }
