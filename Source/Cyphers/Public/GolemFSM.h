@@ -88,6 +88,13 @@ public:
 	void SetNewGoalDirection();
 
 public:
+	UPROPERTY(EditAnywhere, Category = JumpAttack)
+		float JA_startAtkPos = 350;
+	UPROPERTY(EditAnywhere, Category = JumpAttack)
+		float JA_startToEndDistance = 600;
+
+	UPROPERTY(EditAnywhere, Category = JumpAttack)
+		FVector JumpAttackRange = FVector(350, 800, 400);
 	//custom
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackRangeStart = 2500;
@@ -136,6 +143,13 @@ public:
 		float groundAttackCurrentTime = 0;
 public:
 //±Ù°Å¸® ¶¥ ³»·ÁÂï±â
+	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
+		float KD_startAtkPos = 350;
+	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
+		float KD_startToEndDistance = 600;
+
+	UPROPERTY(EditAnywhere)
+		FVector KnockDownAttackRange = FVector(350,800,400);
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
 		float closeKnockDownAttackRangeStart = 0;
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)

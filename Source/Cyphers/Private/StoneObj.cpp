@@ -103,7 +103,6 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 		compGcStone->SetSimulatePhysics(true);
 		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		compRock->SetVisibility(false);
-		//player->DamageFromBoss(enemy->currAttackDamage);
 		//enemy->bCameraShake = true;
 
 		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
@@ -111,6 +110,7 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 							HitComponent->GetComponentLocation(),
 							GetActorRotation());*/
 
+		player->ReceiveDamage(2);
 		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
 		//Destroy();
 	}

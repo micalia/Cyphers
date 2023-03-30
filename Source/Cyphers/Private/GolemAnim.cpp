@@ -106,6 +106,46 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
 	jae->SetRelativeScale3D(FVector(jaeScale*3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
 	}
+
+	/////////////////////////////
+	FVector StartLocation = enemy->GetActorLocation() + enemy->GetActorForwardVector() * enemy->fsm->JA_startAtkPos;
+	FVector AddDistance = enemy->GetActorForwardVector() * enemy->fsm->JA_startToEndDistance;
+	FVector EndLocation = StartLocation + AddDistance;
+	FVector halfSize = enemy->fsm->JumpAttackRange / 2;     //반대로 말하면 halfSize * 2 는 BoxExtent가 됨
+	FRotator collisionRot = enemy->GetActorRotation();
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
+
+	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel7),
+		false,
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::None,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		3     //디버깅 라이프 타임이니까 Tick에서 확인할때는 0.1로 설정해서 하는걸 추천
+	);
+
+	AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("HitAcotor name: %s"), *hitActor->GetName())
+
+	}
+	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(hitActor);
+	if (bResult)
+	{
+		if (kaya != nullptr)
+		{
+			kaya->ReceiveDamage(2);
+		}
+	}
 }
 
 //돌던지기

@@ -59,6 +59,10 @@ AGolem::AGolem()
 	if (tempJumpAttackEffect.Succeeded()) {
 		jumpAttackEffect = tempJumpAttackEffect.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> tempKnockDownAttackEffect(TEXT("/Script/Engine.ParticleSystem'/Game/Resources/Effect/GroundAttacks/Fx/Fire/P_FireGroundAttack4.P_FireGroundAttack4'"));
+	if (tempKnockDownAttackEffect.Succeeded()) {
+		knockDownAttackEffect = tempKnockDownAttackEffect.Object;
+	}
 
 	static ConstructorHelpers::FClassFinder<AGolemGroundAttackCollision> tempGACObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_GolemGroundAttackCollision.BP_GolemGroundAttackCollision_C'"));
 	if (tempGACObj.Succeeded()) {
@@ -98,7 +102,6 @@ void AGolem::BeginPlay()
 void AGolem::Tick(float DeltaTime)
 { 
 	CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
-	UE_LOG(LogTemp, Warning, TEXT("GolemCurrHP : %f / GolemFullHP : %f"), currHP, maxHP)
 }
 
 void AGolem::MoveJumpAttack() {
@@ -136,7 +139,7 @@ void AGolem::JumpAttackPath(FVector start, FVector between, FVector end) {
 		FVector p = CalculateBezier(ratio * i, start, between, end);
 		lineLoc.Add(p);
 
-		DrawDebugSphere(GetWorld(), p, 20.0f, 32, FColor::Red, false, 5.0f);
+		//DrawDebugSphere(GetWorld(), p, 20.0f, 32, FColor::Red, false, 5.0f);
 	}
 }
 

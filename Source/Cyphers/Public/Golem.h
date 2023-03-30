@@ -7,7 +7,7 @@
 #include "Golem.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class CYPHERS_API AGolem : public ACreature
@@ -33,18 +33,18 @@ public:
 		class UGolemFSM* fsm;
 	UPROPERTY(EditAnywhere, Category = ThrowStoneAttack)
 		TSubclassOf<class AStoneObj> stoneFactory;
-		//타겟
+	//타겟
 	UPROPERTY()
 		class ACypher_Kaya* mainPlayer;
 
-//보스 등장
+	//보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
 		bool bossAppear = true;
-//현재상태
+	//현재상태
 	UPROPERTY(EditAnywhere)
 		float currAttackDamage = 0;
-//점프공격
-	//베지어곡선
+	//점프공격
+		//베지어곡선
 	FVector startPos;
 	FVector originEndPos;
 	FVector endPos;
@@ -66,20 +66,27 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* jumpAttackSound;
-		void PlayJumpAttackSound();
-//돌던지기
+	void PlayJumpAttackSound();
+	//돌던지기
 	UPROPERTY(EditAnywhere)
 		class UMaterialParameterCollection* stoneOpacity;
 
-//그라운드 어택
+	//그라운드 어택
 	TSubclassOf<class AGolemGroundAttackCollision> GA_CollisionFactory;
-		UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere)
 		class USceneComponent* groundAttackPoint;
 
-		UPROPERTY(EditAnywhere)
-			class UParticleSystem* groundAttackEffect;
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* groundAttackEffect;
 	void SpawnGroundAttackCollision(FRotator dir);
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* groundAttackSound;
-		void PlayGroundAttackSound();
+	void PlayGroundAttackSound();
+
+public:
+	//넉다운 어택
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* knockDownAttackEffect;
+	UPROPERTY(EditAnywhere)
+	FVector KD_atk_effect_size = FVector(2.2);
 };

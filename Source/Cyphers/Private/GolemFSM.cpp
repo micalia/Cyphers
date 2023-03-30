@@ -8,6 +8,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include "GolemAnim.h"
 #include <GameFramework/CharacterMovementComponent.h>
+#include <Particles/ParticleSystemComponent.h>
 
 // Sets default values for this component's properties
 UGolemFSM::UGolemFSM()
@@ -397,5 +398,69 @@ void UGolemFSM::SetNewGoalDirection()
 
 void UGolemFSM::KnockDownAttackCheck()
 {
-	
+	FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * KD_startAtkPos;
+	FVector AddDistance = me->GetActorForwardVector() * KD_startToEndDistance;
+	FVector EndLocation = StartLocation + AddDistance;
+	FVector halfSize = KnockDownAttackRange / 2;     //반대로 말하면 halfSize * 2 는 BoxExtent가 됨
+	FRotator collisionRot = me->GetActorRotation();
+	TArray<AActor*> EmptyActorsToIgnore;
+	FHitResult HitResult;
+
+	FVector CenterLoc = (StartLocation + EndLocation) / 2;
+	FVector endLineTracePos = CenterLoc + -me->GetActorUpVector() * 500;
+	FHitResult hitInfo;
+	FCollisionQueryParams param;
+	param.AddIgnoredActor(GetOwner());
+	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
+	DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
+
+	if (isHit) {
+		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(), // 이펙트를 생성할 월드
+			me->knockDownAttackEffect, // 생성할 파티클 시스템
+			hitInfo.ImpactPoint, // 이펙트를 생성할 위치
+			me->GetActorRotation(), // 이펙트의 회전값
+			true, // 이펙트 자동 파괴 여부
+			EPSCPoolMethod::AutoRelease // 이펙트 풀링 방법
+		);
+		PAC->SetWorldScale3D(me->KD_atk_effect_size);
+
+		UE_LOG(LogTemp, Warning, TEXT("floorCheckName : %s"), *hitInfo.GetActor()->GetName())
+		
+	}
+
+	// 바닥쪽으로 라인트레이스 쏴서 이펙트 만들것
+	DrawDebugSphere(GetWorld(), CenterLoc, 20.0f, 32, FColor::Red, false, 5.0f);
+
+	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		halfSize,
+		collisionRot,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel7),
+		false,
+		EmptyActorsToIgnore,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		3     //디버깅 라이프 타임이니까 Tick에서 확인할때는 0.1로 설정해서 하는걸 추천
+	);
+
+	AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
+	UE_LOG(LogTemp, Warning, TEXT("HitAcotor name: %s"), *hitActor->GetName())
+
+	}
+	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(hitActor);
+	if (bResult)
+	{
+		if (kaya != nullptr)
+		{
+			kaya->ReceiveDamage(2);
+		}
+	}
+
 }
