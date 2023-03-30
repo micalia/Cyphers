@@ -41,6 +41,11 @@ public:
 
 	UFUNCTION()
 		void AnimNotify_FootSound();
+
+		UFUNCTION()
+		void AnimNotify_DieSound1();
+		UFUNCTION()
+		void AnimNotify_DieSound2();
 //데미지
 	void PlayDieAnim();
 //점프공격

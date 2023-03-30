@@ -81,6 +81,14 @@ AGolem::AGolem()
 	if (tempGroundAttackSound.Succeeded()) {
 		groundAttackSound = tempGroundAttackSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDieSound1(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/bossDie1.bossDie1'"));
+	if (tempDieSound1.Succeeded()) {
+		dieSound1 = tempDieSound1.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDieSound2(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/bossDie2.bossDie2'"));
+	if (tempDieSound2.Succeeded()) {
+		dieSound2 = tempDieSound2.Object;
+	}
 	
 	JA_EffectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("JA_EffectPoint"));
 	JA_EffectPoint->SetupAttachment(GetCapsuleComponent());

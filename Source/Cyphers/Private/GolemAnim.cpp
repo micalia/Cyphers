@@ -67,6 +67,18 @@ void UGolemAnim::AnimNotify_FootSound()
 	enemy->PlayFootSound();
 }
 
+void UGolemAnim::AnimNotify_DieSound1()
+{
+	target->bCameraShake = true;
+	UGameplayStatics::PlaySound2D(GetWorld(), enemy->dieSound1);
+}
+
+void UGolemAnim::AnimNotify_DieSound2()
+{
+	target->bCameraShake = true;
+	UGameplayStatics::PlaySound2D(GetWorld(), enemy->dieSound2);
+}
+
 void UGolemAnim::PlayDieAnim()
 {
 	enemy->PlayAnimMontage(damageMontage, 1, TEXT("Die"));
