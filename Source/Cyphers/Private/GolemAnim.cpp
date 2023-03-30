@@ -95,19 +95,7 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 
 	target->bCameraShake = true;
 	enemy->PlayJumpAttackSound();
-	FVector startPos = enemy->JA_EffectPoint->GetComponentLocation();
-	FVector endPos = startPos -300;
-	FHitResult hitInfo;
-	FCollisionQueryParams param;
-	param.AddIgnoredActor(enemy->GetOwner());
-	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
-
-	if (isHit == true) {
-	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
-	jae->SetRelativeScale3D(FVector(jaeScale*3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
-	}
-
-	/////////////////////////////
+	
 	FVector StartLocation = enemy->GetActorLocation() + enemy->GetActorForwardVector() * enemy->fsm->JA_startAtkPos;
 	FVector AddDistance = enemy->GetActorForwardVector() * enemy->fsm->JA_startToEndDistance;
 	FVector EndLocation = StartLocation + AddDistance;
@@ -115,6 +103,22 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	FRotator collisionRot = enemy->GetActorRotation();
 	TArray<AActor*> EmptyActorsToIgnore;
 	FHitResult HitResult;
+
+	FVector CenterLoc = (StartLocation + EndLocation) / 2;
+	FVector endLineTracePos = CenterLoc + -enemy->GetActorUpVector() * 500;
+	FHitResult hitInfo;
+	FCollisionQueryParams param;
+	param.AddIgnoredActor(enemy);
+	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
+	DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
+
+	if (isHit) {
+		UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
+		jae->SetRelativeScale3D(FVector(jaeScale * 3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
+
+		UE_LOG(LogTemp, Warning, TEXT("floorCheckName : %s"), *hitInfo.GetActor()->GetName())
+
+	}
 
 	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
 		GetWorld(),

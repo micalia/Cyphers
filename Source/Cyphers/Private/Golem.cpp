@@ -110,7 +110,7 @@ void AGolem::MoveJumpAttack() {
 	originEndPos = mainPlayer->GetActorLocation();
 	
 	FVector betweenPos = FMath::Lerp(startPos, originEndPos, 0.5);
-	betweenPos.Z += 1700;
+	betweenPos.Z += betweenHeight;
 
 	JumpAttackPath(startPos, betweenPos, originEndPos);
 }

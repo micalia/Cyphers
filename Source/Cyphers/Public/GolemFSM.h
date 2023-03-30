@@ -97,10 +97,10 @@ public:
 		FVector JumpAttackRange = FVector(350, 800, 400);
 	//custom
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		float jumpAttackRangeStart = 2500;
+		float jumpAttackRangeStart = 3900;
 	//float jumpAttackRangeStart = 1000; //world 스케일이 1일 경우
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		float jumpAttackRangeEnd = 7000;
+		float jumpAttackRangeEnd = 7500;
 	//float jumpAttackRangeEnd = 3200;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackDamage = 40;
@@ -119,9 +119,9 @@ public:
 public:
 	//custom
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwStoneAttackRangeStart = 1100;
+		float throwStoneAttackRangeStart = 4000;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwStoneAttackRangeEnd = 3210;
+		float throwStoneAttackRangeEnd = 7600;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwStoneAttackDamage = 40;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
@@ -148,8 +148,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
 		float KD_startToEndDistance = 600;
 
-	UPROPERTY(EditAnywhere)
-		FVector KnockDownAttackRange = FVector(350,800,400);
+	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
+		FVector KnockDownAttackRange = FVector(430,1000,400);
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
 		float closeKnockDownAttackRangeStart = 0;
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)

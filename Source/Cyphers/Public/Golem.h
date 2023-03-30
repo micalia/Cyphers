@@ -39,7 +39,7 @@ public:
 
 	//보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
-		bool bossAppear = true;
+		bool bossAppear = false;
 	//현재상태
 	UPROPERTY(EditAnywhere)
 		float currAttackDamage = 0;
@@ -52,6 +52,8 @@ public:
 	//베지어 도착지점 z축
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float endPosSub = -40;
+	UPROPERTY(EditAnywhere, Category = Bezier)
+		float betweenHeight = 2500;
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float curvePointCount = 7;
 	FVector CalculateBezier(float ratio, FVector startPos, FVector betweenPos, FVector endPos);
@@ -88,5 +90,5 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* knockDownAttackEffect;
 	UPROPERTY(EditAnywhere)
-	FVector KD_atk_effect_size = FVector(2.2);
+	FVector KD_atk_effect_size = FVector(2.4);
 };

@@ -34,8 +34,8 @@ void UEnemy_SentinelAnim::AnimNotify_DieEnd()
 		golem->bossAppear = true;  
 		ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
 		CyphersGameMode->playerWidget->BossUI->SetRenderOpacity(1);
-		ANextStageWall* wall = Cast<ANextStageWall>(UGameplayStatics::GetActorOfClass(GetWorld(), ANextStageWall::StaticClass()));
-		wall->Destroy();
+		/*ANextStageWall* wall = Cast<ANextStageWall>(UGameplayStatics::GetActorOfClass(GetWorld(), ANextStageWall::StaticClass()));
+		wall->Destroy();*/
 		//Cast<AEnemy>(TryGetPawnOwner())->fsm->bDieMove = true;
 	}
 }

@@ -11,6 +11,7 @@ AGolemGroundAttackCollision::AGolemGroundAttackCollision()
 	PrimaryActorTick.bCanEverTick = true;
 
 	groundAttackCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("GACollision"));
+	groundAttackCollision->SetCollisionProfileName(TEXT("EnemyAtkCollision"));
 	groundAttackCollision->SetBoxExtent(FVector(50));
 	groundAttackCollision->SetRelativeScale3D(FVector(0.95, 4, 4));
 }
@@ -20,6 +21,7 @@ void AGolemGroundAttackCollision::BeginPlay()
 {
 	Super::BeginPlay();
 
+	groundAttackCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	groundAttackCollision->OnComponentBeginOverlap.AddDynamic(this, &AGolemGroundAttackCollision::OnCollisionOverlap);
 }
 

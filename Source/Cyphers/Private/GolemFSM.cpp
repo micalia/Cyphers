@@ -247,7 +247,34 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 
 
 //원거리 공격
-	//돌던지기 범위를 먼저 체크
+// 
+	if (targetDistanceLength > jumpAttackRangeStart &&
+		targetDistanceLength < jumpAttackRangeEnd)
+	{//점프공격 체크
+		if (jumpAttackCurrentTime > jumpAttackCoolTime) {
+			anim->bAttackPlay = true;
+			me->MoveJumpAttack();
+			mState = EGolemState::JumpAttack;
+			anim->animState = mState;
+			FString sectionName = "JumpAttack";
+			anim->PlayJumpAttackAnim(FName(*sectionName));
+			return;
+		}
+	}
+	else {//모든 스킬이 쿨타임일 경우
+		if (closestToTargetRange > targetDistanceLength) {
+			mState = EGolemState::Idle;
+			anim->animState = mState;
+		}
+		else {
+			mState = EGolemState::Move;
+			anim->animState = mState;
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("all skiil is CoolTime...So I am Move"))
+		return;
+	}
+
+	//돌던지기 체크
 	if (targetDistanceLength > throwStoneAttackRangeStart &&
 		targetDistanceLength < throwStoneAttackRangeEnd)
 	{
@@ -288,31 +315,7 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 			}
 		}
 	}
-	if (targetDistanceLength > jumpAttackRangeStart &&
-		targetDistanceLength < jumpAttackRangeEnd)
-	{//점프공격 체크
-		if (jumpAttackCurrentTime > jumpAttackCoolTime) {
-			anim->bAttackPlay = true;
-			me->MoveJumpAttack();
-			mState = EGolemState::JumpAttack;
-			anim->animState = mState;
-			FString sectionName = "JumpAttack";
-			anim->PlayJumpAttackAnim(FName(*sectionName));
-			return;
-		}
-	}
-	else {//모든 스킬이 쿨타임일 경우
-		if (closestToTargetRange > targetDistanceLength) {
-			mState = EGolemState::Idle;
-			anim->animState = mState;
-		}
-		else {
-			mState = EGolemState::Move;
-			anim->animState = mState;
-		}
-		//UE_LOG(LogTemp, Warning, TEXT("all skiil is CoolTime...So I am Move"))
-		return;
-	}
+	
 }
 
 
@@ -398,6 +401,8 @@ void UGolemFSM::SetNewGoalDirection()
 
 void UGolemFSM::KnockDownAttackCheck()
 {
+	target->bCameraShake = true;
+
 	FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * KD_startAtkPos;
 	FVector AddDistance = me->GetActorForwardVector() * KD_startToEndDistance;
 	FVector EndLocation = StartLocation + AddDistance;
