@@ -85,6 +85,10 @@ AGolem::AGolem()
 	if (tempKD_Sound.Succeeded()) {
 		KD_Sound = tempKD_Sound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempBossRoar(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GolemRoar.GolemRoar'"));
+	if (tempBossRoar.Succeeded()) {
+		bossRoar = tempBossRoar.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempDieSound1(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/bossDie1.bossDie1'"));
 	if (tempDieSound1.Succeeded()) {
 		dieSound1 = tempDieSound1.Object;

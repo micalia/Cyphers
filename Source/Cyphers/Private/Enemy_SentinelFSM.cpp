@@ -59,6 +59,9 @@ void UEnemy_SentinelFSM::BeginPlay()
 void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	distWithPlayer = target->GetActorLocation() - me->GetActorLocation();
+
 	switch (currState)
 	{
 	case EEnemy_SentinelState::Idle:
@@ -87,6 +90,8 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UEnemy_SentinelFSM::UpdateIdle()
 {
+	if(distWithPlayer.Length() < detectRange) bDetectPlayer = true;
+
 	//만약에 플레이어를 쫓아 갈 수 있니?
 	//if (IsTargetTrace())
 	//{
@@ -98,6 +103,7 @@ void UEnemy_SentinelFSM::UpdateIdle()
 		//idleDelayTime 이 지나면	
 		if (IsWaitComplete(idleDelayTime))
 		{
+			if(bDetectPlayer == false) return;
 			//현재상태를 Move 로 한다.
 			ChangeState(EEnemy_SentinelState::Move);
 		}

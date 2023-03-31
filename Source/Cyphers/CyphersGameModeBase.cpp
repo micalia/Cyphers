@@ -49,3 +49,14 @@ void ACyphersGameModeBase::BeginPlay()
 		}
 	}
 }
+
+void ACyphersGameModeBase::HideUI()
+{
+	playerWidget->SetVisibility(ESlateVisibility::Hidden);
+	aimUIWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void ACyphersGameModeBase::ShowUI() {
+	playerWidget->SetVisibility(ESlateVisibility::Visible);
+	aimUIWidget->SetVisibility(ESlateVisibility::Visible);
+}

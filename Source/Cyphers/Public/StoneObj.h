@@ -34,6 +34,7 @@ public:
 		class USoundBase* stoneSound;
 	UPROPERTY(EditAnywhere)
 		class UGeometryCollectionComponent* compGcStone;
+
 public:
 	UFUNCTION()
 		void CrashWithPlayer(

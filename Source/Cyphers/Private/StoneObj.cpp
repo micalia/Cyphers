@@ -75,6 +75,7 @@ void AStoneObj::Tick(float DeltaTime)
 		}
 		else {
 			currTime += DeltaTime;
+			return;
 			if (transparentStartTime < currTime) {
 				if (bTransparent == true) {
 					compGcStone->SetCollisionEnabled(ECollisionEnabled::NoCollision);

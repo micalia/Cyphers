@@ -17,5 +17,8 @@ public:
 	virtual void Tick(float DeltaSeconds);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class UCameraComponent* CameraComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = CameraMotion)
+		TSubclassOf<class UCameraShakeBase> cameraShake;
 	
 };

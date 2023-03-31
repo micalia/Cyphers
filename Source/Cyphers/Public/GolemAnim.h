@@ -39,8 +39,14 @@ public:
 	UFUNCTION()
 		void AnimNotify_TurnToTarget();
 
+		UFUNCTION()
+			void AnimNotify_HideBossHP();
+		UFUNCTION()
+			void AnimNotify_BossRoarShake();
 	UFUNCTION()
 		void AnimNotify_FootSound();
+	UFUNCTION()
+		void AnimNotify_RoarSound();
 
 		UFUNCTION()
 		void AnimNotify_DieSound1();

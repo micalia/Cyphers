@@ -40,6 +40,8 @@ public:
 	//보스 등장
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AppearBoss)
 		bool bossAppear = false;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* bossRoar;
 	//현재상태
 	UPROPERTY(EditAnywhere)
 		float currAttackDamage = 0;

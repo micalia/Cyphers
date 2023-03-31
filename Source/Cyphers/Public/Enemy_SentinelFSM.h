@@ -63,6 +63,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		class AAIController* ai;
 
+	bool bDetectPlayer;
+	FVector distWithPlayer;
+	UPROPERTY(EditAnywhere)
+	float detectRange = 3500;
 	//현재시간
 	float currTime = 0;
 	//대기 상태 기다리는 시간

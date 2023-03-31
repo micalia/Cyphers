@@ -39,4 +39,5 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* GolemHP = nullptr;
 	void UpdateBossCurrHP(float curr, float max);
+
 };

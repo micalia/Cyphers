@@ -23,4 +23,7 @@ public:
 	TSubclassOf<class UPlayerWidget> PlayerWidgetClass;
 	UPROPERTY()
 		UPlayerWidget* playerWidget;
+
+		void HideUI();
+		void ShowUI();
 };

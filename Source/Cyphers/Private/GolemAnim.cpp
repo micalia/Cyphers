@@ -13,6 +13,9 @@
 #include <Components/BoxComponent.h>
 #include <Particles/ParticleSystemComponent.h>
 #include "PlayerCamera.h"
+#include "../CyphersGameModeBase.h"
+#include "PlayerWidget.h"
+#include <UMG/Public/Components/CanvasPanel.h>
 
 UGolemAnim::UGolemAnim()
 {
@@ -62,9 +65,26 @@ void UGolemAnim::AnimNotify_TurnToTarget()
 	enemy->fsm->SetNewGoalDirection();
 }
 
+void UGolemAnim::AnimNotify_HideBossHP()
+{ 
+	ACyphersGameModeBase* gameMode = Cast<ACyphersGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->playerWidget->BossUI->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UGolemAnim::AnimNotify_BossRoarShake()
+{
+	auto controller = GetWorld()->GetFirstPlayerController();
+	controller->PlayerCameraManager->StartCameraShake(target->Camera->cameraShake);
+}
+
 void UGolemAnim::AnimNotify_FootSound()
 {
 	enemy->PlayFootSound();
+}
+
+void UGolemAnim::AnimNotify_RoarSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), enemy->bossRoar);
 }
 
 void UGolemAnim::AnimNotify_DieSound1()

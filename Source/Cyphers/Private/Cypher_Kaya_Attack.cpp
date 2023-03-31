@@ -71,7 +71,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	//잡기공격
 	if (bIsGripAttacking) {
 		gripMoveCurrTime +=DeltaTime;
-		
+
 		switch (gripIndex)
 		{
 		case 1:

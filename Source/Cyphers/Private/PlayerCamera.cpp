@@ -4,6 +4,7 @@
 #include "PlayerCamera.h"
 #include <Camera/CameraComponent.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Camera/CameraShakeBase.h>
 
 // Sets default values
 APlayerCamera::APlayerCamera()
@@ -13,6 +14,11 @@ APlayerCamera::APlayerCamera()
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	
+	static ConstructorHelpers::FClassFinder<UCameraShakeBase> tempCameraShake(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_CameraShake.BP_CameraShake_C'"));
+	if (tempCameraShake.Succeeded()) {
+		cameraShake = tempCameraShake.Class;
+	}
+
 }
 
 void APlayerCamera::SetAsMainCamera()
