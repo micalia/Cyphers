@@ -21,6 +21,9 @@ void UPlayerMoveInput::BeginPlay()
 	//Controller 의 회전값을 따라 갈 속성 셋팅
 	me->bUseControllerRotationYaw = true;
 	//me->compArm->bUsePawnControlRotation = true;
+
+	my = -kaya->camTarget->GetRelativeRotation().Pitch;
+	UE_LOG(LogTemp, Warning, TEXT("my: %f"), my)
 }
 
 void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

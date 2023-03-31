@@ -57,7 +57,7 @@ public:
 		class UCypher_Kaya_Attack* compKayaAttack;
 	/*UPROPERTY(EditAnywhere)
 		class USpringArmComponent* compArm;*/
-		UPROPERTY(EditAnywhere)
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USceneComponent* camTarget;
 	/*UPROPERTY(EditAnywhere)
 		class UCameraComponent* compCam;*/

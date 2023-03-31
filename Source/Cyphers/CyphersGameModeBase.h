@@ -15,7 +15,14 @@ class CYPHERS_API ACyphersGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 public:
 	ACyphersGameModeBase();
+	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+
+
+	TSubclassOf<class UMainMenu> MainMenuWidgetClass;
+	UPROPERTY()
+		UMainMenu* MainMenuWidget;
+
 	TSubclassOf<class UAimUI> AimUIClass;
 	UPROPERTY()
 		UAimUI* aimUIWidget;
@@ -26,4 +33,7 @@ public:
 
 		void HideUI();
 		void ShowUI();
+
+		void ShowMouseCursor();
+		void HideMouseCursor();
 };
