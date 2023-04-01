@@ -80,15 +80,19 @@ void ABossAppearBox::Tick(float DeltaTime)
 					player->Camera->SetActorRotation(FMath::Lerp(MoveDest.GetRotation(), FQuat(player->CameraActorComponent->GetComponentRotation()), 1.0f));
 					gameMode->ShowUI();
 					player->compKayaAttack->bBackCameraOringinPos = false;
-				player->AttachCameraActor();
-					/*APlayerController* controller = GetWorld()->GetFirstPlayerController();
-					player->EnableInput(controller);*/
+					player->AttachCameraActor();
 
 					gameMode->playerWidget->BossUI->SetRenderOpacity(1);
 					enemy->bossAppear = true;
 					enemy->fsm->mState = EGolemState::Idle;
 					enemy->fsm->anim->animState = EGolemState::Idle;
 				
+					APlayerController* controller = GetWorld()->GetFirstPlayerController();
+					player->EnableInput(controller);
+
+					player->bCameraPosFix = false;
+					player->bBossCameraEffect = false;
+
 					Destroy();
 				}
 			}
@@ -110,11 +114,14 @@ void ABossAppearBox::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 		kaya->DisableInput(controller);*/
 
 		gameMode->HideUI();
-		kaya->compKayaAttack->bBackCameraOringinPos = true;
+		kaya->bBossCameraEffect = true;
 		kaya->bCameraPosFix = true;
 		bStart = true;
 		kaya->DetachCameraActor();
 		cameraOrigin = kaya->Camera->GetActorTransform();
+
+		APlayerController* controller = GetWorld()->GetFirstPlayerController();
+		kaya->DisableInput(controller);
 	}
 }
 

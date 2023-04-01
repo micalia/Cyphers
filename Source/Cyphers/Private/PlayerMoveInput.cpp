@@ -52,7 +52,7 @@ void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputCompo
 
 void UPlayerMoveInput::MoveAction(float deltaTime)
 {
-	if(kaya->compKayaAttack->bBackCameraOringinPos)return;
+	if(kaya->compKayaAttack->bBackCameraOringinPos || kaya->bBossCameraEffect)return;
 	direction = me->GetActorForwardVector() * v + me->GetActorRightVector() * h;
 	
 	me->AddMovementInput(direction.GetSafeNormal());

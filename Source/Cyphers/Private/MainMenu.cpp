@@ -30,4 +30,7 @@ void UMainMenu::GameStart()
 	kaya->bCameraPosFix = false;
 	kaya->GetMesh()->SetVisibility(true);
 	kaya->compSword->SetVisibility(true);
+
+	APlayerController* controller = GetWorld()->GetFirstPlayerController();
+	kaya->EnableInput(controller);
 }

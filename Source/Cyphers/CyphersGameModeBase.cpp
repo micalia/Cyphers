@@ -78,6 +78,10 @@ void ACyphersGameModeBase::BeginPlay()
 	
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	kaya->bCameraPosFix = true;
+
+	APlayerController* controller = GetWorld()->GetFirstPlayerController();
+	kaya->DisableInput(controller);
+	
 }
 
 void ACyphersGameModeBase::HideUI()

@@ -78,6 +78,8 @@ public:
 		UPROPERTY(EditAnywhere)
 		class USceneComponent* footPos;
 
+		bool bBossCameraEffect;
+
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)
