@@ -24,6 +24,7 @@ void UMainMenu::GameStart()
 
 	ACyphersGameModeBase* gameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
 	gameMode->HideMouseCursor();
+	gameMode->ShowUI();
 
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	kaya->bCameraPosFix = false;

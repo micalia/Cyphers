@@ -428,6 +428,8 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 	{
 		if (sentinel != nullptr)
 		{
+			UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
+
 			ga1Check = true;
 			FVector destination = sentinel->GetActorLocation();
 			FVector myPos = me->GetActorLocation();
@@ -540,6 +542,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 		if (sentinel != nullptr)
 		{
 			if (ga1Check == false) {
+				UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA2_Sound);
 				FVector destination = sentinel->GetActorLocation();
 				FVector myPos = me->GetActorLocation();
 				/* 보스 걷기 루트모션 이동으로 이동 로직이 필요없어짐

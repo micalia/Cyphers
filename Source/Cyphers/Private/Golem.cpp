@@ -175,6 +175,7 @@ void AGolem::PlayFootSound()
 
 void AGolem::ReceiveDamage()
 {
+	mainPlayer->PlayGolemDamageSound();
 	currHP--;
 	if (currHP > 0)
 	{

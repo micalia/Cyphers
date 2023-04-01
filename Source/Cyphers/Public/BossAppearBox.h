@@ -41,6 +41,10 @@ public:
 	FTransform MoveDest;
 	float alpha = 0;
 	float backAlpha = 0;
+	UPROPERTY(EditAnywhere)
+	float backMoveTime = 1.5;
+	float backCurrTime;
+
 	float currTime = 0;
 	UPROPERTY(EditAnywhere)
 		float moveTime = 2.5;

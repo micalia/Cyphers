@@ -29,15 +29,15 @@ void UEnemy_SentinelAnim::AnimNotify_DieEnd()
 {
 	//3. enemy 가 가지고 있는 fsm 을 이용해서 bDieMove 를 true
 	enemy->fsm->bDieMove = true;
-	AGolem* golem = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
-	if (golem != nullptr) {
-		golem->bossAppear = true;  
-		ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
-		CyphersGameMode->playerWidget->BossUI->SetRenderOpacity(1);
-		/*ANextStageWall* wall = Cast<ANextStageWall>(UGameplayStatics::GetActorOfClass(GetWorld(), ANextStageWall::StaticClass()));
-		wall->Destroy();*/
-		//Cast<AEnemy>(TryGetPawnOwner())->fsm->bDieMove = true;
-	}
+	//AGolem* golem = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
+	//if (golem != nullptr) {
+	//	golem->bossAppear = true;  
+	//	ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
+	//	CyphersGameMode->playerWidget->BossUI->SetRenderOpacity(1);
+	//	/*ANextStageWall* wall = Cast<ANextStageWall>(UGameplayStatics::GetActorOfClass(GetWorld(), ANextStageWall::StaticClass()));
+	//	wall->Destroy();*/
+	//	//Cast<AEnemy>(TryGetPawnOwner())->fsm->bDieMove = true;
+	//}
 }
 
 void UEnemy_SentinelAnim::AnimNotify_EnemyAttack()
@@ -58,6 +58,11 @@ void UEnemy_SentinelAnim::AnimNotify_CheckRiseDelayTime()
 void UEnemy_SentinelAnim::AnimNotify_ChangeToIdle()
 {
 	enemy->fsm->ChangeState(EEnemy_SentinelState::Idle);
+}
+
+void UEnemy_SentinelAnim::AnimNotify_GA2Sound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), enemy->GA2_Sound);
 }
 
 void UEnemy_SentinelAnim::PlayGripAttackDamageAnim()

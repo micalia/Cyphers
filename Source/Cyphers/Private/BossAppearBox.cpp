@@ -69,14 +69,28 @@ void ABossAppearBox::Tick(float DeltaTime)
 				roarCurrTime += DeltaTime;
 			}
 			else { 
-				gameMode->ShowUI();
-				gameMode->playerWidget->BossUI->SetRenderOpacity(1);
-				player->compKayaAttack->kayaAnim->AttachCamera();
-				enemy->bossAppear = true;
-				enemy->fsm->mState = EGolemState::Idle;
-				enemy->fsm->anim->animState = EGolemState::Idle;
+				backCurrTime+=DeltaTime;
+				backAlpha = backCurrTime / backMoveTime;
+				if (backAlpha < 1) {
+					player->Camera->SetActorLocation(FMath::Lerp(MoveDest.GetLocation(), player->CameraActorComponent->GetComponentLocation(), backAlpha));
+					player->Camera->SetActorRotation(FMath::Lerp(MoveDest.GetRotation(), FQuat(player->CameraActorComponent->GetComponentRotation()), backAlpha));
+				}
+				else {
+					player->Camera->SetActorLocation(FMath::Lerp(MoveDest.GetLocation(), player->CameraActorComponent->GetComponentLocation(), 1.0f));
+					player->Camera->SetActorRotation(FMath::Lerp(MoveDest.GetRotation(), FQuat(player->CameraActorComponent->GetComponentRotation()), 1.0f));
+					gameMode->ShowUI();
+					player->compKayaAttack->bBackCameraOringinPos = false;
+				player->AttachCameraActor();
+					/*APlayerController* controller = GetWorld()->GetFirstPlayerController();
+					player->EnableInput(controller);*/
+
+					gameMode->playerWidget->BossUI->SetRenderOpacity(1);
+					enemy->bossAppear = true;
+					enemy->fsm->mState = EGolemState::Idle;
+					enemy->fsm->anim->animState = EGolemState::Idle;
 				
-				Destroy();
+					Destroy();
+				}
 			}
 		}
 	}
@@ -92,7 +106,11 @@ void ABossAppearBox::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(OtherActor);
 	if (kaya) {
 		UE_LOG(LogTemp, Warning, TEXT("Hit box !!!!!!"))
+		/*APlayerController* controller = GetWorld()->GetFirstPlayerController();
+		kaya->DisableInput(controller);*/
+
 		gameMode->HideUI();
+		kaya->compKayaAttack->bBackCameraOringinPos = true;
 		kaya->bCameraPosFix = true;
 		bStart = true;
 		kaya->DetachCameraActor();

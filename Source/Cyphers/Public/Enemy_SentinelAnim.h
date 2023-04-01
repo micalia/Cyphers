@@ -36,6 +36,8 @@ public:
 		void AnimNotify_CheckRiseDelayTime();
 	UFUNCTION()
 		void AnimNotify_ChangeToIdle();
+	UFUNCTION()
+		void AnimNotify_GA2Sound();
 
 	void PlayGripAttackDamageAnim();
 	void PlayGripAttackDamage2Anim();

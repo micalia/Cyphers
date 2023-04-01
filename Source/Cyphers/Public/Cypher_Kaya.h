@@ -77,6 +77,7 @@ public:
 		class APowerAttackDecal* powerAttackDecal;
 		UPROPERTY(EditAnywhere)
 		class USceneComponent* footPos;
+
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)
@@ -106,12 +107,22 @@ public:
 		class USoundBase* dashAttackSound;
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* powerAttackComboSound;
+//적 데미지 사운드
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* GA1_Sound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* GA2_Sound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* golemDamage;
 
 	void PlayPowerAttackSwordReadySound();
 	void PlayPowerAttackGroundSound();
 	void PlayDashSound();
 	void PlayGaUpAtkSound();
 	void PlayGaDownAtkSound();
+
+	void PlayGolemDamageSound();
+
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* powerAttackEndEffect;
 

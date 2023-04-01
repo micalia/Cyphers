@@ -13,6 +13,8 @@
 #include "Cypher_Kaya.h"
 #include "PlayerCamera.h"
 #include <Components/BoxComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include <Sound/SoundBase.h>
 
 // Sets default values
 AEnemy_Sentinel::AEnemy_Sentinel()
@@ -66,6 +68,12 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	attackCollision->SetRelativeLocation(FVector(116,0,0));
 	attackCollision->SetBoxExtent(atKCollisionSize);
+
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGA2_Sound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_2_Sound.GA_2_Sound'"));
+	if (tempGA2_Sound.Succeeded()) {
+		GA2_Sound = tempGA2_Sound.Object;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -108,6 +116,7 @@ void AEnemy_Sentinel::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemy_Sentinel::ReceiveDamage()
 {
+	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
 	currHP--;
 	if (currHP > 0)
 	{
@@ -123,6 +132,7 @@ void AEnemy_Sentinel::ReceiveDamage()
 
 void AEnemy_Sentinel::ReceiveGripAttackDamage()
 {
+	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
 	currHP--;
 }
 

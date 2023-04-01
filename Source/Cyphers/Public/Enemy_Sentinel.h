@@ -60,6 +60,9 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* GA2_Sound;
 private:
 	
 	FVector CameraLocation;

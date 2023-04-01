@@ -132,6 +132,18 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempDashSound.Succeeded()) {
 		dashSound = tempDashSound.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGA1_Sound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_1_Sound.GA_1_Sound'"));
+	if (tempGA1_Sound.Succeeded()) {
+		GA1_Sound = tempGA1_Sound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGA2_Sound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_2_Sound.GA_2_Sound'"));
+	if (tempGA2_Sound.Succeeded()) {
+		GA2_Sound = tempGA2_Sound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempGolemDamage(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GolemDamage.GolemDamage'"));
+	if (tempGolemDamage.Succeeded()) {
+		golemDamage = tempGolemDamage.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackComboSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackComboSound.PowerAttackComboSound'"));
 	if (tempPowerAttackComboSound.Succeeded()) {
 		powerAttackComboSound = tempPowerAttackComboSound.Object;
@@ -306,6 +318,11 @@ void ACypher_Kaya::PlayGaUpAtkSound()
 void ACypher_Kaya::PlayGaDownAtkSound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), gaDownAtkSound);
+}
+
+void ACypher_Kaya::PlayGolemDamageSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), golemDamage);
 }
 
 void ACypher_Kaya::PlayDashAttackSound()
