@@ -63,6 +63,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		class AAIController* ai;
 
+	float disappearZheight;
+
 	bool bDetectPlayer;
 	FVector distWithPlayer;
 	UPROPERTY(EditAnywhere)

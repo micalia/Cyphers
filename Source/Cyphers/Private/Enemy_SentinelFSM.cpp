@@ -52,6 +52,7 @@ void UEnemy_SentinelFSM::BeginPlay()
 	ai = Cast<AAIController>(me->GetController());
 	//ai = UAIBlueprintHelperLibrary::GetAIController(me);
 
+	disappearZheight = me->GetActorLocation().Z -500;
 }
 
 
@@ -204,8 +205,9 @@ void UEnemy_SentinelFSM::UpdateDie()
 	FVector vt = FVector::DownVector * dieSpeed * GetWorld()->DeltaTimeSeconds;
 	FVector p = p0 + vt;
 
+
 	//2. 만약에 p.Z 가 -200 보다 작으면 파괴한다
-	if (p.Z < -200)
+	if (p.Z < disappearZheight)
 	{
 		me->Destroy();
 

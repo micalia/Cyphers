@@ -20,7 +20,6 @@ void UMainMenu::NativeConstruct()
 void UMainMenu::GameStart()
 {
 	SetVisibility(ESlateVisibility::Hidden);
-	UE_LOG(LogTemp, Warning, TEXT("GameStart!!!"))
 
 	ACyphersGameModeBase* gameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
 	gameMode->HideMouseCursor();

@@ -16,6 +16,7 @@
 #include "../CyphersGameModeBase.h"
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/CanvasPanel.h>
+#include <GeometryCollectionEngine/Public/GeometryCollection/GeometryCollectionComponent.h>
 
 UGolemAnim::UGolemAnim()
 {
@@ -142,13 +143,11 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(enemy);
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
-	DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
+	//DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
 
 	if (isHit) {
 		UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
 		jae->SetRelativeScale3D(FVector(jaeScale * 3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
-
-		UE_LOG(LogTemp, Warning, TEXT("floorCheckName : %s"), *hitInfo.GetActor()->GetName())
 
 	}
 
@@ -170,10 +169,6 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	);
 
 	AActor* hitActor = HitResult.GetActor();
-	if (hitActor != nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("HitAcotor name: %s"), *hitActor->GetName())
-
-	}
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(hitActor);
 	if (bResult)
 	{
@@ -202,7 +197,6 @@ void UGolemAnim::AnimNotify_StoneSpawn()
 	FName stoneSpawnSocketName(TEXT("SpawnStoneSocket"));
 	if (enemy->stoneOpacity != nullptr) {
 		UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), 1);
-		UE_LOG(LogTemp, Warning, TEXT("opacity 1 set!!"))
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("Fail Set opacity"))
@@ -224,7 +218,7 @@ void UGolemAnim::AnimNotify_ThrowStone()
 {
 	enemy->fsm->SetNewGoalDirection();
 	enemy->fsm->throwStoneAttackCurrentTime = 0;
-
+	
 	spawnStone->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	spawnStone->compCollision->SetCollisionProfileName(TEXT("StoneObj"));
 	spawnStone->compCollision->SetSimulatePhysics(true);
@@ -233,6 +227,7 @@ void UGolemAnim::AnimNotify_ThrowStone()
 	FVector dir = distance.GetSafeNormal();
 	FVector force = spawnStone->compCollision->GetMass() * dir * enemy->fsm->throwPower;
 	spawnStone->compCollision->AddForceAtLocation(force, spawnStone->compCollision->GetCenterOfMass());
+
 }
 
 void UGolemAnim::AnimNotify_GroundAttackEffect()

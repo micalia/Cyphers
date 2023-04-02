@@ -246,23 +246,23 @@ void UCypher_Kaya_Attack::AttackCheck()
 
 #if ENABLE_DRAW_DEBUG
 
-	FVector TraceVec = me->GetActorForwardVector() * AttackRange * 3;
-	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
-	float HalfHeight = AttackRange * 3 * 0.5f + AttackRadius * 3;
-	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
-	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-	float DebugLifeTime = 5.0f;
+	//FVector TraceVec = me->GetActorForwardVector() * AttackRange * 3;
+	//FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
+	//float HalfHeight = AttackRange * 3 * 0.5f + AttackRadius * 3;
+	//FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	//FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	//float DebugLifeTime = 5.0f;
 
-	DrawDebugCapsule(
-		GetWorld(),
-		Center,
-		HalfHeight,
-		AttackRadius * 3,
-		CapsuleRot,
-		DrawColor,
-		false,
-		DebugLifeTime
-	);
+	//DrawDebugCapsule(
+	//	GetWorld(),
+	//	Center,
+	//	HalfHeight,
+	//	AttackRadius * 3,
+	//	CapsuleRot,
+	//	DrawColor,
+	//	false,
+	//	DebugLifeTime
+	//);
 #endif
 	AActor* hitActor = HitResult.GetActor();
 	if (hitActor != nullptr) {
@@ -300,13 +300,16 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange * 3,
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel5,
-		FCollisionShape::MakeSphere(DashAttackRadius * 3),
+		FCollisionShape::MakeSphere(DashAttackRadius * 3 * 3),
 		Params
 	);
 
+	//DrawDebugSphere(GetWorld(), me->GetActorLocation(), 20.0f, 32, FColor::Purple, false, 5.0f);
+	//DrawDebugSphere(GetWorld(), me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange * 3, 20.0f, 32, FColor::Green, false, 5.0f);
+	//DrawDebugSphere(GetWorld(), me->GetActorLocation() + me->GetActorForwardVector() * DashAttackRange * 3, DashAttackRadius * 3 *3, 32, FColor::White, false, 5);
 #if ENABLE_DRAW_DEBUG
 
-	FVector TraceVec = me->GetActorForwardVector() * DashAttackRange * 3;
+	/*FVector TraceVec = me->GetActorForwardVector() * DashAttackRange * 3;
 	FVector Center = me->GetActorLocation() + TraceVec * 0.5f;
 	float HalfHeight = DashAttackRange * 3 * 0.5f + DashAttackRadius * 3;
 	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
@@ -322,7 +325,7 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		DrawColor,
 		false,
 		DebugLifeTime
-	);
+	);*/
 #endif
 	AActor* hitActor = HitResult.GetActor();
 	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
@@ -409,7 +412,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel5),
 		false,
 		EmptyActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true,
 		FLinearColor::Red,
@@ -452,54 +455,6 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 			golem->ReceiveDamage();
 		}
 	}
-	/*FVector StartLocation = me->GetActorLocation() + me->GetActorForwardVector() * startGripAtkPos;
-	FVector AddDistance = me->GetActorForwardVector() * startToEndDistance;
-	FVector EndLocation = StartLocation + AddDistance;
-	FVector halfSize = gripAttackRange / 2;
-	FRotator collisionRot = me->GetActorRotation();
-	TArray<AActor*> EmptyActorsToIgnore;
-	FHitResult HitResult;
-
-	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
-		GetWorld(),
-		StartLocation,
-		EndLocation,
-		halfSize,
-		collisionRot,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
-		false,
-		EmptyActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
-		HitResult,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		3
-	);
-	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
-	AActor* hitActor = HitResult.GetActor();
-	if (hitActor != nullptr) {
-
-		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
-	}
-
-	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
-	if (bResult)
-	{
-		if (sentinel != nullptr)
-		{
-			sentinel->ReceiveDamage();
-		}
-	}
-
-	AGolem* golem = Cast<AGolem>(hitActor);
-	if (bResult)
-	{
-		if (golem != nullptr)
-		{
-			golem->ReceiveDamage();
-		}
-	}*/
 }
 
 void UCypher_Kaya_Attack::GripAttackCheck2()
@@ -522,7 +477,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel5),
 		false,
 		EmptyActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true,
 		FLinearColor::Red,
@@ -734,7 +689,6 @@ void UCypher_Kaya_Attack::InputKeySpaceBar()
   	
 	currSpaceBarCool = spaceBarCool;
 	dashHorizontal = kaya->compPlayerMove->GetH();
-	UE_LOG(LogTemp, Warning, TEXT("hor: %f"), dashHorizontal)
 	Dash();
 }
 

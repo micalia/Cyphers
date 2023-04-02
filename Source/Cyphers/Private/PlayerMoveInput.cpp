@@ -23,13 +23,12 @@ void UPlayerMoveInput::BeginPlay()
 	//me->compArm->bUsePawnControlRotation = true;
 
 	my = -kaya->camTarget->GetRelativeRotation().Pitch;
-	UE_LOG(LogTemp, Warning, TEXT("my: %f"), my)
 }
 
 void UPlayerMoveInput::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
 	if (kaya->bDamageState == false) {
 		MoveAction(DeltaTime);
 	}
@@ -52,9 +51,9 @@ void UPlayerMoveInput::SetupInputBinding(class UInputComponent* PlayerInputCompo
 
 void UPlayerMoveInput::MoveAction(float deltaTime)
 {
-	if(kaya->compKayaAttack->bBackCameraOringinPos || kaya->bBossCameraEffect)return;
+	if (kaya->compKayaAttack->bBackCameraOringinPos || kaya->bBossCameraEffect)return;
 	direction = me->GetActorForwardVector() * v + me->GetActorRightVector() * h;
-	
+
 	me->AddMovementInput(direction.GetSafeNormal());
 }
 
@@ -76,17 +75,17 @@ void UPlayerMoveInput::InputVertical(float value)
 
 void UPlayerMoveInput::InputLookUp(float value)
 {
-	if(kaya->bCameraPosFix) return;
-	if(kaya->compKayaAttack->bAttackCharge) return;
+	if (kaya->bCameraPosFix) return;
+	if (kaya->compKayaAttack->bAttackCharge) return;
 	me->AddControllerPitchInput(value);
-	my+=value;
+	my += value;
 
-		if (-my < minCamPitch) {
-			my = -minCamPitch;
-		}
-		else if(-my > maxCamPitch) {
-			my = -maxCamPitch;
-		}
+	if (-my < minCamPitch) {
+		my = -minCamPitch;
+	}
+	else if (-my > maxCamPitch) {
+		my = -maxCamPitch;
+	}
 	kaya->camTarget->SetRelativeRotation(FRotator(FMath::Clamp(-my, minCamPitch, maxCamPitch), 0, 0));
 }
 

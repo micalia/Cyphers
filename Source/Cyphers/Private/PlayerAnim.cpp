@@ -81,7 +81,6 @@ void UPlayerAnim::AttachCamera()
 	me->AttachCameraActor();
 	me->beforeActCameraPos = me->Camera->GetActorLocation();
 	//공격이 끝난 시점 카메라 상대좌표를 가져온다
-	UE_LOG(LogTemp, Warning, TEXT("CameraActorComponent->GetComponentLocation() : %s / Camera->GetActorLocation() : %s"), *me->CameraActorComponent->GetComponentLocation().ToString(), *me->Camera->GetActorLocation().ToString())
 		//카메라 액터가 ChildActorComponent까지 가기 위해 움직여야 하는 거리
 		FVector moveCameraRange = me->CameraActorComponent->GetComponentLocation() - me->Camera->GetActorLocation();
 	//카메라 액터의 목적지 월드 위치
@@ -89,7 +88,6 @@ void UPlayerAnim::AttachCamera()
 	//카메라 액터의 회전값을 캐릭터 ChildActorComponent회전값이랑 일치
 	me->beforeActCameraRot = me->Camera->GetActorRotation();
 	me->afterActCameraRot = me->CameraActorComponent->GetComponentRotation();
-	UE_LOG(LogTemp, Warning, TEXT("me->afterActCameraPos : %s"), *me->afterActCameraPos.ToString())
 		me->compKayaAttack->bBackCameraOringinPos = true;
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
@@ -172,7 +170,6 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo7()
 	me->compNiagra->Activate(true);
 	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
-	UE_LOG(LogTemp, Warning, TEXT("combo6!!"))
 		UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
 }
 
@@ -183,7 +180,6 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
 	me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	UE_LOG(LogTemp, Warning, TEXT("attackENd NOtify"))
 		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
 	FVector currLocation = me->GetActorLocation();
 

@@ -248,14 +248,12 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		if (compKayaAttack->bNotDamageMotion == false) {
 			compKayaAttack->kayaAnim->DamagePlayAnim();
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Damage, currHP : %f"), currHP)
 		
 	}
 	else {
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		compKayaAttack->kayaAnim->DiePlayAnim();
 		currHP = 0;
-		UE_LOG(LogTemp, Warning, TEXT("Player DIe"))
 	}
 }
 
@@ -278,10 +276,9 @@ void ACypher_Kaya::AttachCameraActor()
 
 void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
 
 	//공격 대상마다 체크하는 로직 수정 필요
-	UE_LOG(LogTemp, Warning, TEXT("enemy HIt!!!"))
 	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(OtherActor);
 	if (sentinel != nullptr) {
 		sentinel->ReceiveDamage();

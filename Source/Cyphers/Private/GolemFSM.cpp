@@ -86,7 +86,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (bTurnComplete != true) return;
 	if (LookAtPlayerAfterAttack()) {
-		UE_LOG(LogTemp, Warning, TEXT("turning End!"))
+		//UE_LOG(LogTemp, Warning, TEXT("turning End!"))
 	}
 }
 void UGolemFSM::IdleState() {
@@ -417,7 +417,7 @@ void UGolemFSM::KnockDownAttackCheck()
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(GetOwner());
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
-	DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
+	//DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
 
 	if (isHit) {
 		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(
@@ -435,7 +435,7 @@ void UGolemFSM::KnockDownAttackCheck()
 	}
 
 	// 바닥쪽으로 라인트레이스 쏴서 이펙트 만들것
-	DrawDebugSphere(GetWorld(), CenterLoc, 20.0f, 32, FColor::Red, false, 5.0f);
+	//DrawDebugSphere(GetWorld(), CenterLoc, 20.0f, 32, FColor::Red, false, 5.0f);
 
 	bool bResult = UKismetSystemLibrary::BoxTraceSingle(
 		GetWorld(),
@@ -446,7 +446,7 @@ void UGolemFSM::KnockDownAttackCheck()
 		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel7),
 		false,
 		EmptyActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true,
 		FLinearColor::Red,

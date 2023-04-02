@@ -94,7 +94,7 @@ public:
 		float JA_startToEndDistance = 600;
 
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		FVector JumpAttackRange = FVector(350, 800, 400);
+		FVector JumpAttackRange = FVector(1100, 1650, 400);
 	//custom
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackRangeStart = 3900;
@@ -127,7 +127,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwStoneAttackCoolTime = 4.2;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwPower = 275000;
+		float throwPower = 600000.0f;
 	//fix
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = ThrowAttack)
 		float throwStoneAttackCurrentTime = 0;

@@ -53,6 +53,11 @@ AStoneObj::AStoneObj()
 	if (tempStoneSound.Succeeded()) {
 		stoneSound = tempStoneSound.Object;
 	}
+
+	compCheckPlayerCollision = CreateDefaultSubobject<USphereComponent>(TEXT("CheckPlayerCollision"));
+	compCheckPlayerCollision->SetupAttachment(RootComponent);
+	compCheckPlayerCollision->SetCollisionProfileName(TEXT("StoneCheckPlayer"));
+	compCheckPlayerCollision->SetSphereRadius(300);
 }
 
 // Called when the game starts or when spawned
@@ -60,7 +65,10 @@ void AStoneObj::BeginPlay()
 {
 	Super::BeginPlay();
 	compCollision->OnComponentHit.AddDynamic(this, &AStoneObj::CrashWithPlayer);
+	compCheckPlayerCollision->OnComponentBeginOverlap.AddDynamic(this, &AStoneObj::OnCheckPlayerOverlap);
 	enemy = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
+
+	compGcStone->SetVisibility(false);
 }
 
 // Called every frame
@@ -97,12 +105,15 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 {
 	ACypher_Kaya* player = Cast<ACypher_Kaya>(OtherActor);
 	if (player) {
+		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		player->bCameraShake = true;
 		bIsCrash = true;
 		bTransparent = true;
 		compGcStone->SetVisibility(true);
 		compGcStone->SetSimulatePhysics(true);
-		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//compGcStone->AddImpulse(addImpulsePower);
+
+		compGcStone->ApplyExternalStrain(0, Hit.ImpactPoint, 0,0,100,100);
 		compRock->SetVisibility(false);
 		//enemy->bCameraShake = true;
 
@@ -115,15 +126,23 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
 		//Destroy();
 	}
-	else {
+	/*else {
+		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		bIsCrash = true;
 		bTransparent = true;
 		compGcStone->SetVisibility(true);
 		compGcStone->SetSimulatePhysics(true);
-		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		compRock->SetVisibility(false);
 
 		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
+	}*/
+}
+
+void AStoneObj::OnCheckPlayerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ACypher_Kaya* player = Cast<ACypher_Kaya>(OtherActor);
+	if (player) {
+		compGcStone->SetSimulatePhysics(true);
 	}
 }
 

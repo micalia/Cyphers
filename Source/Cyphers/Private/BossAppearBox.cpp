@@ -30,7 +30,6 @@ void ABossAppearBox::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("box Beginplay!!"))
 	collisionBox->OnComponentBeginOverlap.AddDynamic(this, &ABossAppearBox::OnOverlap);
 	enemy = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
 	player = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
@@ -109,7 +108,6 @@ void ABossAppearBox::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(OtherActor);
 	if (kaya) {
-		UE_LOG(LogTemp, Warning, TEXT("Hit box !!!!!!"))
 		/*APlayerController* controller = GetWorld()->GetFirstPlayerController();
 		kaya->DisableInput(controller);*/
 

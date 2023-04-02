@@ -26,13 +26,15 @@ public:
 		class AGolem* enemy;
 	UPROPERTY()
 		class UStaticMesh* rockMesh;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* compRock;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USphereComponent* compCollision;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USphereComponent* compCheckPlayerCollision;
 	UPROPERTY(EditDefaultsOnly, Category = Sound)
 		class USoundBase* stoneSound;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UGeometryCollectionComponent* compGcStone;
 
 public:
@@ -43,7 +45,18 @@ public:
 			UPrimitiveComponent* OtherComp,
 			FVector NormalImpulse,
 			const FHitResult& Hit);
+
+	UFUNCTION()
+		void OnCheckPlayerOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
 public:
+	/*UPROPERTY(EditAnywhere)
+		FVector addImpulsePower = FVector(0,0,30000);*/
 	UPROPERTY(EditAnywhere)
 		float destroyTime = 5;
 	UPROPERTY(EditAnywhere)
