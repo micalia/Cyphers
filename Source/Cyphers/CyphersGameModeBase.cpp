@@ -84,10 +84,13 @@ void ACyphersGameModeBase::BeginPlay()
 	ShowMouseCursor();
 	
 	kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
-	kaya->bCameraPosFix = true;
+	if (kaya != nullptr) {
+		kaya->bCameraPosFix = true;
 
-	APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	kaya->DisableInput(controller);
+		APlayerController* controller = GetWorld()->GetFirstPlayerController();
+		kaya->DisableInput(controller);
+
+	}
 	
 }
 
