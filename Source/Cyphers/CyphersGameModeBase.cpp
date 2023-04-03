@@ -6,6 +6,7 @@
 #include "PlayerWidget.h"
 #include "MainMenu.h"
 #include "Cypher_Kaya.h"
+#include <Kismet/KismetMathLibrary.h>
 
 ACyphersGameModeBase::ACyphersGameModeBase()
 {
@@ -28,6 +29,12 @@ ACyphersGameModeBase::ACyphersGameModeBase()
 	if (tempPlayerWidgetclass.Succeeded())
 	{
 		PlayerWidgetClass = tempPlayerWidgetclass.Class;
+	}
+
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempEarthquakeSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/earthquake_sound.earthquake_sound'"));
+	if (tempEarthquakeSound.Succeeded()) {
+		earthquakeSound = tempEarthquakeSound.Object;
 	}
 	
 }
@@ -76,12 +83,17 @@ void ACyphersGameModeBase::BeginPlay()
 
 	ShowMouseCursor();
 	
-	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+	kaya = Cast<ACypher_Kaya>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	kaya->bCameraPosFix = true;
 
 	APlayerController* controller = GetWorld()->GetFirstPlayerController();
 	kaya->DisableInput(controller);
 	
+}
+
+void ACyphersGameModeBase::Tick(float DeltaSeconds)
+{
+	if (bCameraShake == true)CameraShakeRandom();
 }
 
 void ACyphersGameModeBase::HideUI()
@@ -109,4 +121,19 @@ void ACyphersGameModeBase::HideMouseCursor()
 	PlayerController->bShowMouseCursor = false;
 	PlayerController->bEnableClickEvents = false;
 	PlayerController->bEnableMouseOverEvents = false;
+}
+
+void ACyphersGameModeBase::CameraShakeRandom()
+{
+	if (camCurrTime < cameraShakeTime) {
+		camCurrTime += GetWorld()->GetDeltaSeconds();
+		float y = UKismetMathLibrary::RandomFloatInRange(-4, 4);
+		float z = UKismetMathLibrary::RandomFloatInRange(-4, 4);
+		kaya->CameraActorComponent->SetRelativeLocation(kaya->cameraOriginPos + FVector(0, y, z));
+	}
+	else {
+		bCameraShake = false;
+		kaya->CameraActorComponent->SetRelativeLocation(kaya->cameraOriginPos);
+		camCurrTime = 0;
+	}
 }

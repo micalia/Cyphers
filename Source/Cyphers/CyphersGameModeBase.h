@@ -7,7 +7,7 @@
 #include "CyphersGameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class CYPHERS_API ACyphersGameModeBase : public AGameModeBase
@@ -17,7 +17,11 @@ public:
 	ACyphersGameModeBase();
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* earthquakeSound;
 
 	TSubclassOf<class UMainMenu> MainMenuWidgetClass;
 	UPROPERTY()
@@ -31,9 +35,19 @@ public:
 	UPROPERTY()
 		UPlayerWidget* playerWidget;
 
-		void HideUI();
-		void ShowUI();
+	UPROPERTY()
+		class ACypher_Kaya* kaya;
 
-		void ShowMouseCursor();
-		void HideMouseCursor();
+	void HideUI();
+	void ShowUI();
+
+	void ShowMouseCursor();
+	void HideMouseCursor();
+
+	void CameraShakeRandom();
+
+	bool bCameraShake;
+	float camCurrTime;
+	UPROPERTY(EditAnywhere)
+		float cameraShakeTime = 3.5;
 };
