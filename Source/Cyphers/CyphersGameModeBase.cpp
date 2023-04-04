@@ -7,6 +7,9 @@
 #include "MainMenu.h"
 #include "Cypher_Kaya.h"
 #include <Kismet/KismetMathLibrary.h>
+#include <UMG/Public/Components/Image.h>
+#include "WhiteScreen.h"
+#include <Kismet/GameplayStatics.h>
 
 ACyphersGameModeBase::ACyphersGameModeBase()
 {
@@ -29,6 +32,12 @@ ACyphersGameModeBase::ACyphersGameModeBase()
 	if (tempPlayerWidgetclass.Succeeded())
 	{
 		PlayerWidgetClass = tempPlayerWidgetclass.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<UWhiteScreen> tempWhiteScreeClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WB_WhiteScreen.WB_WhiteScreen_C'"));
+	if (tempWhiteScreeClass.Succeeded())
+	{
+		WhiteScreenClass = tempWhiteScreeClass.Class;
 	}
 
 
@@ -74,6 +83,16 @@ void ACyphersGameModeBase::PostInitializeComponents()
 		}
 	}
 
+	if (WhiteScreenClass != nullptr)
+	{
+		whiteScreen = CreateWidget<UWhiteScreen>(GetWorld(), WhiteScreenClass);
+
+		if (whiteScreen != nullptr)
+		{
+			whiteScreen->AddToViewport();
+		}
+	}
+
 	HideUI();
 }
 
@@ -92,11 +111,14 @@ void ACyphersGameModeBase::BeginPlay()
 
 	}
 	
+	ActiveWhiteScreenOpacity = true;
+	OpacityOnCheck = false;
 }
 
 void ACyphersGameModeBase::Tick(float DeltaSeconds)
 {
 	if (bCameraShake == true)CameraShakeRandom();
+	if(ActiveWhiteScreenOpacity == true) WhiteScreenOpacityActive(OpacityOnCheck);
 }
 
 void ACyphersGameModeBase::HideUI()
@@ -138,5 +160,31 @@ void ACyphersGameModeBase::CameraShakeRandom()
 		bCameraShake = false;
 		kaya->CameraActorComponent->SetRelativeLocation(kaya->cameraOriginPos);
 		camCurrTime = 0;
+	}
+}
+
+void ACyphersGameModeBase::WhiteScreenOpacityActive(bool OpacityOn)
+{
+	renderCurrTime += GetWorld()->GetDeltaSeconds();
+	if (OpacityOn) {
+		if (renderCurrTime < renderOpacityTime) {
+			whiteScreen->WhiteScreen->SetOpacity(renderCurrTime / renderOpacityTime);
+		}
+		else {
+		//게임이 끝났을때화면이 점점 하얘지면서 다시 씬을 재로딩하기 됨
+			renderCurrTime = renderOpacityTime;
+			UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGame"));
+		}
+	}
+	else { 
+		if (renderCurrTime < renderOpacityTime) {
+			float opacity = 1 - renderCurrTime / renderOpacityTime;
+			whiteScreen->WhiteScreen->SetOpacity(opacity);
+		}
+		else {
+			renderCurrTime = 0;
+			ActiveWhiteScreenOpacity = false;
+			whiteScreen->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 }

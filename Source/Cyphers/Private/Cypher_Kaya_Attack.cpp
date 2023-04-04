@@ -704,7 +704,9 @@ void UCypher_Kaya_Attack::DashAttack()
 {
 	startCoolBothMouse = true;
 	currbothMouseAttackCool = bothMouseAttackCool;
-	kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	if (kaya->CyphersGameMode != nullptr) {
+		kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	}
 	IsAttacking = true;
 	kayaAnim->DashAttackPlayAnim();
 }

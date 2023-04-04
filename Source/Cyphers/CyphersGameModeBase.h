@@ -35,6 +35,10 @@ public:
 	UPROPERTY()
 		UPlayerWidget* playerWidget;
 
+	TSubclassOf<class UWhiteScreen> WhiteScreenClass;
+	UPROPERTY()
+		UWhiteScreen* whiteScreen;
+
 	UPROPERTY()
 		class ACypher_Kaya* kaya;
 
@@ -50,4 +54,11 @@ public:
 	float camCurrTime;
 	UPROPERTY(EditAnywhere)
 		float cameraShakeTime = 3.5;
+
+	UPROPERTY(EditAnywhere)
+		float renderOpacityTime = 2;
+		float renderCurrTime;
+	void WhiteScreenOpacityActive(bool OpacityOn);
+	bool OpacityOnCheck;
+	bool ActiveWhiteScreenOpacity;
 };
