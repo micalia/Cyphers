@@ -36,7 +36,7 @@ void AEndPoint::BeginPlay()
 	Super::BeginPlay();
 	
 	compCapsule->OnComponentBeginOverlap.AddDynamic(this, &AEndPoint::OnOverlap);
-
+	compCapsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called every frame

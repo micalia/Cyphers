@@ -14,6 +14,8 @@
 #include "PlayerWidget.h"
 #include <Particles/ParticleSystem.h>
 #include "GolemGroundAttackCollision.h"
+#include "EndPoint.h"
+#include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
 
 AGolem::AGolem()
 {
@@ -113,6 +115,7 @@ void AGolem::BeginPlay()
 	maxHP = health;
 	currHP = maxHP;
 
+	endPoint = Cast<AEndPoint>(UGameplayStatics::GetActorOfClass(GetWorld(), AEndPoint::StaticClass()));
 }
 
 void AGolem::Tick(float DeltaTime)
@@ -190,5 +193,11 @@ void AGolem::ReceiveDamage()
 		fsm->anim->PlayDieAnim();
 		fsm->bDie = true;
 		fsm->mState = EGolemState::Die;
+		CyphersGameMode->bFadingOut = true;
+
+		if (endPoint != nullptr) { 
+			endPoint->compCapsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			endPoint->compNiagra->SetVisibility(true);
+		}
 	}
 }

@@ -22,6 +22,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* earthquakeSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* battleSound;
 
 	TSubclassOf<class UMainMenu> MainMenuWidgetClass;
 	UPROPERTY()
@@ -54,11 +56,26 @@ public:
 	float camCurrTime;
 	UPROPERTY(EditAnywhere)
 		float cameraShakeTime = 3.5;
-
+//화면 하얘지는 효과
 	UPROPERTY(EditAnywhere)
 		float renderOpacityTime = 2;
 		float renderCurrTime;
 	void WhiteScreenOpacityActive(bool OpacityOn);
 	bool OpacityOnCheck;
 	bool ActiveWhiteScreenOpacity;
+//전투브금
+	UPROPERTY(EditAnywhere)
+		float bgmVolume = 0.5;
+	UPROPERTY()
+		UAudioComponent* battleAudioComp;
+	UPROPERTY()
+	USoundClass* soundClass;
+	void PlayBattleMusic();
+	void FadeOutBattleMusic();
+	UPROPERTY(EditAnywhere, Category = Sound)
+		float FadeOutDuration = 1.5;
+		float FadeOutCurrTime;
+
+		bool bFadingOut;
+		float currVolume;
 };

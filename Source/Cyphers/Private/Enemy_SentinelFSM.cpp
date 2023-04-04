@@ -63,7 +63,9 @@ void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	distWithPlayer = target->GetActorLocation() - me->GetActorLocation();
+	if (target != nullptr) {
+		distWithPlayer = target->GetActorLocation() - me->GetActorLocation();
+	}
 
 	switch (currState)
 	{

@@ -38,7 +38,10 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	CalculateCurrentTime(DeltaTime);
 
-	targetDistance = target->GetActorLocation() - me->GetActorLocation();
+	if (target != nullptr) {
+		targetDistance = target->GetActorLocation() - me->GetActorLocation();
+	}
+
 	targetDistanceLength = targetDistance.Length();
 
 	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)

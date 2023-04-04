@@ -92,6 +92,8 @@ void ABossAppearBox::Tick(float DeltaTime)
 					player->bCameraPosFix = false;
 					player->bBossCameraEffect = false;
 
+					gameMode->PlayBattleMusic();
+
 					Destroy();
 				}
 			}

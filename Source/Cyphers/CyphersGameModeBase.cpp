@@ -10,6 +10,7 @@
 #include <UMG/Public/Components/Image.h>
 #include "WhiteScreen.h"
 #include <Kismet/GameplayStatics.h>
+#include <Components/AudioComponent.h>
 
 ACyphersGameModeBase::ACyphersGameModeBase()
 {
@@ -44,6 +45,11 @@ ACyphersGameModeBase::ACyphersGameModeBase()
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempEarthquakeSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/earthquake_sound.earthquake_sound'"));
 	if (tempEarthquakeSound.Succeeded()) {
 		earthquakeSound = tempEarthquakeSound.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempBattleSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/BattleSound.BattleSound'"));
+	if (tempBattleSound.Succeeded()) {
+		battleSound = tempBattleSound.Object;
 	}
 	
 }
@@ -113,12 +119,14 @@ void ACyphersGameModeBase::BeginPlay()
 	
 	ActiveWhiteScreenOpacity = true;
 	OpacityOnCheck = false;
+	
 }
 
 void ACyphersGameModeBase::Tick(float DeltaSeconds)
 {
 	if (bCameraShake == true)CameraShakeRandom();
 	if(ActiveWhiteScreenOpacity == true) WhiteScreenOpacityActive(OpacityOnCheck);
+	if(bFadingOut)FadeOutBattleMusic();
 }
 
 void ACyphersGameModeBase::HideUI()
@@ -186,5 +194,34 @@ void ACyphersGameModeBase::WhiteScreenOpacityActive(bool OpacityOn)
 			ActiveWhiteScreenOpacity = false;
 			whiteScreen->SetVisibility(ESlateVisibility::Collapsed);
 		}
+	}
+}
+
+void ACyphersGameModeBase::PlayBattleMusic()
+{
+	battleAudioComp = UGameplayStatics::SpawnSound2D(GetWorld(), battleSound);
+	battleAudioComp->SetVolumeMultiplier(bgmVolume);
+	currVolume = battleAudioComp->VolumeMultiplier;
+	/*currVolume = battleSound->GetVolumeMultiplier();
+	soundClass = battleSound->GetSoundClass();*/
+
+	UE_LOG(LogTemp, Warning, TEXT("currVolume: %f"), battleAudioComp->VolumeMultiplier)
+}
+
+void ACyphersGameModeBase::FadeOutBattleMusic()
+{
+	FadeOutCurrTime+= GetWorld()->GetDeltaSeconds();
+	if (battleAudioComp != nullptr) {
+		battleAudioComp->SetVolumeMultiplier(FMath::Lerp(currVolume, 0, FadeOutCurrTime / FadeOutDuration));
+		if (battleAudioComp->VolumeMultiplier < 0) {
+			battleAudioComp->SetVolumeMultiplier(0);
+			battleAudioComp->Stop();
+		}/*
+		soundClass->Properties.Volume = FMath::Lerp(currVolume, 0, FadeOutCurrTime / FadeOutDuration);
+		if (soundClass->Properties.Volume < 0) {
+			soundClass->
+			Properties.Volume = 0;
+		}*/
+		UE_LOG(LogTemp, Warning, TEXT("SoundVolume : %f"), battleAudioComp->VolumeMultiplier)
 	}
 }

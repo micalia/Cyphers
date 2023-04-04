@@ -101,4 +101,7 @@ public:
 		class USoundBase* dieSound1;
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* dieSound2;
+
+		UPROPERTY()
+		class AEndPoint* endPoint;
 };
