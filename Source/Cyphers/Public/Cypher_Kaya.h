@@ -83,7 +83,11 @@ public:
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)
-	class USoundBase* damageSound;
+		class USoundBase* rightFootSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* leftFootSound;
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* damageSound;
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* swing1;
 	UPROPERTY(EditAnywhere, Category = Sound)

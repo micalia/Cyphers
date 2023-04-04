@@ -100,6 +100,14 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempPowerAttackEndVoice.Succeeded()) {
 		powerAttackEnd = tempPowerAttackEndVoice.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempRightFootSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/rightFootStep.rightFootStep'"));
+	if (tempRightFootSound.Succeeded()) {
+		rightFootSound = tempRightFootSound.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempLeftFootSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/leftFootStep.leftFootStep'"));
+	if (tempLeftFootSound.Succeeded()) {
+		leftFootSound = tempLeftFootSound.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempSwing1(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/swing1.swing1'"));
 	if (tempSwing1.Succeeded()) {
 		swing1 = tempSwing1.Object;

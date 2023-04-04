@@ -71,6 +71,11 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Damage, Meta = (AllowPrivateAccess = true))
 		class UAnimMontage* damageMontage;
 public:
+//걷기 사운드
+	UFUNCTION()
+		void AnimNotify_LeftFoot();
+	UFUNCTION()
+		void AnimNotify_RightFoot();
 //평타 공격 콤보(좌클릭)
 
 	void BasicAttackMontageSection(int32 NewSection);

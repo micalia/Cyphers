@@ -92,6 +92,16 @@ void UPlayerAnim::AttachCamera()
 	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
+void UPlayerAnim::AnimNotify_LeftFoot()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), me->leftFootSound);
+}
+
+void UPlayerAnim::AnimNotify_RightFoot()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), me->rightFootSound);
+}
+
 void UPlayerAnim::BasicAttackMontageSection(int32 NewSection)
 {
 	ABCHECK(Montage_IsPlaying(basicAttackAnimMontage))
