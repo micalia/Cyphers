@@ -25,6 +25,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+//등장 Dissolve효과
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* playerAppearSound;
+	UPROPERTY(EditAnywhere)
+		class UNiagaraSystem* disolveNiagaraAsset;
+	UPROPERTY(EditAnywhere)
+		class UNiagaraComponent* disolveNiagara;
+	UPROPERTY(EditAnywhere)
+		float AppearTime = 5;
+		float currAppearTime;
+
+		bool bPlayerAppear;
+		void PlayerAppear();
+///////////////////////
+
 	float maxHP;
 	float currHP;
 

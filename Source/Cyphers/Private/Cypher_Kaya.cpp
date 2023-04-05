@@ -22,6 +22,7 @@
 #include <Particles/ParticleSystem.h>
 #include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
 #include <Kismet/KismetMathLibrary.h>
+#include "WhiteScreen.h"
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -99,6 +100,10 @@ ACypher_Kaya::ACypher_Kaya() {
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackEndVoice(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackEndVoice.PowerAttackEndVoice'"));
 	if (tempPowerAttackEndVoice.Succeeded()) {
 		powerAttackEnd = tempPowerAttackEndVoice.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempPlayerAppearSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PlayerAppearSound.PlayerAppearSound'"));
+	if (tempPlayerAppearSound.Succeeded()) {
+		playerAppearSound = tempPlayerAppearSound.Object;
 	}
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempRightFootSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/rightFootStep.rightFootStep'"));
 	if (tempRightFootSound.Succeeded()) {
@@ -189,6 +194,17 @@ ACypher_Kaya::ACypher_Kaya() {
 	compNiagra = CreateDefaultSubobject<UNiagaraComponent>(TEXT("AfterImageEffect"));
 	compNiagra->SetupAttachment(RootComponent);
 	compNiagra->SetAsset(NiagaraSystemAsset);
+
+	//등장 연출
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> tempDisolveNiagaraAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/Resources/Effect/DissolveSpawn/VFX/NS_Morph2.NS_Morph2'"));
+	if (tempDisolveNiagaraAsset.Succeeded()) {
+		disolveNiagaraAsset = tempDisolveNiagaraAsset.Object;
+	}
+
+	disolveNiagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("DisolveNiagara"));
+	disolveNiagara->SetupAttachment(GetMesh());
+	disolveNiagara->SetAsset(disolveNiagaraAsset);
 }
 
 void ACypher_Kaya::BeginPlay()
@@ -212,6 +228,7 @@ void ACypher_Kaya::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
 
+	if(bPlayerAppear)PlayerAppear();
 	if (bCameraShake == true)CameraShakeRandom();
 	
 	currtimer+=DeltaTime;
@@ -229,6 +246,20 @@ void ACypher_Kaya::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 	
 	compPlayerMove->SetupInputBinding(PlayerInputComponent);
 	compKayaAttack->SetupInputBinding(PlayerInputComponent);
+}
+
+void ACypher_Kaya::PlayerAppear()
+{
+	currAppearTime += GetWorld()->GetDeltaSeconds();
+	if (currAppearTime < AppearTime) {
+	float alpha = currAppearTime / AppearTime;
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Amount"), alpha);
+	}
+	else {
+		currAppearTime = 0;
+		bPlayerAppear = false;
+		disolveNiagara->SetActive(false);
+	}
 }
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
@@ -262,6 +293,12 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		compKayaAttack->kayaAnim->DiePlayAnim();
 		currHP = 0;
+		APlayerController* controller = GetWorld()->GetFirstPlayerController();
+		DisableInput(controller); 
+		ACyphersGameModeBase* gamemode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
+		gamemode->whiteScreen->SetVisibility(ESlateVisibility::Visible);
+		gamemode->OpacityOnCheck = true;
+		gamemode->ActiveWhiteScreenOpacity = true;
 	}
 }
 
