@@ -15,7 +15,9 @@ class CYPHERS_API UPlayerWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	UPROPERTY(meta = (BindWidget))
-	class UCanvasPanel* BossUI = nullptr;
+		class UCanvasPanel* BossUI = nullptr;
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* BossHPtxt = nullptr;
 	UPROPERTY(meta=(BindWidget))
 	class UProgressBar* PlayerHpBar = nullptr;
 

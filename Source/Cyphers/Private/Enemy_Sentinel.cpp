@@ -15,6 +15,7 @@
 #include <Components/BoxComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Sound/SoundBase.h>
+#include "DamageIndicator.h"
 
 // Sets default values
 AEnemy_Sentinel::AEnemy_Sentinel()
@@ -74,6 +75,16 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	if (tempGA2_Sound.Succeeded()) {
 		GA2_Sound = tempGA2_Sound.Object;
 	}
+
+	damageIndicatorWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("damageIndicatorWidget"));
+	damageIndicatorWidget->SetupAttachment(GetMesh());
+
+	static ConstructorHelpers::FClassFinder<UDamageIndicator> tempDamageIndicatorFactory(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WB_DamageIndicator.WB_DamageIndicator_C'"));
+	if (tempDamageIndicatorFactory.Succeeded()) {
+		DamageIndicatorFactory = tempDamageIndicatorFactory.Class;
+	}
+	
+	damageIndicatorWidget->SetWidgetClass(DamageIndicatorFactory);
 }
 
 // Called when the game starts or when spawned
@@ -93,7 +104,7 @@ void AEnemy_Sentinel::BeginPlay()
 
 	attackCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy_Sentinel::OnAttackOverlap);
 
-	
+	damageIndicator = Cast<UDamageIndicator>(damageIndicatorWidget->GetWidget());
 }
 
 // Called every frame
@@ -116,24 +127,75 @@ void AEnemy_Sentinel::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void AEnemy_Sentinel::ReceiveDamage()
 {
-	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
-	currHP--;
-	if (currHP > 0)
-	{
-		fsm->ChangeState(EEnemy_SentinelState::Damaged);
-	}
-	//그렇지 않으면 Die 상태로 전환
-	else
-	{
+	/*UDamageIndicator* DI = Cast<UDamageIndicator>(damageIndicatorWidget->GetWidget());
+	DI.*/
 
-		fsm->ChangeState(EEnemy_SentinelState::Die);
+	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
+	float basicDamage = 1000;
+	float criticalDamage = 1500;
+
+	int32 ranVal = UKismetMathLibrary::RandomIntegerInRange(1,100);
+	if (ranVal < 60) {
+		currHP-= basicDamage;
+		DamageNumber(basicDamage);
+
+		if (currHP > 0)
+		{
+			fsm->ChangeState(EEnemy_SentinelState::Damaged);
+		}
+		//그렇지 않으면 Die 상태로 전환
+		else
+		{
+
+			fsm->ChangeState(EEnemy_SentinelState::Die);
+		}
+
 	}
+	else {
+		if (damageIndicator)
+		{
+			damageIndicator->bCritical = true;
+		}
+
+		currHP -= criticalDamage;
+		DamageNumber(criticalDamage);
+
+		if (currHP > 0)
+		{
+			fsm->ChangeState(EEnemy_SentinelState::Damaged);
+		}
+		//그렇지 않으면 Die 상태로 전환
+		else
+		{
+
+			fsm->ChangeState(EEnemy_SentinelState::Die);
+		}
+	}
+
+
 }
 
 void AEnemy_Sentinel::ReceiveGripAttackDamage()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
-	currHP--;
+	float basicDamage = 1000;
+	float criticalDamage = 1500;
+
+	int32 ranVal = UKismetMathLibrary::RandomIntegerInRange(1, 100);
+	if (ranVal < 60) {
+		currHP -= basicDamage;
+		DamageNumber(basicDamage);
+
+	}
+	else {
+		if (damageIndicator)
+		{
+			damageIndicator->bCritical = true;
+		}
+
+		currHP -= criticalDamage;
+		DamageNumber(criticalDamage);
+	}
 }
 
 void AEnemy_Sentinel::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -145,13 +207,17 @@ void AEnemy_Sentinel::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 void AEnemy_Sentinel::UpdateWidgetRotation()
 {
+	CameraLocation = GetPlayerCameraLocation();
+	CameraRotation = GetPlayerCameraRotation();
 	if (hpWidget)
 	{
-		CameraLocation = GetPlayerCameraLocation();
-		CameraRotation = GetPlayerCameraRotation();
-
 		WidgetRotation = UKismetMathLibrary::FindLookAtRotation(hpWidget->GetComponentLocation(), CameraLocation);
 		hpWidget->SetWorldRotation(WidgetRotation);
+	}
+	if (damageIndicatorWidget)
+	{
+		WidgetRotation = UKismetMathLibrary::FindLookAtRotation(damageIndicatorWidget->GetComponentLocation(), CameraLocation);
+		damageIndicatorWidget->SetWorldRotation(WidgetRotation);
 	}
 }
 

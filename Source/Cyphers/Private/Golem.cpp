@@ -16,6 +16,9 @@
 #include "GolemGroundAttackCollision.h"
 #include "EndPoint.h"
 #include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
+#include <UMG/Public/Components/WidgetComponent.h>
+#include "DamageIndicator.h"
+#include <Kismet/KismetMathLibrary.h>
 
 AGolem::AGolem()
 {
@@ -104,7 +107,15 @@ AGolem::AGolem()
 	JA_EffectPoint->SetupAttachment(GetCapsuleComponent());
 	JA_EffectPoint->SetRelativeLocation(FVector(148, 0, -86));
 
+	damageIndicatorWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("damageIndicatorWidget"));
+	damageIndicatorWidget->SetupAttachment(GetMesh());
 
+	static ConstructorHelpers::FClassFinder<UDamageIndicator> tempDamageIndicatorFactory(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WB_DamageIndicator.WB_DamageIndicator_C'"));
+	if (tempDamageIndicatorFactory.Succeeded()) {
+		DamageIndicatorFactory = tempDamageIndicatorFactory.Class;
+	}
+
+	damageIndicatorWidget->SetWidgetClass(DamageIndicatorFactory);
 }
  
 void AGolem::BeginPlay()
@@ -116,6 +127,7 @@ void AGolem::BeginPlay()
 	currHP = maxHP;
 
 	endPoint = Cast<AEndPoint>(UGameplayStatics::GetActorOfClass(GetWorld(), AEndPoint::StaticClass()));
+	damageIndicator = Cast<UDamageIndicator>(damageIndicatorWidget->GetWidget());
 }
 
 void AGolem::Tick(float DeltaTime)
@@ -176,10 +188,29 @@ void AGolem::PlayFootSound()
 	UGameplayStatics::PlaySound2D(GetWorld(), footSound);
 }
 
-void AGolem::ReceiveDamage()
+void AGolem::ReceiveDamage(FVector hitLocation)
 {
 	mainPlayer->PlayGolemDamageSound();
-	currHP--;
+
+
+	float basicDamage = 1000;
+	float criticalDamage = 1500;
+
+	int32 ranVal = UKismetMathLibrary::RandomIntegerInRange(1, 100);
+	if (ranVal < 60) {
+		currHP -= basicDamage;
+		DamageNumber(basicDamage, hitLocation, false);
+	}
+	else {
+		if (damageIndicator)
+		{
+			damageIndicator->bCritical = true;
+		}
+
+		currHP -= criticalDamage;
+		DamageNumber(criticalDamage, hitLocation, true);
+	}
+
 	if (currHP > 0)
 	{
 		//fsm->ChangeState(EEnemy_SentinelState::Damaged);
@@ -200,4 +231,5 @@ void AGolem::ReceiveDamage()
 			endPoint->compNiagra->SetVisibility(true);
 		}
 	}
+
 }

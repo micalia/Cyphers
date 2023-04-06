@@ -18,6 +18,16 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+//µ¥¹ÌÁö ui
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UWidgetComponent* damageIndicatorWidget;
+	UFUNCTION(BlueprintImplementableEvent)
+		void DamageNumber(float Damage, FVector hitLocation, bool critical);
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UDamageIndicator> DamageIndicatorFactory;
+	UPROPERTY()
+		class UDamageIndicator* damageIndicator;
+/////////////
 	float maxHP;
 	float currHP;
 
@@ -25,7 +35,7 @@ public:
 		class USoundBase* footSound;
 	void PlayFootSound();
 
-	void ReceiveDamage();
+	void ReceiveDamage(FVector hitLocation);
 	UPROPERTY()
 		class ACyphersGameModeBase* CyphersGameMode;
 

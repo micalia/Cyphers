@@ -23,6 +23,7 @@
 #include <../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 #include "WhiteScreen.h"
+#include <UMG/Public/Components/WidgetComponent.h>
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -205,6 +206,7 @@ ACypher_Kaya::ACypher_Kaya() {
 	disolveNiagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("DisolveNiagara"));
 	disolveNiagara->SetupAttachment(GetMesh());
 	disolveNiagara->SetAsset(disolveNiagaraAsset);
+
 }
 
 void ACypher_Kaya::BeginPlay()
@@ -332,7 +334,7 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 	AGolem* golem = Cast<AGolem>(OtherActor);
 	if (golem != nullptr)
 	{
-		golem->ReceiveDamage();
+		golem->ReceiveDamage(GetActorLocation());
 	}
 	
 }

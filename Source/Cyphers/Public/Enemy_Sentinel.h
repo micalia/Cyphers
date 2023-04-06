@@ -26,6 +26,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+//데미지 효과
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UWidgetComponent* damageIndicatorWidget;
+	UFUNCTION(BlueprintImplementableEvent)
+		void DamageNumber(float Damage);
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UDamageIndicator> DamageIndicatorFactory;
+		UPROPERTY()
+		class UDamageIndicator* damageIndicator;
+
 	UPROPERTY()
 	class ACypher_Kaya* kaya;
 

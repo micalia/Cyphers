@@ -284,7 +284,7 @@ void UCypher_Kaya_Attack::AttackCheck()
 	{
 		if (golem != nullptr)
 		{
-			golem->ReceiveDamage();
+			golem->ReceiveDamage(HitResult.ImpactPoint);
 		}
 	}
 }
@@ -342,7 +342,7 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 	{
 		if (golem != nullptr)
 		{
-			golem->ReceiveDamage();
+			golem->ReceiveDamage(HitResult.ImpactPoint);
 		}
 	}
 
@@ -452,7 +452,7 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 	{
 		if (golem != nullptr)
 		{
-			golem->ReceiveDamage();
+			golem->ReceiveDamage(HitResult.ImpactPoint);
 		}
 	}
 }
@@ -521,7 +521,7 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 	{
 		if (golem != nullptr)
 		{
-			golem->ReceiveDamage();
+			golem->ReceiveDamage(HitResult.ImpactPoint);
 		}
 	}
 }

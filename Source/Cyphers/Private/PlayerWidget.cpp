@@ -4,6 +4,7 @@
 #include "PlayerWidget.h"
 #include "Components/ProgressBar.h"
 #include <UMG/Public/Components/CanvasPanel.h>
+#include <UMG/Public/Components/TextBlock.h>
 
 void UPlayerWidget::NativeConstruct()
 {
@@ -15,6 +16,7 @@ void UPlayerWidget::NativeConstruct()
 	KeyFCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("KeyFCoolTimeBar")));
 	BossUI = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("BossUI")));
 	GolemHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("GolemHP")));
+	BossHPtxt = Cast<UTextBlock>(GetWidgetFromName(TEXT("BossHPtxt")));
 }
 
 void UPlayerWidget::UpdateCurrHP(float curr, float max)
@@ -75,5 +77,9 @@ void UPlayerWidget::UpdateBossCurrHP(float curr, float max)
 		float hp = curr / max;
 		//Progress bar UI °»½Å
 		GolemHP->SetPercent(hp);
+
+		if(curr<0) curr = 0;
+		FString strHP = FString::Printf(TEXT("%d% / %d%"), (int32)(curr), (int32)max);
+		BossHPtxt->SetText(FText::FromString(strHP));
 	}
 }

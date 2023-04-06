@@ -38,7 +38,7 @@ public:
 
 		bool bPlayerAppear;
 		void PlayerAppear();
-///////////////////////
+
 
 	float maxHP;
 	float currHP;
