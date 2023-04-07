@@ -19,7 +19,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
-
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* earthquakeSound;
 	UPROPERTY(EditAnywhere, Category = Sound)
@@ -43,6 +42,8 @@ public:
 
 	UPROPERTY()
 		class ACypher_Kaya* kaya;
+
+		void NextStage();
 
 	void HideUI();
 	void ShowUI();
@@ -78,4 +79,10 @@ public:
 
 		bool bFadingOut;
 		float currVolume;
+
+//돌가루 효과
+	TArray<AActor*> FoundStonePowderActor;
+	TArray<AActor*> FoundStoneSmokeActor;
+
+
 };

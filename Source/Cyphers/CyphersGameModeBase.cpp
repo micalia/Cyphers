@@ -11,6 +11,10 @@
 #include "WhiteScreen.h"
 #include <Kismet/GameplayStatics.h>
 #include <Components/AudioComponent.h>
+#include "BlockStone.h"
+#include "SpawnFallingStonePowder.h"
+#include "StoneMoveSmoke.h"
+#include <Particles/ParticleSystemComponent.h>
 
 ACyphersGameModeBase::ACyphersGameModeBase()
 {
@@ -120,6 +124,9 @@ void ACyphersGameModeBase::BeginPlay()
 	ActiveWhiteScreenOpacity = true;
 	OpacityOnCheck = false;
 	
+	//돌 효과 액터를 가져온다
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnFallingStonePowder::StaticClass(), FoundStonePowderActor);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStoneMoveSmoke::StaticClass(), FoundStoneSmokeActor);
 }
 
 void ACyphersGameModeBase::Tick(float DeltaSeconds)
@@ -127,6 +134,31 @@ void ACyphersGameModeBase::Tick(float DeltaSeconds)
 	if (bCameraShake == true)CameraShakeRandom();
 	if(ActiveWhiteScreenOpacity == true) WhiteScreenOpacityActive(OpacityOnCheck);
 	if(bFadingOut)FadeOutBattleMusic();
+}
+
+void ACyphersGameModeBase::NextStage()
+{
+	ABlockStone* blockStone = Cast<ABlockStone>(UGameplayStatics::GetActorOfClass(GetWorld(), ABlockStone::StaticClass()));
+	blockStone->bNextStage = true;
+
+	bCameraShake = true;
+
+	UGameplayStatics::PlaySound2D(GetWorld(), earthquakeSound);
+
+	for (int32 i=0; i < FoundStonePowderActor.Num(); i++)
+	{
+		ASpawnFallingStonePowder* stonePowderEffect = Cast<ASpawnFallingStonePowder>(FoundStonePowderActor[i]);
+		stonePowderEffect->ExecuteStonePowderEffect();
+		stonePowderEffect->bIsLoop = true;
+	}
+
+	for (int32 i = 0; i < FoundStoneSmokeActor.Num(); i++)
+	{ 
+		UE_LOG(LogTemp, Warning, TEXT("FoundStoneSmokeActor Name : %s"), *FoundStoneSmokeActor[i]->GetName())
+		AStoneMoveSmoke* stoneSmokeEffect = Cast<AStoneMoveSmoke>(FoundStoneSmokeActor[i]);
+		stoneSmokeEffect->vfxComp->SetActive(true);
+	}
+	
 }
 
 void ACyphersGameModeBase::HideUI()
@@ -168,6 +200,21 @@ void ACyphersGameModeBase::CameraShakeRandom()
 		bCameraShake = false;
 		kaya->CameraActorComponent->SetRelativeLocation(kaya->cameraOriginPos);
 		camCurrTime = 0;
+
+		//돌가루 효과 반복 종료
+		for (int32 i = 0; i < FoundStonePowderActor.Num(); i++)
+		{
+			ASpawnFallingStonePowder* stonePowderEffect = Cast<ASpawnFallingStonePowder>(FoundStonePowderActor[i]);
+			stonePowderEffect->bIsLoop = false;
+		}
+
+		//흙먼지 날림 연출 효과
+		for (int32 i = 0; i < FoundStoneSmokeActor.Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FoundStoneSmokeActor Name : %s"), *FoundStoneSmokeActor[i]->GetName())
+			AStoneMoveSmoke* stoneSmokeEffect = Cast<AStoneMoveSmoke>(FoundStoneSmokeActor[i]);
+			stoneSmokeEffect->vfxComp->SetActive(false);
+		}
 	}
 }
 
@@ -175,7 +222,7 @@ void ACyphersGameModeBase::WhiteScreenOpacityActive(bool OpacityOn)
 {
 	renderCurrTime += GetWorld()->GetDeltaSeconds();
 	if (OpacityOn) {
-		if (renderCurrTime < renderOpacityTime) {
+		if (renderCurrTime < renderOpacityTime+1.5) {
 			whiteScreen->WhiteScreen->SetOpacity(renderCurrTime / renderOpacityTime);
 		}
 		else {

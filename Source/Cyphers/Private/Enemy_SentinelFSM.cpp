@@ -12,7 +12,6 @@
 #include "Enemy_Sentinel.h"
 #include <Components/CapsuleComponent.h>
 #include <UMG/Public/Components/WidgetComponent.h>
-#include "BlockStone.h"
 #include "../CyphersGameModeBase.h"
 
 // Sets default values for this component's properties
@@ -213,13 +212,8 @@ void UEnemy_SentinelFSM::UpdateDie()
 	//2. 만약에 p.Z 가 -200 보다 작으면 파괴한다
 	if (p.Z < disappearZheight)
 	{
-		ABlockStone* blockStone = Cast<ABlockStone>(UGameplayStatics::GetActorOfClass(GetWorld(), ABlockStone::StaticClass()));
-		blockStone->bNextStage = true;
-		
 		ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
-		CyphersGameMode->bCameraShake = true;
-		
-		UGameplayStatics::PlaySound2D(GetWorld(), CyphersGameMode->earthquakeSound);
+		CyphersGameMode->NextStage();
 
 		me->Destroy();
 

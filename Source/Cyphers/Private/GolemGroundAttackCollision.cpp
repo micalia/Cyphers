@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include <Components/BoxComponent.h>
 #include "GolemGroundAttackCollision.h"
+#include <Components/BoxComponent.h>
 #include "Cypher_Kaya.h"
 
 // Sets default values
