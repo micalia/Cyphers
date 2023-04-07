@@ -16,6 +16,7 @@ void UMainMenu::NativeConstruct()
 	exit_btn = Cast<UButton>(GetWidgetFromName(TEXT("exit_btn")));
 
 	start_btn->OnClicked.AddDynamic(this, &UMainMenu::GameStart);
+	exit_btn->OnClicked.AddDynamic(this, &UMainMenu::GameExit);
 
 }
 
@@ -38,3 +39,13 @@ void UMainMenu::GameStart()
 	APlayerController* controller = GetWorld()->GetFirstPlayerController();
 	kaya->EnableInput(controller);
 }
+
+void UMainMenu::GameExit()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{
+		PlayerController->ConsoleCommand("quit");
+	}
+}
+

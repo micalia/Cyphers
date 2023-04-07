@@ -44,6 +44,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	targetDistanceLength = targetDistance.Length();
 
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
 	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
 
 	switch (mState) {
@@ -415,13 +416,12 @@ void UGolemFSM::KnockDownAttackCheck()
 	FHitResult HitResult;
 
 	FVector CenterLoc = (StartLocation + EndLocation) / 2;
-	FVector endLineTracePos = CenterLoc + -me->GetActorUpVector() * 500;
+	FVector endLineTracePos = CenterLoc + -me->GetActorUpVector() * 10000;
 	FHitResult hitInfo;
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(GetOwner());
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
-	//DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
-
+	
 	if (isHit) {
 		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(
 			GetWorld(), // 이펙트를 생성할 월드
@@ -433,8 +433,6 @@ void UGolemFSM::KnockDownAttackCheck()
 		);
 		PAC->SetWorldScale3D(me->KD_atk_effect_size);
 
-		UE_LOG(LogTemp, Warning, TEXT("floorCheckName : %s"), *hitInfo.GetActor()->GetName())
-		
 	}
 
 	// 바닥쪽으로 라인트레이스 쏴서 이펙트 만들것

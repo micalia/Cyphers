@@ -116,9 +116,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float startGripAtkPos = 70;
 	UPROPERTY(EditAnywhere)
-	float startToEndDistance = 670;
+	float startToEndDistance = 720;
 	UPROPERTY(EditAnywhere)
-	FVector gripAttackRange = FVector(20, 250, 200);
+	FVector gripAttackRange = FVector(80, 330, 500);
 	bool ga1Check;
 	void GripAttackCheck();
 	void GripAttackCheck2();

@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UNiagaraComponent* compNiagra;
 
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* endpointOverlapSound;
+
 	UFUNCTION()
 		void OnOverlap(
 			UPrimitiveComponent* OverlappedComponent,

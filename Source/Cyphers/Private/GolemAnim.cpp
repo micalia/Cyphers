@@ -137,8 +137,8 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	TArray<AActor*> EmptyActorsToIgnore;
 	FHitResult HitResult;
 
-	FVector CenterLoc = (StartLocation + EndLocation) / 2;
-	FVector endLineTracePos = CenterLoc + -enemy->GetActorUpVector() * 500;
+	FVector CenterLoc = (StartLocation + EndLocation) / 2 + FVector::UpVector * 100;
+	FVector endLineTracePos = CenterLoc + -enemy->GetActorUpVector() * 10000;
 	FHitResult hitInfo;
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(enemy);
@@ -149,6 +149,11 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 		UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
 		jae->SetRelativeScale3D(FVector(jaeScale * 3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
 
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), CenterLoc.X, CenterLoc.Y, CenterLoc.Z);
+		UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), endLineTracePos.X, endLineTracePos.Y, endLineTracePos.Z);
 	}
 
 	bool bResult = UKismetSystemLibrary::BoxTraceSingle(

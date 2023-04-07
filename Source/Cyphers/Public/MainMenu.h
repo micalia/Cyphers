@@ -23,4 +23,6 @@ public:
 
 	UFUNCTION()
 	void GameStart();
+	UFUNCTION()
+	void GameExit();
 };

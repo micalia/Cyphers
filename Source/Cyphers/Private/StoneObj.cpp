@@ -76,6 +76,10 @@ void AStoneObj::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	autoDestroyCurrTime += DeltaTime;
+
+	if(autoDestroyCurrTime > autoDestroyTime) Destroy();
+
 	if (bIsCrash == true)
 	{
 		if (currTime > destroyTime) {

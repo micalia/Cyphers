@@ -65,7 +65,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float endPosSub = -40;
 	UPROPERTY(EditAnywhere, Category = Bezier)
-		float betweenHeight = 2500;
+		float betweenHeight = 4000;
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float curvePointCount = 7;
 	FVector CalculateBezier(float ratio, FVector startPos, FVector betweenPos, FVector endPos);

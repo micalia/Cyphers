@@ -68,4 +68,8 @@ public:
 	float transparentCurrTime = 0;
 	bool bIsCrash = false;
 	bool bTransparent = false;
+
+	UPROPERTY(EditAnywhere)
+	float autoDestroyTime = 12;
+	float autoDestroyCurrTime;
 };

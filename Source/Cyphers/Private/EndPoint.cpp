@@ -6,6 +6,7 @@
 #include <Components/CapsuleComponent.h>
 #include "../CyphersGameModeBase.h"
 #include "WhiteScreen.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AEndPoint::AEndPoint()
@@ -28,6 +29,12 @@ AEndPoint::AEndPoint()
 	}
 
 	compNiagra->SetAsset(NiagaraSystemAsset);
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempEndpointOverlapSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/EndPointOverlap.EndPointOverlap'"));
+	if (tempEndpointOverlapSound.Succeeded()) {
+		endpointOverlapSound = tempEndpointOverlapSound.Object;
+	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -49,6 +56,7 @@ void AEndPoint::Tick(float DeltaTime)
 void AEndPoint::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 { 
 	UE_LOG(LogTemp, Warning, TEXT("Overlap!!!!!!!!!!!"))
+	UGameplayStatics::PlaySound2D(GetWorld(), endpointOverlapSound);
 	ACyphersGameModeBase* gamemode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
 	gamemode->whiteScreen->SetVisibility(ESlateVisibility::Visible);
 	gamemode->OpacityOnCheck = true;
