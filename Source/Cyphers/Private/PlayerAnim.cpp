@@ -203,6 +203,7 @@ void UPlayerAnim::AnimNotify_PAEndEffect()
 	me->PlayPowerAttackGroundSound();
 	UParticleSystemComponent* pae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
 	pae->SetRelativeScale3D(FVector(paeScale*3));
+	me->Camera->CameraMoveDelegate.ExecuteIfBound();
 }
 
 void UPlayerAnim::AnimNotify_DashAttackCheck()

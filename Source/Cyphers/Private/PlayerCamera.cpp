@@ -21,6 +21,12 @@ APlayerCamera::APlayerCamera()
 
 }
 
+void APlayerCamera::BeginPlay()
+{
+	Super::BeginPlay();
+	CameraMoveDelegate.BindUObject(this, &APlayerCamera::CameraMoveEvent);
+}
+
 void APlayerCamera::SetAsMainCamera()
 {
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
@@ -31,4 +37,26 @@ void APlayerCamera::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	if (bCameraShake == true)CameraShakeRandom();
+}
+
+void APlayerCamera::CameraMoveEvent()
+{
+	cameraOriginPos = GetActorLocation();
+	bCameraShake = true;
+}
+
+void APlayerCamera::CameraShakeRandom()
+{
+	if (camCurrTime < cameraShakeTime) {
+		camCurrTime += GetWorld()->GetDeltaSeconds();
+		float y = UKismetMathLibrary::RandomFloatInRange(-12, 12);
+		float z = UKismetMathLibrary::RandomFloatInRange(-12, 12);
+		SetActorLocation(cameraOriginPos + FVector(0, y, z));
+	}
+	else {
+		bCameraShake = false;
+		SetActorLocation(cameraOriginPos);
+		camCurrTime = 0;
+	}
 }

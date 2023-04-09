@@ -164,6 +164,6 @@ public:
 	FVector cameraOriginPos;
 	void CameraShakeRandom();
 	UPROPERTY(EditAnywhere)
-	float cameraShakeTime = 0.7;
+	float cameraShakeTime = 0.9;
 	float camCurrTime;
 };

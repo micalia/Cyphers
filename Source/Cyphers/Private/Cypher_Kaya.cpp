@@ -383,8 +383,8 @@ void ACypher_Kaya::CameraShakeRandom()
 {
 	if (camCurrTime < cameraShakeTime) {
 		camCurrTime += GetWorld()->GetDeltaSeconds();
-		float y = UKismetMathLibrary::RandomFloatInRange(-4, 4);
-		float z = UKismetMathLibrary::RandomFloatInRange(-4, 4);
+		float y = UKismetMathLibrary::RandomFloatInRange(-6, 6);
+		float z = UKismetMathLibrary::RandomFloatInRange(-6, 6);
 		CameraActorComponent->SetRelativeLocation(cameraOriginPos + FVector(0, y, z));
 	}
 	else {
