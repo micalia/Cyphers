@@ -60,7 +60,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float cameraFocusHeight = -120;
 	UPROPERTY(EditAnywhere)
-	float cameraFocusDistanceToBoss = 2700;
+	float cameraFocusDistanceToBoss = 3200;
 public:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent,

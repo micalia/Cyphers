@@ -23,6 +23,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class ACypher_Kaya* target;
 
+	UPROPERTY(EditAnywhere, Category=Effect)
+	float groundAttackEffectSize = 3.4;
+
 	virtual void NativeBeginPlay() override;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = FSM)
 		EGolemState animState;

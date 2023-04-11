@@ -147,7 +147,7 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 
 	if (isHit) {
 		UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
-		jae->SetRelativeScale3D(FVector(jaeScale * 3)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
+		jae->SetRelativeScale3D(FVector(jaeScale * 3.2)); // 월드 캐릭터 스케일을 3으로 했기때문에 3을 곱해줌
 
 	}
 	else
@@ -247,7 +247,7 @@ void UGolemAnim::AnimNotify_GroundAttackEffect()
 
 	dir.Yaw = dir.Yaw - 90;
 	UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->groundAttackEffect, enemy->groundAttackPoint->GetComponentLocation(), dir, true, EPSCPoolMethod::AutoRelease);
-	jae->SetRelativeScale3D(FVector(3));
+	jae->SetRelativeScale3D(FVector(groundAttackEffectSize));
 }
 
 void UGolemAnim::PlayGroundAttackAnim()

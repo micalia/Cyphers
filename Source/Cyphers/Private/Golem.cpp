@@ -219,7 +219,9 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 	else
 	{
 		FVector orginPos = GetMesh()->GetRelativeLocation();
-		GetMesh()->SetRelativeLocation(FVector(orginPos.X, orginPos.Y, orginPos.Z+30));
+		FRotator orginRot = GetMesh()->GetRelativeRotation();
+		GetMesh()->SetRelativeLocation(FVector(orginPos.X, orginPos.Y, orginPos.Z+90));
+		GetMesh()->SetRelativeRotation(FRotator(orginRot.Pitch-5, orginRot.Yaw, orginRot.Roll));
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		fsm->anim->PlayDieAnim();
 		fsm->bDie = true;
