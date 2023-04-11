@@ -56,6 +56,10 @@ public:
 
 		void DamagePlayAnim();
 		void DiePlayAnim();
+
+		//골렘한테 대쉬공격 받았을때
+		void KnockBackFlyAnim();
+		void RiseAnim();
 private:
 //몽타주
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))

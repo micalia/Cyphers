@@ -18,7 +18,19 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-//데미지 ui
+	//대쉬어택
+	UPROPERTY(EditAnywhere)
+		class UCapsuleComponent* leftPunchCollision;
+
+	UFUNCTION()
+		void OnAttackOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult& SweepResult);
+	//데미지 ui
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UWidgetComponent* damageIndicatorWidget;
 	UFUNCTION(BlueprintImplementableEvent)
@@ -27,7 +39,7 @@ public:
 		TSubclassOf<class UDamageIndicator> DamageIndicatorFactory;
 	UPROPERTY()
 		class UDamageIndicator* damageIndicator;
-/////////////
+	/////////////
 	float maxHP;
 	float currHP;
 
@@ -102,7 +114,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* knockDownAttackEffect;
 	UPROPERTY(EditAnywhere)
-	FVector KD_atk_effect_size = FVector(2.8);
+		FVector KD_atk_effect_size = FVector(2.8);
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* KD_Sound;
 
@@ -112,6 +124,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = Sound)
 		class USoundBase* dieSound2;
 
-		UPROPERTY()
+	UPROPERTY()
 		class AEndPoint* endPoint;
+
+	//대쉬어택
+	UPROPERTY(EditAnywhere)
+		class UParticleSystem* dashAttackEffect;
+		UPROPERTY(EditAnywhere)
+			FVector dashAtkEffectSize = FVector(3.3);
 };

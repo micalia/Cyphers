@@ -43,6 +43,10 @@ public:
 		void AnimNotify_TurnToTarget();
 
 		UFUNCTION()
+			void AnimNotify_DashAtkActive();
+		UFUNCTION()
+			void AnimNotify_DashAtkEnd();
+		UFUNCTION()
 			void AnimNotify_HideBossHP();
 		UFUNCTION()
 			void AnimNotify_BossRoarShake();
@@ -54,7 +58,9 @@ public:
 		UFUNCTION()
 		void AnimNotify_DieSound1();
 		UFUNCTION()
-		void AnimNotify_DieSound2();
+			void AnimNotify_DieSound2();
+		UFUNCTION()
+			void AnimNotify_ShakeCam();
 //데미지
 	void PlayDieAnim();
 //점프공격
@@ -90,6 +96,8 @@ public:
 	UFUNCTION()
 		void AnimNotify_KnockDownAttackCheck();
 	void PlayCloseKnockDownAttack();
+//대쉬어택
+	void PlayDashAttack();
 //몽타주
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* jumpAttackMontage;
@@ -101,4 +109,6 @@ public:
 		UAnimMontage* closeKnockDownAttackMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 		UAnimMontage* damageMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+		UAnimMontage* dashAttackMontage;
 };

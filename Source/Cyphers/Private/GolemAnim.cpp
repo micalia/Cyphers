@@ -17,6 +17,7 @@
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/CanvasPanel.h>
 #include <GeometryCollectionEngine/Public/GeometryCollection/GeometryCollectionComponent.h>
+#include <Components/CapsuleComponent.h>
 
 UGolemAnim::UGolemAnim()
 {
@@ -35,6 +36,10 @@ UGolemAnim::UGolemAnim()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempCloseKnockDownAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_CloseKnockDownAttackMontage.AM_CloseKnockDownAttackMontage'"));
 	if (tempCloseKnockDownAttackMontage.Succeeded()) {
 		closeKnockDownAttackMontage = tempCloseKnockDownAttackMontage.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDashAttackMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_GolemDashAttack.AM_GolemDashAttack'"));
+	if (tempDashAttackMontage.Succeeded()) {
+		dashAttackMontage = tempDashAttackMontage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_Damage.AM_Damage'"));
@@ -64,6 +69,16 @@ void UGolemAnim::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 void UGolemAnim::AnimNotify_TurnToTarget()
 {
 	enemy->fsm->SetNewGoalDirection();
+}
+
+void UGolemAnim::AnimNotify_DashAtkActive()
+{ 
+	enemy->leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void UGolemAnim::AnimNotify_DashAtkEnd()
+{
+	enemy->leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UGolemAnim::AnimNotify_HideBossHP()
@@ -98,6 +113,11 @@ void UGolemAnim::AnimNotify_DieSound2()
 {
 	target->bCameraShake = true;
 	UGameplayStatics::PlaySound2D(GetWorld(), enemy->dieSound2);
+}
+
+void UGolemAnim::AnimNotify_ShakeCam()
+{
+	target->bCameraShake = true;
 }
 
 void UGolemAnim::PlayDieAnim()
@@ -263,4 +283,9 @@ void UGolemAnim::AnimNotify_KnockDownAttackCheck()
 void UGolemAnim::PlayCloseKnockDownAttack()
 {
 	Montage_Play(closeKnockDownAttackMontage, 1.0f);
+}
+
+void UGolemAnim::PlayDashAttack()
+{
+	Montage_Play(dashAttackMontage, 1.0f);
 }

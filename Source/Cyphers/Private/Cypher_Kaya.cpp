@@ -230,6 +230,7 @@ void ACypher_Kaya::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
 
+	if(bRise)RiseCheck();
 	if(bPlayerAppear)PlayerAppear();
 	if (bCameraShake == true)CameraShakeRandom();
 	
@@ -337,6 +338,16 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 		golem->ReceiveDamage(GetActorLocation());
 	}
 	
+}
+
+void ACypher_Kaya::RiseCheck()
+{
+	riseCurrTime += GetWorld()->GetDeltaSeconds();
+	if (riseCurrTime > riseTime) {
+		bRise = false;
+		compKayaAttack->kayaAnim->RiseAnim();
+		riseCurrTime = 0;
+	}
 }
 
 void ACypher_Kaya::PlayPowerAttackSwordReadySound()

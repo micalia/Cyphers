@@ -44,7 +44,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	targetDistanceLength = targetDistance.Length();
 
-	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
 	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
 
 	switch (mState) {
@@ -173,6 +173,7 @@ void UGolemFSM::CalculateCurrentTime(float DeltaTime)
 	throwStoneAttackCurrentTime += DeltaTime;
 	groundAttackCurrentTime += DeltaTime;
 	closeKnockDownAttackCurrentTime += DeltaTime;
+	DashAttackCurrentTime += DeltaTime;
 }
 
 //void UGolemFSM::OnDamageProcess(float damage) {
@@ -234,6 +235,18 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 			anim->bAttackPlay = true;
 			mState = EGolemState::CloseKnockDownAttack;
 			anim->PlayCloseKnockDownAttack();
+			return;
+		}
+	}
+
+	//대쉬어택
+	if (DashAttackCurrentTime > DashAttackCoolTime) {
+		if (targetDistanceLength > DashAttackRangeStart &&
+			targetDistanceLength < DashAttackRangeEnd) {
+			anim->bAttackPlay = true;
+			mState = EGolemState::DashAttack;
+			anim->PlayDashAttack();
+			DashAttackCurrentTime = 0;
 			return;
 		}
 	}

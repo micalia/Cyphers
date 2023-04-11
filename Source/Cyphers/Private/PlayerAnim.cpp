@@ -302,3 +302,14 @@ void UPlayerAnim::DiePlayAnim()
 {
 	me->PlayAnimMontage(damageMontage, 1, TEXT("Die"));
 }
+
+void UPlayerAnim::KnockBackFlyAnim()
+{
+	me->PlayAnimMontage(damageMontage, 1, TEXT("FlyingDamage"));
+}
+
+void UPlayerAnim::RiseAnim()
+{
+	me->PlayAnimMontage(damageMontage, 1, TEXT("Rise"));
+}
+

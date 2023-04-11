@@ -94,7 +94,12 @@ public:
 		class USceneComponent* footPos;
 
 		bool bBossCameraEffect;
-
+		
+	bool bRise;
+	UPROPERTY(EditAnywhere)
+	float riseTime = 2.7;
+		float riseCurrTime;
+		void RiseCheck();
 public:
 	//카야 사운드
 	UPROPERTY(EditAnywhere, Category = Sound)

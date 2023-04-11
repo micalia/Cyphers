@@ -19,6 +19,9 @@
 #include <UMG/Public/Components/WidgetComponent.h>
 #include "DamageIndicator.h"
 #include <Kismet/KismetMathLibrary.h>
+#include <Particles/ParticleSystemComponent.h>
+#include "PlayerAnim.h"
+#include "Cypher_Kaya_Attack.h"
 
 AGolem::AGolem()
 {
@@ -69,6 +72,11 @@ AGolem::AGolem()
 		knockDownAttackEffect = tempKnockDownAttackEffect.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> tempDashAttackEffect(TEXT("/Script/Engine.ParticleSystem'/Game/Resources/Effect/Realistic_Starter_VFX_Pack_Vol2/Particles/Destruction/P_Destruction_Concrete.P_Destruction_Concrete'"));
+	if (tempDashAttackEffect.Succeeded()) {
+		dashAttackEffect = tempDashAttackEffect.Object;
+	}
+
 	static ConstructorHelpers::FClassFinder<AGolemGroundAttackCollision> tempGACObj(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_GolemGroundAttackCollision.BP_GolemGroundAttackCollision_C'"));
 	if (tempGACObj.Succeeded()) {
 		GA_CollisionFactory = tempGACObj.Class;
@@ -116,6 +124,13 @@ AGolem::AGolem()
 	}
 
 	damageIndicatorWidget->SetWidgetClass(DamageIndicatorFactory);
+
+	leftPunchCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("leftPunchCollision"));
+	leftPunchCollision->SetupAttachment(GetMesh(), TEXT("Bip001-L-Hand"));
+	leftPunchCollision->SetCapsuleRadius(80);
+	leftPunchCollision->SetCapsuleHalfHeight(113);
+	leftPunchCollision->SetCollisionProfileName(TEXT("EnemyAtkCollision"));
+	leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
  
 void AGolem::BeginPlay()
@@ -128,11 +143,30 @@ void AGolem::BeginPlay()
 
 	endPoint = Cast<AEndPoint>(UGameplayStatics::GetActorOfClass(GetWorld(), AEndPoint::StaticClass()));
 	damageIndicator = Cast<UDamageIndicator>(damageIndicatorWidget->GetWidget());
+
+	leftPunchCollision->OnComponentBeginOverlap.AddDynamic(this, &AGolem::OnAttackOverlap);
 }
 
 void AGolem::Tick(float DeltaTime)
 { 
 	CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
+}
+
+void AGolem::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(OtherActor);
+	
+	if (kaya != nullptr)
+	{ 
+		kaya->ReceiveDamage(2);
+		kaya->bCameraShake = true;
+		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), dashAttackEffect, kaya->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))), GetActorRotation());
+		PAC->SetWorldScale3D(dashAtkEffectSize);
+		leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		kaya->compKayaAttack->kayaAnim->KnockBackFlyAnim();
+		kaya->bRise = true;
+	} 
+	
 }
 
 void AGolem::MoveJumpAttack() {
