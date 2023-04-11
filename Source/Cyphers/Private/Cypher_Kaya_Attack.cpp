@@ -799,13 +799,15 @@ void UCypher_Kaya_Attack::InputKeyE_Pressed()
 	kayaAnim->PowerAttackReadyAnim();
 	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, kaya->footPos->GetComponentLocation(), kaya->footPos->GetComponentRotation());
 
+	kaya->Camera->bSkillCamMove = true;
+	kaya->Camera->bSkillReady = true;
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
 {
 	if (bAttackCharge == false) return;
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
-
+		kaya->Camera->bSkillReady = false;
 		IsAttacking = true;
 	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {

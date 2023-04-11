@@ -274,6 +274,7 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 	}
 	//¸¸¾à ±Ã±Ø±â Â÷Â¡ÁßÀÌ¿´´Ù¸é ±ÃÄµ½½ µÇ¸é¼­ ÄðÅ¸ÀÓ
 	if (compKayaAttack->bAttackCharge) {
+		Camera->bSkillReady = false;
 		compKayaAttack->decal->bPowerAttackEnd = true;
 		compKayaAttack->bAttackCharge = false;
 		compKayaAttack->startCoolKeyE = true;

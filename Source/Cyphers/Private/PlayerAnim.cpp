@@ -202,6 +202,7 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 
 void UPlayerAnim::AnimNotify_PAEndEffect()
 {
+	me->Camera->bSkillCamMove = false;
 	me->PlayPowerAttackGroundSound();
 	UParticleSystemComponent* pae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
 	pae->SetRelativeScale3D(FVector(paeScale*3));

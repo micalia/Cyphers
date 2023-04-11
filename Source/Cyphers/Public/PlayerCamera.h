@@ -39,5 +39,11 @@ public:
 	float camCurrTime;
 	void CameraShakeRandom();
 	//±Ã±Ø±â È¿°ú
+	bool bSkillCamMove;
+	bool bSkillReady;
 	FVector camOriginPosMove;
+	void SkillCamMove();
+	FVector prevCamPos;
+	UPROPERTY(EditAnywhere)
+	float SkillCamSpeed = 3;
 };
