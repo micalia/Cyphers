@@ -44,7 +44,7 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	targetDistanceLength = targetDistance.Length();
 
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
 	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
 
 	switch (mState) {

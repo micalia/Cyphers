@@ -38,6 +38,10 @@ public:
 		void AnimNotify_ChangeToIdle();
 	UFUNCTION()
 		void AnimNotify_GA2Sound();
+	UFUNCTION()
+		void AnimNotify_NoHitState();
+	UFUNCTION()
+		void AnimNotify_HitState();
 
 	void PlayGripAttackDamageAnim();
 	void PlayGripAttackDamage2Anim();

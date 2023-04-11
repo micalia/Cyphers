@@ -120,11 +120,13 @@ void UPlayerAnim::AnimNotify_NextAttackCheck()
 
 void UPlayerAnim::AnimNotify_GripAttackCheck()
 {
+	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	OnGripAttackCheck.Broadcast();
 }
 
 void UPlayerAnim::AnimNotify_GripAttackCheck2()
 {
+	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	OnGripAttackCheck2.Broadcast();
 }
 

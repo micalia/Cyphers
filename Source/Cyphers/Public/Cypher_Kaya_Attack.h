@@ -131,15 +131,28 @@ private:
 		int32 MaxDashCombo = 2;
 public:
 //기본공격
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
+		float BasicAttackStartPos = 300;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
+		float BasicAttackstartToEndDistance = 800;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
+		FVector BasicAttackRange = FVector(800, 600, 500);
+	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	float AttackRange = 200;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float AttackRadius = 50;
+		float AttackRadius = 50;*/
 //대쉬공격
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+float DashAttackStartPos = 700;
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+float DashAttackstartToEndDistance = 1400;
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+FVector DashAttackRange = FVector(1400, 800, 500);
+
+	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 		float DashAttackRange = 450;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float DashAttackRadius = 70;
+		float DashAttackRadius = 70;*/
 
 		bool CheckCurrState();
 //파워어택

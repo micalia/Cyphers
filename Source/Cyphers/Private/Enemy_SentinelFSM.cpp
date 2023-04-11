@@ -213,7 +213,7 @@ void UEnemy_SentinelFSM::UpdateDie()
 	if (p.Z < disappearZheight)
 	{
 		ACyphersGameModeBase* CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
-		CyphersGameMode->NextStage();
+		CyphersGameMode->CheckKillCount();
 
 		me->Destroy();
 

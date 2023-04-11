@@ -202,6 +202,7 @@ void AEnemy_Sentinel::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (kaya != nullptr) {
 		kaya->ReceiveDamage(2);
+		attackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 

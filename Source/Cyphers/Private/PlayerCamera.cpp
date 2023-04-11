@@ -12,19 +12,23 @@ APlayerCamera::APlayerCamera()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	compRoot = CreateDefaultSubobject<USceneComponent>(TEXT("compRoot"));
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	
+	CameraComponent->SetupAttachment(compRoot);
 	static ConstructorHelpers::FClassFinder<UCameraShakeBase> tempCameraShake(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_CameraShake.BP_CameraShake_C'"));
 	if (tempCameraShake.Succeeded()) {
 		cameraShake = tempCameraShake.Class;
 	}
-
+	powerAttackCamMove = CreateDefaultSubobject<USceneComponent>(TEXT("camMove"));
+	powerAttackCamMove->SetupAttachment(compRoot);
 }
 
 void APlayerCamera::BeginPlay()
 {
 	Super::BeginPlay();
 	CameraMoveDelegate.BindUObject(this, &APlayerCamera::CameraMoveEvent);
+	camOriginPosMove = CameraComponent->GetRelativeLocation();
 }
 
 void APlayerCamera::SetAsMainCamera()

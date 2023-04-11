@@ -20,6 +20,10 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class UCameraComponent* CameraComponent;
+	UPROPERTY(EditAnywhere, Category = Camera)
+		class USceneComponent* powerAttackCamMove;
+	UPROPERTY(EditAnywhere, Category = Camera)
+		class USceneComponent* compRoot;
 
 	UPROPERTY(EditDefaultsOnly, Category = CameraMotion)
 		TSubclassOf<class UCameraShakeBase> cameraShake;
@@ -34,4 +38,6 @@ public:
 		float cameraShakeTime = 1.1;
 	float camCurrTime;
 	void CameraShakeRandom();
+	//±Ã±Ø±â È¿°ú
+	FVector camOriginPosMove;
 };

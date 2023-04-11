@@ -272,3 +272,11 @@ void ACyphersGameModeBase::FadeOutBattleMusic()
 		UE_LOG(LogTemp, Warning, TEXT("SoundVolume : %f"), battleAudioComp->VolumeMultiplier)
 	}
 }
+
+void ACyphersGameModeBase::CheckKillCount()
+{
+	killCount++;
+	if (TargetNumberOfKill <= killCount) {
+		NextStage();
+	}
+}

@@ -128,6 +128,8 @@ public:
 		class AEndPoint* endPoint;
 
 	//대쉬어택
+	UPROPERTY(EditAnywhere, Category = Sound)
+		class USoundBase* dashAtkSound;
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* dashAttackEffect;
 		UPROPERTY(EditAnywhere)

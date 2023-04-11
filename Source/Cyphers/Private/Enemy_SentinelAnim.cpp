@@ -11,6 +11,7 @@
 #include "NextStageWall.h"
 #include "PlayerWidget.h"
 #include <UMG/Public/Components/CanvasPanel.h>
+#include <Components/CapsuleComponent.h>
 
 void UEnemy_SentinelAnim::NativeBeginPlay()
 {
@@ -63,6 +64,17 @@ void UEnemy_SentinelAnim::AnimNotify_ChangeToIdle()
 void UEnemy_SentinelAnim::AnimNotify_GA2Sound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), enemy->GA2_Sound);
+}
+
+void UEnemy_SentinelAnim::AnimNotify_NoHitState()
+{
+	enemy->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void UEnemy_SentinelAnim::AnimNotify_HitState()
+{
+	enemy->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
 }
 
 void UEnemy_SentinelAnim::PlayGripAttackDamageAnim()

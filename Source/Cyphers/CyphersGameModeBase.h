@@ -84,5 +84,10 @@ public:
 	TArray<AActor*> FoundStonePowderActor;
 	TArray<AActor*> FoundStoneSmokeActor;
 
+//현재 적 처치 체크
+	int32 killCount;
+	UPROPERTY(EditAnywhere)
+	int32 TargetNumberOfKill = 3;
+	void CheckKillCount();
 
 };

@@ -110,6 +110,10 @@ AGolem::AGolem()
 	if (tempDieSound2.Succeeded()) {
 		dieSound2 = tempDieSound2.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundBase> tempDashAtkSound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GolemDashAtkPunchSound.GolemDashAtkPunchSound'"));
+	if (tempDashAtkSound.Succeeded()) {
+		dashAtkSound = tempDashAtkSound.Object;
+	}
 	
 	JA_EffectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("JA_EffectPoint"));
 	JA_EffectPoint->SetupAttachment(GetCapsuleComponent());
@@ -158,6 +162,7 @@ void AGolem::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	
 	if (kaya != nullptr)
 	{ 
+		UGameplayStatics::PlaySound2D(GetWorld(), dashAtkSound);
 		kaya->ReceiveDamage(2);
 		kaya->bCameraShake = true;
 		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), dashAttackEffect, kaya->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))), GetActorRotation());
@@ -257,6 +262,7 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 		GetMesh()->SetRelativeLocation(FVector(orginPos.X, orginPos.Y, orginPos.Z+90));
 		GetMesh()->SetRelativeRotation(FRotator(orginRot.Pitch-5, orginRot.Yaw, orginRot.Roll));
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		fsm->anim->PlayDieAnim();
 		fsm->bDie = true;
 		fsm->mState = EGolemState::Die;
