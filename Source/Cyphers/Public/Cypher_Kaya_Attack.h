@@ -130,6 +130,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 		int32 MaxDashCombo = 2;
 public:
+//잡기 공격
+bool bGripAttack;
+bool bDash;
 //기본공격
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
 		float BasicAttackStartPos = 300;

@@ -166,10 +166,13 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			}
 			MouseLRCheckCurrentTime += DeltaTime;
 			if (MouseLRCheckCurrentTime > MouseLRCheckTime) {
+				if(bGripAttack == true)return;
 				if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
+					if (bGripAttack == true)return;
 					InitInput();
 					if (startCoolBothMouse) return;
 					if (IsAttacking == true) return;
+					if(bDash == true)return;
 					AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
 					//마우스 양클릭 공격실행	
 					UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
@@ -177,12 +180,16 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 					DashAttack();
 				}
 				else if (bLeftMouseButtonPressed) {
+					if (bDash == true)return;
+					if (bGripAttack == true)return;
 					InitInput();
 					//마우스 왼쪽공격
 					UE_LOG(LogTemp, Warning, TEXT("mouseLeft"))
 						BasicAttack();
 				}
 				else if (bRightMouseButtonPressed) {
+					if (bDash == true)return;
+					if (bGripAttack == true)return;
 					InitInput();
 					//마우스 오른쪽 공격
 					UE_LOG(LogTemp, Warning, TEXT("RightClick"))
@@ -727,6 +734,8 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 {
 	if (bInterrupted == true) return;
 	//ABCHECK(CurrentCombo > 0);
+	bGripAttack = false;
+	bDash = false;
 //대쉬 상태였다면
 	if (bDashOn) {
 		bDashOn = false;
@@ -757,7 +766,9 @@ void UCypher_Kaya_Attack::InputKeyF()
 	if (startCoolKeyF)return;
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
+	if (bDash == true)return;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
+		bGripAttack = true;
 		startCoolKeyF = true;
 	currkeyFCool = keyFCool;
 	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
@@ -791,6 +802,8 @@ void UCypher_Kaya_Attack::InputKeyE_Pressed()
 	if (startCoolKeyE)return;
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
+	if (bDash == true)return;
+	if (bGripAttack == true)return;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
 		kaya->PlayPowerAttackSwordReadySound();
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
@@ -828,8 +841,9 @@ void UCypher_Kaya_Attack::InputKeySpaceBar()
 		if (startCoolSpaceBar)return;
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
+	if (bGripAttack == true)return;
 	if (CurrentDashCombo > MaxDashCombo) return;
-
+	bDash = true;
 	currSpaceBarCool = spaceBarCool;
 	dashHorizontal = kaya->compPlayerMove->GetH();
 	Dash();
