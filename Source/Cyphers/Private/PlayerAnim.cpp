@@ -54,9 +54,7 @@ void UPlayerAnim::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	APawn* pawn = TryGetPawnOwner();
-
 	me = Cast<ACypher_Kaya>(pawn);
-
 }
 
 void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
@@ -82,14 +80,13 @@ void UPlayerAnim::AttachCamera()
 	me->beforeActCameraPos = me->Camera->GetActorLocation();
 	//공격이 끝난 시점 카메라 상대좌표를 가져온다
 		//카메라 액터가 ChildActorComponent까지 가기 위해 움직여야 하는 거리
-		FVector moveCameraRange = me->CameraActorComponent->GetComponentLocation() - me->Camera->GetActorLocation();
+	FVector moveCameraRange = me->CameraActorComponent->GetComponentLocation() - me->Camera->GetActorLocation();
 	//카메라 액터의 목적지 월드 위치
 	me->afterActCameraPos = me->Camera->GetActorLocation() + moveCameraRange;
 	//카메라 액터의 회전값을 캐릭터 ChildActorComponent회전값이랑 일치
 	me->beforeActCameraRot = me->Camera->GetActorRotation();
 	me->afterActCameraRot = me->CameraActorComponent->GetComponentRotation();
-		me->compKayaAttack->bBackCameraOringinPos = true;
-	//me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	me->compKayaAttack->bBackCameraOringinPos = true;
 }
 
 void UPlayerAnim::AnimNotify_LeftFoot()
@@ -134,55 +131,39 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo1()
 {
 	me->compNiagra->Activate(true);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	
+
 	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo2()
 {
 	me->compNiagra->Activate(true);
-	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
-	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo3()
 {
 	me->compNiagra->Activate(true);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo4()
 {
 	me->compNiagra->Activate(true);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo5()
 {
 	me->compNiagra->Activate(true);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo6()
 {
 	me->compNiagra->Activate(true);
-	//UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackComboSound);
 }
-
 
 void UPlayerAnim::AnimNotify_PowerAttackCombo7()
 {
 	me->compNiagra->Activate(true);
-	/*me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::QueryOnly);	*/
-		UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
+	UGameplayStatics::PlaySound2D(GetWorld(), me->powerAttackEnd);
 }
 
 void UPlayerAnim::AnimNotify_PowerAttackEnd()
@@ -192,7 +173,7 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
 	me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
+	FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
 	FVector currLocation = me->GetActorLocation();
 
 	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
@@ -205,7 +186,7 @@ void UPlayerAnim::AnimNotify_PAEndEffect()
 	me->Camera->bSkillCamMove = false;
 	me->PlayPowerAttackGroundSound();
 	UParticleSystemComponent* pae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), me->powerAttackEndEffect, me->footPos->GetComponentLocation(), me->GetActorRotation(), true, EPSCPoolMethod::AutoRelease);
-	pae->SetRelativeScale3D(FVector(paeScale*3));
+	pae->SetRelativeScale3D(FVector(paeScale * 3));
 	me->Camera->CameraMoveDelegate.ExecuteIfBound();
 }
 
@@ -240,14 +221,13 @@ void UPlayerAnim::PowerAttackReadyAnim()
 	Montage_Play(powerAttackAnimMontage, 1.0f);
 }
 
-
 void UPlayerAnim::PowerAttackPlayAnim()
 {
 	Montage_JumpToSection(TEXT("PowerAttackPlay"), powerAttackAnimMontage);
 }
 
 void UPlayerAnim::PlayDashAnim()
-{ 
+{
 	me->PlayDashSound();
 
 	if (me->compKayaAttack->dashHorizontal == -1) {
@@ -262,7 +242,7 @@ void UPlayerAnim::PlayDashAnim()
 }
 
 void UPlayerAnim::AnimNotify_NextDashCheck()
-{	
+{
 	OnNextDashCheck.Broadcast();
 }
 

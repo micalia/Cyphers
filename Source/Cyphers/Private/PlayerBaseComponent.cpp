@@ -6,7 +6,6 @@ UPlayerBaseComponent::UPlayerBaseComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
 void UPlayerBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();

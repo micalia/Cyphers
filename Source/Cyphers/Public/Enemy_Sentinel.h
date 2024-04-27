@@ -45,7 +45,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UEnemy_SentinelFSM* fsm;
 
-
 	//죽었을 때 호출되는 함수를 담는 변수
 	FEnemySentinelDieDelegate dieDelegate;
 

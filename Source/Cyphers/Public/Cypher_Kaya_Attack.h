@@ -7,7 +7,7 @@
 #include "Cypher_Kaya_Attack.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class CYPHERS_API UCypher_Kaya_Attack : public UPlayerBaseComponent
@@ -27,11 +27,11 @@ public:
 public:
 	bool bLeftMouseButtonPressed;
 	bool bRightMouseButtonPressed;
-	
+
 	bool bNotDamageMotion;
 	void InitInput();
 	void InputMouseLeft();	//평타	
-	void InputMouseRight();	
+	void InputMouseRight();
 	void InputMouseLeftAndRight();	//대쉬 공격
 	void InputKeyShiftAndMouseLeft();
 	void InputKeyF();
@@ -39,13 +39,9 @@ public:
 	void InputKeyE_Released();
 	void InputKeySpaceBar();
 
-	/*void InputMouseLeftAndRight();
-	void InputKeySpace();
-	*/
 	UPROPERTY(EditAnywhere)
 	float MouseLRCheckTime = 0.07;
 	float MouseLRCheckCurrentTime = 0;
-	//float ClickTimestamp = 0.0;
 	//궁극기 사용이후 카메라 원래 위치로 Lerp 이동
 	bool bBackCameraOringinPos;
 	float currCameraBackTime = 0;
@@ -59,8 +55,8 @@ public:
 
 	UPROPERTY()
 	class APowerAttackDecal* decal;
-//쿨타임
-	//양클릭
+	//쿨타임
+		//양클릭
 	bool startCoolBothMouse;
 	UPROPERTY(EditAnywhere)
 	float bothMouseAttackCool = 3;
@@ -74,9 +70,9 @@ public:
 	//키보드F
 	bool startCoolKeyF;
 	UPROPERTY(EditAnywhere)
-		float keyFCool = 2;
+	float keyFCool = 2;
 	float currkeyFCool;
-//대쉬
+	//대쉬
 	UPROPERTY(EditAnywhere)
 	float spaceBarCool = 4;
 	UPROPERTY(VisibleAnywhere)
@@ -91,7 +87,7 @@ public:
 	void Dash();
 
 public:
-//잡기공격
+	//잡기공격
 	bool bIsGripAttacking;
 	float GA_alpha;
 	TArray<FVector> GAMovePoints;
@@ -126,67 +122,56 @@ public:
 	float moveHitEnemyPos = 500;
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
-		int32 CurrentDashCombo;
+	int32 CurrentDashCombo;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
-		int32 MaxDashCombo = 2;
+	int32 MaxDashCombo = 2;
 public:
-//잡기 공격
-bool bGripAttack;
-bool bDash;
-//기본공격
+	//잡기 공격
+	bool bGripAttack;
+	bool bDash;
+	//기본공격
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
-		float BasicAttackStartPos = 300;
+	float BasicAttackStartPos = 300;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
-		float BasicAttackstartToEndDistance = 800;
+	float BasicAttackstartToEndDistance = 800;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)
-		FVector BasicAttackRange = FVector(800, 600, 500);
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-	float AttackRange = 200;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float AttackRadius = 50;*/
-//대쉬공격
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
-float DashAttackStartPos = 700;
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
-float DashAttackstartToEndDistance = 1400;
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
-FVector DashAttackRange = FVector(1400, 800, 500);
+	FVector BasicAttackRange = FVector(800, 600, 500);
+	//대쉬공격
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+	float DashAttackStartPos = 700;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+	float DashAttackstartToEndDistance = 1400;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = DashAttack)
+	FVector DashAttackRange = FVector(1400, 800, 500);
 
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float DashAttackRange = 450;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float DashAttackRadius = 70;*/
-
-		bool CheckCurrState();
-//파워어택
-		FTimerHandle TimerHandle_PowerAttackStart;
-		void StartPowerAttack();
-		UPROPERTY(EditAnywhere)
-		float PowerAttackStartTime=1;
-		float currPowerAttackCheck;
-		bool powerAttackStartCheck;
+	bool CheckCurrState();
+	//파워어택
+	FTimerHandle TimerHandle_PowerAttackStart;
+	void StartPowerAttack();
+	UPROPERTY(EditAnywhere)
+	float PowerAttackStartTime = 1;
+	float currPowerAttackCheck;
+	bool powerAttackStartCheck;
 public:
-//평타
-// 이득우 콤보구현
+	//평타
+	// 이득우 콤보구현
 	void BasicAttack();
 	void AttackStartComboState();
 	void AttackEndComboState();
 	UFUNCTION()
-		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	bool IsComboInputOn;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	bool IsAttacking;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		bool IsNoComboAttacking;
+	bool IsNoComboAttacking;
 private:
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
-	bool CanNextCombo; => 이득우 선생님 책에는 이 변수를 사용하지만 코드에 흐름을 분석한 결과 굳이 필요없는 변수라 삭제하려고 했으나 혹시 내가 보르는 이득우 선생님의 의도를 나중에 깨달을 수도 있으므로 주석처리 함*/
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	int32 CurrentCombo;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	int32 MaxCombo = 3;
 public:
-//대쉬 공격
+	//대쉬 공격
 	void DashAttack();
 };

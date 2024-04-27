@@ -41,7 +41,6 @@ UGolemAnim::UGolemAnim()
 	if (tempDashAttackMontage.Succeeded()) {
 		dashAttackMontage = tempDashAttackMontage.Object;
 	}
-
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> tempDamageMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Golem/AM_Damage.AM_Damage'"));
 	if (tempDamageMontage.Succeeded()) {
 		damageMontage = tempDamageMontage.Object;
@@ -163,7 +162,6 @@ void UGolemAnim::AnimNotify_JumpAttackImpact()
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(enemy);
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, CenterLoc, endLineTracePos, ECC_Visibility, param);
-	//DrawDebugLine(GetWorld(), CenterLoc, endLineTracePos, FColor::Blue, false, 3, 0, 3);
 
 	if (isHit) {
 		UParticleSystemComponent* jae = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), enemy->jumpAttackEffect, hitInfo.ImpactPoint, enemy->JA_EffectPoint->GetComponentRotation(), true, EPSCPoolMethod::AutoRelease);
@@ -235,8 +233,6 @@ void UGolemAnim::AnimNotify_StoneSpawn()
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 			stoneSpawnSocketName);
 	}
-	//enemy->bCameraShake = true;
-	//GetWorld()->SpawnActor<UStaticMesh>(rockMesh, enemy->GetMesh()->GetSocketLocation(FName(TEXT("RightHand"))));
 }
 
 void UGolemAnim::AnimNotify_ThrowStone()
@@ -252,7 +248,6 @@ void UGolemAnim::AnimNotify_ThrowStone()
 	FVector dir = distance.GetSafeNormal();
 	FVector force = spawnStone->compCollision->GetMass() * dir * enemy->fsm->throwPower;
 	spawnStone->compCollision->AddForceAtLocation(force, spawnStone->compCollision->GetCenterOfMass());
-
 }
 
 void UGolemAnim::AnimNotify_GroundAttackEffect()

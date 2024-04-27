@@ -12,22 +12,22 @@ UCLASS()
 class CYPHERS_API APlayerCamera : public AActor
 {
 	GENERATED_BODY()
-public:	
+public:
 	virtual void BeginPlay() override;
 	// Sets default values for this actor's properties
 	APlayerCamera();
 	void SetAsMainCamera();
 	virtual void Tick(float DeltaSeconds) override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		class UCameraComponent* CameraComponent;
+	class UCameraComponent* CameraComponent;
 	UPROPERTY(EditAnywhere, Category = Camera)
-		class USceneComponent* powerAttackCamMove;
+	class USceneComponent* powerAttackCamMove;
 	UPROPERTY(EditAnywhere, Category = Camera)
-		class USceneComponent* compRoot;
+	class USceneComponent* compRoot;
 
 	UPROPERTY(EditDefaultsOnly, Category = CameraMotion)
-		TSubclassOf<class UCameraShakeBase> cameraShake;
-	
+	TSubclassOf<class UCameraShakeBase> cameraShake;
+
 	//Ä«¸Þ¶ó Èçµé¸²
 	FCameraMoveDelegate CameraMoveDelegate;
 
@@ -35,7 +35,7 @@ public:
 	bool bCameraShake = false;
 	FVector cameraOriginPos;
 	UPROPERTY(EditAnywhere)
-		float cameraShakeTime = 1.1;
+	float cameraShakeTime = 1.1;
 	float camCurrTime;
 	void CameraShakeRandom();
 	//±Ã±Ø±â È¿°ú

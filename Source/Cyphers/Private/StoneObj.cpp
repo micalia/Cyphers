@@ -115,31 +115,11 @@ void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* Other
 		bTransparent = true;
 		compGcStone->SetVisibility(true);
 		compGcStone->SetSimulatePhysics(true);
-		//compGcStone->AddImpulse(addImpulsePower);
-
 		compGcStone->ApplyExternalStrain(0, Hit.ImpactPoint, 0,0,100,100);
 		compRock->SetVisibility(false);
-		//enemy->bCameraShake = true;
-
-		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
-							crashEffect,
-							HitComponent->GetComponentLocation(),
-							GetActorRotation());*/
-
 		player->ReceiveDamage(2);
 		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
-		//Destroy();
 	}
-	/*else {
-		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		bIsCrash = true;
-		bTransparent = true;
-		compGcStone->SetVisibility(true);
-		compGcStone->SetSimulatePhysics(true);
-		compRock->SetVisibility(false);
-
-		UGameplayStatics::PlaySound2D(GetWorld(), stoneSound);
-	}*/
 }
 
 void AStoneObj::OnCheckPlayerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -18,8 +18,6 @@ ACreature::ACreature()
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
-
-	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ACreature::OnHit);
 }
 
 void ACreature::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -32,17 +30,4 @@ void ACreature::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void ACreature::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	/*if (OtherComp->IsSimulatingPhysics()) {
-
-	UE_LOG(LogTemp, Warning, TEXT("phsics : true"))
-	}
-	else {
-	UE_LOG(LogTemp, Warning, TEXT("phsics : false"))
-
-	}*/
-	
 }

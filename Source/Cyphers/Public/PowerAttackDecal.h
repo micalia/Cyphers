@@ -10,8 +10,8 @@ UCLASS()
 class CYPHERS_API APowerAttackDecal : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APowerAttackDecal();
 
@@ -19,34 +19,34 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		class USceneComponent* rootComp;
+	class USceneComponent* rootComp;
 	UPROPERTY(EditAnywhere)
-		class UStaticMeshComponent* compDecal;
+	class UStaticMeshComponent* compDecal;
 
-		FVector currScale;
-		UPROPERTY(EditAnywhere)
-		float RotationSpeed = 20;
-		float CurrentRotate;
+	FVector currScale;
+	UPROPERTY(EditAnywhere)
+	float RotationSpeed = 20;
+	float CurrentRotate;
 
-		UPROPERTY(EditAnywhere)
-		float biggerSpeed= 26;
-		float currSize;
-		UPROPERTY(EditAnywhere)
-		float MaxScale = 20;
+	UPROPERTY(EditAnywhere)
+	float biggerSpeed = 26;
+	float currSize;
+	UPROPERTY(EditAnywhere)
+	float MaxScale = 20;
 
-		bool bPowerAttackEnd;
+	bool bPowerAttackEnd;
 
-		UPROPERTY(EditAnywhere)
-			class UMaterialParameterCollection* decalOpacity;
-			float currOpacityTime;
-			UPROPERTY(EditAnywhere)
-			float OpacityTermTime = 0.8;
-			float alpha;
-			UPROPERTY(EditAnywhere)
-			float defaultOpacity = 0.3;
+	UPROPERTY(EditAnywhere)
+	class UMaterialParameterCollection* decalOpacity;
+	float currOpacityTime;
+	UPROPERTY(EditAnywhere)
+	float OpacityTermTime = 0.8;
+	float alpha;
+	UPROPERTY(EditAnywhere)
+	float defaultOpacity = 0.3;
 };

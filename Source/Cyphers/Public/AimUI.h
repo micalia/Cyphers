@@ -22,6 +22,4 @@ public:
 		float RotationSpeed = 120;
 		float CurrentRotate;
 
-	UFUNCTION(BlueprintCallable, Category = "YourClass")
-		void MoveAimUI(float DeltaTime, float MoveDistance);
 };

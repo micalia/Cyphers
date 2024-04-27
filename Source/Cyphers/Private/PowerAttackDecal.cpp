@@ -65,17 +65,7 @@ void APowerAttackDecal::Tick(float DeltaTime)
 			UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), decalOpacity, TEXT("DecalOpacity"), 0);
 			Destroy();
 		}
-
-		/* 스킬 시전 후 점점 작아지게
-		currSize -= biggerSpeed * DeltaTime;
-		if (currSize > 0.75) {
-			compDecal->SetRelativeScale3D(FVector(currSize));
-		}
-		else {
-			Destroy();
-		}*/
 	}
 	CurrentRotate += RotationSpeed * DeltaTime;
 	compDecal->SetRelativeRotation(FRotator(0, CurrentRotate,0));
-	
 }

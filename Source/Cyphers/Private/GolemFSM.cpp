@@ -17,7 +17,6 @@ UGolemFSM::UGolemFSM()
 
 }
 
-
 // Called when the game starts
 void UGolemFSM::BeginPlay()
 {
@@ -44,9 +43,6 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	targetDistanceLength = targetDistance.Length();
 
-	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Purple, FString::Printf(TEXT("targetDistanceLength: %f"), targetDistanceLength), true, FVector2D(1, 1));
-	//UE_LOG(LogTemp, Warning, TEXT("targetDistanceLength: %f"), targetDistanceLength)
-
 	switch (mState) {
 	case EGolemState::AppearBoss:
 		if (me->bossAppear == false) return;
@@ -60,20 +56,10 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 		break;
 	case EGolemState::JumpAttack:
 		me->currAttackDamage = jumpAttackDamage;
-		//UE_LOG(LogTemp, Warning, TEXT("JumpAttack - currTime : %f"), jumpAttackCurrentTime);
 		if (jumpAttackOn == true)JumpAttackState();
-		/*if (anim->bAttackPlay == false && bTurnComplete == false) {
-			SetNewGoalDirection();
-			jumpAttackCurrentTime = 0;
-		}*/
 		break;
 	case EGolemState::ThrowStoneAttack:
 		me->currAttackDamage = throwStoneAttackDamage;
-		//UE_LOG(LogTemp, Warning, TEXT("ThrowStoneAttack - currTime : %f"), throwStoneAttackCurrentTime);
-		/*if (anim->bAttackPlay == false && bTurnComplete == false) {
-			SetNewGoalDirection();
-			throwStoneAttackCurrentTime = 0;
-		}*/
 		break;
 	case EGolemState::GroundAttack:
 		groundAttackCurrentTime = 0;
@@ -114,10 +100,6 @@ void UGolemFSM::MoveState(float DeltaTime) {
 	FVector destination = target->GetActorLocation();
 	FVector mm = me->GetActorLocation();
 	targetDistance = destination - me->GetActorLocation();
-	/* 보스 걷기 루트모션 이동으로 이동 로직이 필요없어짐
-	FVector P0 = me->GetActorLocation();
-	FVector vt = targetDistance.GetSafeNormal() * bossSpeed * DeltaTime;
-	me->SetActorLocation(P0 + vt);*/
 
 	FRotator rotDir = UKismetMathLibrary::MakeRotator(0, 0, UKismetMathLibrary::FindLookAtRotation(mm, destination).Yaw);
 
@@ -138,9 +120,7 @@ void UGolemFSM::JumpAttackState()
 
 	float alpha = jumpAttackDeltaTime/JM_Point_BetweentMoveTime;
 	if (alpha<1) {
-		
 		me->SetActorLocation(FMath::Lerp(me->lineLoc[jumpAttackIdx], me->lineLoc[jumpAttackIdx+1], alpha));
-
 	}
 	else {
 		jumpAttackDeltaTime = 0;
@@ -156,14 +136,8 @@ void UGolemFSM::JumpAttackState()
 
 
 void UGolemFSM::DamageState() {
-
 	mState = EGolemState::Idle;
 	anim->animState = mState;
-	/* 필요없을시 삭제
-	currentTime += GetWorld()->DeltaRealTimeSeconds;
-	if (currentTime > damageDelayTime) {
-		currentTime = 0;
-	}*/
 }
 void UGolemFSM::DieState() {}
 
@@ -175,33 +149,6 @@ void UGolemFSM::CalculateCurrentTime(float DeltaTime)
 	closeKnockDownAttackCurrentTime += DeltaTime;
 	DashAttackCurrentTime += DeltaTime;
 }
-
-//void UGolemFSM::OnDamageProcess(float damage) {
-//	me->hp -= damage;
-//
-//	if (me->hp <= 0) {
-//		bDie = true;
-//		me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-//		me->headCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-//		mState = EGolemState::Die;
-//		anim->PlayDamageAnim(TEXT("Die"));
-//	}
-//	/*hp--;
-//
-//	if (hp > 0) {
-//		UE_LOG(LogTemp, Warning, TEXT("hp : %d"), hp);
-//		mState = EGolemState::Damage;
-//		FString sectionName = "Damage";
-//		anim->PlayDamageAnim(FName(*sectionName));
-//	}
-//	else {
-//		UE_LOG(LogTemp, Warning, TEXT("hp : %d .. You Die"), hp);
-//		mState = EGolemState::Die;
-//		anim->PlayDamageAnim(TEXT("Die"));
-//	}
-//	anim->animState = mState;
-//	*/
-//}
 
 void UGolemFSM::CheckAttackRangeAndCoolTime()
 {
@@ -262,9 +209,7 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 		}
 	}
 
-
 //원거리 공격
-// 
 	if (targetDistanceLength > jumpAttackRangeStart &&
 		targetDistanceLength < jumpAttackRangeEnd)
 	{//점프공격 체크
@@ -332,7 +277,6 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 			}
 		}
 	}
-	
 }
 
 
@@ -445,7 +389,6 @@ void UGolemFSM::KnockDownAttackCheck()
 			EPSCPoolMethod::AutoRelease // 이펙트 풀링 방법
 		);
 		PAC->SetWorldScale3D(me->KD_atk_effect_size);
-
 	}
 
 	// 바닥쪽으로 라인트레이스 쏴서 이펙트 만들것

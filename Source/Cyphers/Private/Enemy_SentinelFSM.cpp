@@ -17,12 +17,8 @@
 // Sets default values for this component's properties
 UEnemy_SentinelFSM::UEnemy_SentinelFSM()
 {
-	//SetActive (true / false) 작동 되게 하자!
 	bAutoActivate = true;
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 
 	//몽타주 불러오자
 	ConstructorHelpers::FObjectFinder<UAnimMontage> tempMontage(TEXT("/Script/Engine.AnimMontage'/Game/Resources/Animations/Mongtage/AM_Enemy_Sentinel/AM_Enemy_SentinelDamage.AM_Enemy_SentinelDamage'"));
@@ -42,17 +38,10 @@ void UEnemy_SentinelFSM::BeginPlay()
 	target = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
 	//나를 찾자
 	me = Cast<AEnemy_Sentinel>(GetOwner());
-	
-	//anim instance 찾자
-	/*USkeletalMeshComponent* mesh = me->GetMesh();
-	UAnimInstance animInstance = mesh->GetAnimInstance();
-	anim = Cast<UEnemyAnim>(animInstance);*/
 	anim = Cast<UEnemy_SentinelAnim>(me->GetMesh()->GetAnimInstance());
 
 	//ai controller 찾자
 	ai = Cast<AAIController>(me->GetController());
-	//ai = UAIBlueprintHelperLibrary::GetAIController(me);
-
 	disappearZheight = me->GetActorLocation().Z -200;
 }
 
@@ -96,22 +85,12 @@ void UEnemy_SentinelFSM::UpdateIdle()
 {
 	if(distWithPlayer.Length() < detectRange) bDetectPlayer = true;
 
-	//만약에 플레이어를 쫓아 갈 수 있니?
-	//if (IsTargetTrace())
-	//{
-	//	//상태를 Move 로 전환
-	//	ChangeState(EEnemy_SentinelState::Move);
-	//}
-	//else
-	//{
-		//idleDelayTime 이 지나면	
-		if (IsWaitComplete(idleDelayTime))
-		{
-			if(bDetectPlayer == false) return;
-			//현재상태를 Move 로 한다.
-			ChangeState(EEnemy_SentinelState::Move);
-		}
-    //	}
+	if (IsWaitComplete(idleDelayTime))
+	{
+		if(bDetectPlayer == false) return;
+		//현재상태를 Move 로 한다.
+		ChangeState(EEnemy_SentinelState::Move);
+	}
 }
 
 void UEnemy_SentinelFSM::UpdateMove()
@@ -121,42 +100,21 @@ void UEnemy_SentinelFSM::UpdateMove()
 	
 	//1. 타겟을 향하는 방향을 구하고(target - me)
 	FVector dir = target->GetActorLocation() - me->GetActorLocation();
-
-	////처음 위치, 나의 현재 위치의 거리
-	//float dist = FVector::Distance(originPos, me->GetActorLocation());
-
-	////만약에 dist 가 moveRange 보다 커지면 (움직일 수 있는 반경을 넘어갔다면)
-	//if (dist > moveRange)
-	//{
-	//	//상태를 ReturnPos 로 변경
-	//	ChangeState(EEnemy_SentinelState::ReturnPos);
-	//}
-	////만약에 시야에 들어왔다면
-	//else if (bTrace)
-	//{
 	
-		//만약에 target - me 거리가 공격범위보다 작으면
-		if (dir.Length() < attackRange)
-		{
-			//상태를 Attack 으로 변경
-			ChangeState(EEnemy_SentinelState::Attack);
-		}
-		//그렇지 않으면
-		else
-		{
-			//2. 그 방향으S로 이동하고 싶다.
-			//////me->AddMovementInput(dir.GetSafeNormal());
-			//ai 를 이용해서 목적지까지 이동하고 싶다.	
-			EPathFollowingRequestResult::Type re = ai->MoveToActor(target);
-		}
-	//}
-	////시야에 들어오지 않았다면
-	//else
-	//{
-	//	// 랜덤한 위치까지 도착한 후 Idle 상태로 전환
-	//	MoveToPos(randPos);
-	//}
-
+	//만약에 target - me 거리가 공격범위보다 작으면
+	if (dir.Length() < attackRange)
+	{
+		//상태를 Attack 으로 변경
+		ChangeState(EEnemy_SentinelState::Attack);
+	}
+	//그렇지 않으면
+	else
+	{
+		//2. 그 방향으S로 이동하고 싶다.
+		//////me->AddMovementInput(dir.GetSafeNormal());
+		//ai 를 이용해서 목적지까지 이동하고 싶다.	
+		EPathFollowingRequestResult::Type re = ai->MoveToActor(target);
+	}
 }
 
 void UEnemy_SentinelFSM::UpdateAttack()
@@ -225,8 +183,6 @@ void UEnemy_SentinelFSM::UpdateDie()
 		me->SetActorLocation(p);
 	}
 }
-
-
 
 void UEnemy_SentinelFSM::UpdateLieFloor()
 {
@@ -337,7 +293,7 @@ bool UEnemy_SentinelFSM::IsTargetTrace()
 	//   나 - 타겟 과의 거리가 traceRange 보다 작으면
 	if (angle < 30 && dir.Length() < traceRange)
 	{
-		//Enemy -----> target LineTrace 쏘자!!
+		//Enemy -----> target LineTrace를 쏜다
 		FHitResult hitInfo;
 		FCollisionQueryParams param;
 		param.AddIgnoredActor(me);

@@ -10,7 +10,7 @@
 UENUM(BlueprintType)
 enum class EPlayerState : uint8 {
 	Move,
-	BasicAttack,	
+	BasicAttack,
 };
 
 DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
@@ -42,45 +42,45 @@ public:
 
 	// 앞, 뒤를 판별하는 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float dirV = 0;
+	float dirV = 0;
 
 	// 오른쪽, 왼쪽을 판별하는 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float dirH = 0;
+	float dirH = 0;
 
 	//공중에 있는지 여부
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		bool bAir = true;
+	bool bAir = true;
 
-		void AttachCamera();
+	void AttachCamera();
 
-		void DamagePlayAnim();
-		void DiePlayAnim();
+	void DamagePlayAnim();
+	void DiePlayAnim();
 
-		//골렘한테 대쉬공격 받았을때
-		void KnockBackFlyAnim();
-		void RiseAnim();
+	//골렘한테 대쉬공격 받았을때
+	void KnockBackFlyAnim();
+	void RiseAnim();
 private:
-//몽타주
+	//몽타주
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* basicAttackAnimMontage;
+	class UAnimMontage* basicAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = DashAttack, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* dashAttackAnimMontage;
+	class UAnimMontage* dashAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = GripAttack, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* gripAttackAnimMontage;
+	class UAnimMontage* gripAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PowerAttack, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* powerAttackAnimMontage;
+	class UAnimMontage* powerAttackAnimMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* dashMontage;
+	class UAnimMontage* dashMontage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Damage, Meta = (AllowPrivateAccess = true))
-		class UAnimMontage* damageMontage;
+	class UAnimMontage* damageMontage;
 public:
-//걷기 사운드
+	//걷기 사운드
 	UFUNCTION()
-		void AnimNotify_LeftFoot();
+	void AnimNotify_LeftFoot();
 	UFUNCTION()
-		void AnimNotify_RightFoot();
-//평타 공격 콤보(좌클릭)
+	void AnimNotify_RightFoot();
+	//평타 공격 콤보(좌클릭)
 
 	void BasicAttackMontageSection(int32 NewSection);
 
@@ -92,72 +92,63 @@ public:
 	FOnGripAttackCheck2Delegate OnGripAttackCheck2;
 
 	UFUNCTION()
-		void AnimNotify_AttackHitCheck();
+	void AnimNotify_AttackHitCheck();
 	UFUNCTION()
-		void AnimNotify_NextAttackCheck();
+	void AnimNotify_NextAttackCheck();
 	UFUNCTION()
-		void AnimNotify_GripAttackCheck();
+	void AnimNotify_GripAttackCheck();
 	UFUNCTION()
-		void AnimNotify_GripAttackCheck2();
+	void AnimNotify_GripAttackCheck2();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo1();
+	void AnimNotify_PowerAttackCombo1();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo2();
+	void AnimNotify_PowerAttackCombo2();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo3();
+	void AnimNotify_PowerAttackCombo3();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo4();
+	void AnimNotify_PowerAttackCombo4();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo5();
+	void AnimNotify_PowerAttackCombo5();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo6();
+	void AnimNotify_PowerAttackCombo6();
 	UFUNCTION()
-		void AnimNotify_PowerAttackCombo7();
+	void AnimNotify_PowerAttackCombo7();
 	UFUNCTION()
-		void AnimNotify_PowerAttackEnd();
+	void AnimNotify_PowerAttackEnd();
 	UFUNCTION()
-		void AnimNotify_PAEndEffect();
+	void AnimNotify_PAEndEffect();
 	UFUNCTION()
-		void AnimNotify_DashAttackCheck();
-		FName GetAttackMontageSectionName(int32 Section);
+	void AnimNotify_DashAttackCheck();
+	FName GetAttackMontageSectionName(int32 Section);
 
-		//파워 어택 END 이펙트 크기
-		UPROPERTY(EditAnywhere)
-		float paeScale = 0.6;
+	//파워 어택 END 이펙트 크기
+	UPROPERTY(EditAnywhere)
+	float paeScale = 0.6;
 	void BasicAttackPlayAnim();
-//대쉬 공격 (양클릭)
+	//대쉬 공격 (양클릭)
 	void DashAttackPlayAnim();
 	void GripAttackPlayAnim();
 	void PowerAttackReadyAnim();
 	void PowerAttackPlayAnim();
-//파워어택
-	/*UPROPERTY(EditAnywhere, Category = PowerAttack)
-	float powerAttackRange= 450;
-	UPROPERTY(EditAnywhere, Category = PowerAttack)
-	float powerAttackRadius= 70;*/
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float DashAttackRange = 450;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-		float DashAttackRadius = 70;*/
-//대쉬
+	//대쉬
 	void PlayDashAnim();
 	UFUNCTION()
-		void AnimNotify_NextDashCheck();
-		////사운드 재생
+	void AnimNotify_NextDashCheck();
+	////사운드 재생
 	UFUNCTION()
 	void AnimNotify_BasicAttack1Sound();
 	UFUNCTION()
-		void AnimNotify_BasicAttack2Sound();
+	void AnimNotify_BasicAttack2Sound();
 	UFUNCTION()
-		void AnimNotify_BasicAttack3Sound();
+	void AnimNotify_BasicAttack3Sound();
 
-// 잔상 이펙트
+	// 잔상 이펙트
 	UFUNCTION()
-		void AnimNotify_AfterImage();
+	void AnimNotify_AfterImage();
 
-//Input F공격
+	//Input F공격
 	UFUNCTION()
-		void AnimNotify_GaUpAtkSound();
+	void AnimNotify_GaUpAtkSound();
 	UFUNCTION()
-		void AnimNotify_GaDownAtkSound();
+	void AnimNotify_GaDownAtkSound();
 };

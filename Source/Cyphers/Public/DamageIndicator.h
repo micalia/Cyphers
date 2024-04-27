@@ -21,5 +21,4 @@ public:
 		class UTextBlock* DamageTxt = nullptr;
 	UPROPERTY(BlueprintReadWrite)
 	bool bCritical;
-		//void ApplyDamage(FText Damage);
 };

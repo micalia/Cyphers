@@ -10,8 +10,8 @@ UCLASS()
 class CYPHERS_API AStoneMoveSmoke : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AStoneMoveSmoke();
 
@@ -19,13 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-		class USceneComponent* rootComp;
+	class USceneComponent* rootComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UParticleSystemComponent* vfxComp;
+	class UParticleSystemComponent* vfxComp;
 
 };

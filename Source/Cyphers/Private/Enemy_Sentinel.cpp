@@ -23,7 +23,6 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	//Mesh 의 위치를 셋팅
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	//Mesh 의 회전을 셋팅
@@ -70,7 +69,6 @@ AEnemy_Sentinel::AEnemy_Sentinel()
 	attackCollision->SetRelativeLocation(FVector(116,0,0));
 	attackCollision->SetBoxExtent(atKCollisionSize);
 
-
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempGA2_Sound(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/GA_2_Sound.GA_2_Sound'"));
 	if (tempGA2_Sound.Succeeded()) {
 		GA2_Sound = tempGA2_Sound.Object;
@@ -113,23 +111,17 @@ void AEnemy_Sentinel::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (sentinelHpUI != nullptr) {
 		sentinelHpUI->UpdateCurrHP(currHP, maxHP);
-
 	}
-	
 }
 
 // Called to bind functionality to input
 void AEnemy_Sentinel::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AEnemy_Sentinel::ReceiveDamage()
 {
-	/*UDamageIndicator* DI = Cast<UDamageIndicator>(damageIndicatorWidget->GetWidget());
-	DI.*/
-
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->GA1_Sound);
 	float basicDamage = 1000;
 	float criticalDamage = 1500;
@@ -146,7 +138,6 @@ void AEnemy_Sentinel::ReceiveDamage()
 		//그렇지 않으면 Die 상태로 전환
 		else
 		{
-
 			fsm->ChangeState(EEnemy_SentinelState::Die);
 		}
 
@@ -167,12 +158,9 @@ void AEnemy_Sentinel::ReceiveDamage()
 		//그렇지 않으면 Die 상태로 전환
 		else
 		{
-
 			fsm->ChangeState(EEnemy_SentinelState::Die);
 		}
 	}
-
-
 }
 
 void AEnemy_Sentinel::ReceiveGripAttackDamage()

@@ -46,14 +46,6 @@ ACypher_Kaya::ACypher_Kaya() {
 		compSword->SetStaticMesh(tempSwordMesh.Object);
 	}
 
-	/*compArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("compArm"));
-	compArm->SetupAttachment(RootComponent);
-	compArm->SetRelativeLocation(FVector(0,0, 50));*/
-
-	/*compCam = CreateDefaultSubobject<UCameraComponent>(TEXT("compCam"));
-	compCam->SetupAttachment(compArm);
-	compCam->SetRelativeLocation(FVector(-110,0, 78));*/
-
 	ConstructorHelpers::FClassFinder<UPlayerAnim> tempAnim(TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/Animation/ABP_Cypher_Kaya.ABP_Cypher_Kaya_C'"));
 	if (tempAnim.Succeeded())
 	{
@@ -184,8 +176,6 @@ ACypher_Kaya::ACypher_Kaya() {
 	if (tempPowerAttackEndEffect.Succeeded()) {
 		powerAttackEndEffect = tempPowerAttackEndEffect.Object;
 	}
-	
-	//블루프린트 에디터 창에서 [Mesh]클릭 후 디테일 창에서 tick을 검색한 다음 [Optimization]->[Advanced]->[Visibility Based Anim Tick Option]값을 'Always Tick Pose and Refresh Bones'로 바꿀것
 
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> tempNiagraSystem(TEXT("/Script/Niagara.NiagaraSystem'/Game/Resources/Effect/NS_AfterImageSystem.NS_AfterImageSystem'"));
 	if (tempNiagraSystem.Succeeded()) {
@@ -308,25 +298,16 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 
 void ACypher_Kaya::DetachCameraActor()
 {
-	//FVector CameraWorldPos = Camera->GetActorLocation();
 	Camera->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	//CameraActorComponent->DetachFromParent(true);
-	//Camera->SetActorLocation(CameraWorldPos);
 }
 
 void ACypher_Kaya::AttachCameraActor()
 {
-	//CameraActorComponent->AttachToComponent(CameraActorComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	
 	Camera->AttachToComponent(CameraActorComponent, FAttachmentTransformRules::KeepWorldTransform);
-	//Camera->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform, TEXT("CameraTarget"));
-	//Camera->SetActorRelativeLocation(CameraOffset);
 }
 
 void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 5.0f);
-
 	//공격 대상마다 체크하는 로직 수정 필요
 	AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(OtherActor);
 	if (sentinel != nullptr) {
@@ -338,7 +319,6 @@ void ACypher_Kaya::OnPowerAttackOverlap(UPrimitiveComponent* OverlappedComponent
 	{
 		golem->ReceiveDamage(GetActorLocation());
 	}
-	
 }
 
 void ACypher_Kaya::RiseCheck()

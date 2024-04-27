@@ -34,7 +34,6 @@ void ABossAppearBox::BeginPlay()
 	enemy = Cast<AGolem>(UGameplayStatics::GetActorOfClass(GetWorld(), AGolem::StaticClass()));
 	player = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
 
-
 	MoveDest = FTransform(FQuat::MakeFromEuler(FVector(enemy->GetActorRotation().Roll,
 		enemy->GetActorRotation().Pitch + 5,
 		enemy->GetActorRotation().Yaw + 180)),
@@ -110,9 +109,6 @@ void ABossAppearBox::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	ACypher_Kaya* kaya = Cast<ACypher_Kaya>(OtherActor);
 	if (kaya) {
-		/*APlayerController* controller = GetWorld()->GetFirstPlayerController();
-		kaya->DisableInput(controller);*/
-
 		gameMode->HideUI();
 		kaya->bBossCameraEffect = true;
 		kaya->bCameraPosFix = true;

@@ -20,8 +20,6 @@ void UPlayerMoveInput::BeginPlay()
 	me->GetCharacterMovement()->MaxWalkSpeed = moveSpeed;
 	//Controller 의 회전값을 따라 갈 속성 셋팅
 	me->bUseControllerRotationYaw = true;
-	//me->compArm->bUsePawnControlRotation = true;
-
 	my = -kaya->camTarget->GetRelativeRotation().Pitch;
 }
 
@@ -60,7 +58,6 @@ void UPlayerMoveInput::MoveAction(float deltaTime)
 void UPlayerMoveInput::RotateAction()
 {
 	me->SetActorRotation(FRotator(0, mx, 0));
-	//me->compArm->SetRelativeRotation(FRotator(-my, 0, 0));
 }
 
 void UPlayerMoveInput::InputHorizontal(float value)

@@ -29,7 +29,6 @@ void APlayerCamera::BeginPlay()
 	Super::BeginPlay();
 	CameraMoveDelegate.BindUObject(this, &APlayerCamera::CameraMoveEvent);
 	camOriginPosMove = CameraComponent->GetRelativeLocation();
-
 	prevCamPos = CameraComponent->GetRelativeLocation();
 }
 
@@ -70,11 +69,9 @@ void APlayerCamera::CameraShakeRandom()
 
 void APlayerCamera::SkillCamMove()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("SkillMove!!"))
 	if (bSkillReady) {
 		prevCamPos = FMath::Lerp(prevCamPos, powerAttackCamMove->GetRelativeLocation(), GetWorld()->GetDeltaSeconds() * SkillCamSpeed);
 		CameraComponent->SetRelativeLocation(prevCamPos);
-		//UE_LOG(LogTemp, Warning, TEXT("start : %s"), *prevCamPos.ToString())
 	}
 	else {
 		prevCamPos = FMath::Lerp(prevCamPos, camOriginPosMove, GetWorld()->GetDeltaSeconds() * SkillCamSpeed);
@@ -85,6 +82,5 @@ void APlayerCamera::SkillCamMove()
 			bSkillReady = false;
 			bSkillCamMove = false;
 		}
-		//UE_LOG(LogTemp, Warning, TEXT("End : %f"), gap)
 	}
 }

@@ -7,7 +7,7 @@
 #include "PlayerWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class CYPHERS_API UPlayerWidget : public UUserWidget
@@ -15,20 +15,20 @@ class CYPHERS_API UPlayerWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	UPROPERTY(meta = (BindWidget))
-		class UCanvasPanel* BossUI = nullptr;
+	class UCanvasPanel* BossUI = nullptr;
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* BossHPtxt = nullptr;
-	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* BossHPtxt = nullptr;
+	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PlayerHpBar = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* BothMouseCoolTimeBar = nullptr;
+	class UProgressBar* BothMouseCoolTimeBar = nullptr;
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* KeyECoolTimeBar = nullptr;
+	class UProgressBar* KeyECoolTimeBar = nullptr;
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* KeyFCoolTimeBar = nullptr;
+	class UProgressBar* KeyFCoolTimeBar = nullptr;
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* SpaceBarCoolTimerBar = nullptr;
+	class UProgressBar* SpaceBarCoolTimerBar = nullptr;
 
 	void NativeConstruct();
 	void UpdateCurrHP(float curr, float max);
@@ -39,7 +39,6 @@ public:
 	void UpdateSpaceBarCoolTime(float curr, float max);
 
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* GolemHP = nullptr;
+	class UProgressBar* GolemHP = nullptr;
 	void UpdateBossCurrHP(float curr, float max);
-
 };

@@ -10,9 +10,3 @@ void UDamageIndicator::NativeConstruct()
 
 	DamageTxt = Cast<UTextBlock>(GetWidgetFromName(TEXT("DamageTxt")));
 }
-
-//void UDamageIndicator::ApplyDamage(FText Damage)
-//{
-//	//DamageTxt
-//}
-//

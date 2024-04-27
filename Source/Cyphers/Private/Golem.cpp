@@ -208,8 +208,6 @@ void AGolem::JumpAttackPath(FVector start, FVector between, FVector end) {
 	{
 		FVector p = CalculateBezier(ratio * i, start, between, end);
 		lineLoc.Add(p);
-
-		//DrawDebugSphere(GetWorld(), p, 20.0f, 32, FColor::Red, false, 5.0f);
 	}
 }
 
@@ -231,7 +229,6 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 {
 	mainPlayer->PlayGolemDamageSound();
 
-
 	float basicDamage = 1000;
 	float criticalDamage = 1500;
 
@@ -250,12 +247,7 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 		DamageNumber(criticalDamage, hitLocation, true);
 	}
 
-	if (currHP > 0)
-	{
-		//fsm->ChangeState(EEnemy_SentinelState::Damaged);
-	}
-	//그렇지 않으면 Die 상태로 전환
-	else
+	if (currHP < 0)
 	{
 		FVector orginPos = GetMesh()->GetRelativeLocation();
 		FRotator orginRot = GetMesh()->GetRelativeRotation();
@@ -273,5 +265,4 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 			endPoint->compNiagra->SetVisibility(true);
 		}
 	}
-
 }

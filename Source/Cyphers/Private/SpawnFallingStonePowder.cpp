@@ -14,7 +14,6 @@ ASpawnFallingStonePowder::ASpawnFallingStonePowder()
 	SetRootComponent(rootComp);
 	vfxComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("vfxComp"));
 	vfxComp->SetupAttachment(RootComponent);
-
 }
 
 // Called when the game starts or when spawned

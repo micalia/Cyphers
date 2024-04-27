@@ -17,7 +17,6 @@ void UMainMenu::NativeConstruct()
 
 	start_btn->OnClicked.AddDynamic(this, &UMainMenu::GameStart);
 	exit_btn->OnClicked.AddDynamic(this, &UMainMenu::GameExit);
-
 }
 
 void UMainMenu::GameStart()
@@ -32,7 +31,6 @@ void UMainMenu::GameStart()
 	kaya->bCameraPosFix = false;
 	kaya->bPlayerAppear = true; 
 	kaya->disolveNiagara->SetActive(true);
-	/*kaya->GetMesh()->SetVisibility(true);*/
 	kaya->compSword->SetVisibility(true);
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->playerAppearSound);
 
