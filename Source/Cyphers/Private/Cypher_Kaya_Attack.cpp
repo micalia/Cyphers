@@ -106,43 +106,48 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 
 	}
+		if (kaya->CyphersGameMode) {
+		//酿鸥烙 贸府
+			if (startCoolBothMouse) {
+				currbothMouseAttackCool -= DeltaTime;
+				kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
+				if (currbothMouseAttackCool < 0) {
+					kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+					startCoolBothMouse = false;
+				}
+			}
 
-	//酿鸥烙 贸府
-	if (startCoolBothMouse) {
-		currbothMouseAttackCool -= DeltaTime;
-		kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
-		if (currbothMouseAttackCool < 0) {
-			kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-			startCoolBothMouse = false;
-		}
-	}
+			if (startCoolKeyE) {
+				currkeyECool -= DeltaTime;
+				kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
+				if (currkeyECool < 0) {
+					kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+					startCoolKeyE = false;
+				}
+			}
 
-	if (startCoolKeyE) {
-		currkeyECool -= DeltaTime;
-		kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
-		if (currkeyECool < 0) {
-			kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-			startCoolKeyE = false;
+			if (startCoolKeyF) {
+				currkeyFCool -= DeltaTime;
+				kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
+				if (currkeyFCool < 0) {
+					kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+					startCoolKeyF = false;
+				}
+			}
 		}
-	}
 
-	if (startCoolKeyF) {
-		currkeyFCool -= DeltaTime;
-		kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
-		if (currkeyFCool < 0) {
-			kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-			startCoolKeyF = false;
+		if (startCoolSpaceBar) {
+			currSpaceBarCool -= DeltaTime;
+			if (kaya->CyphersGameMode) {
+				kaya->CyphersGameMode->playerWidget->UpdateSpaceBarCoolTime(currSpaceBarCool, spaceBarCool);
+			}
+			if (currSpaceBarCool < 0) {
+				if (kaya->CyphersGameMode) {
+					kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Hidden);
+				}
+				startCoolSpaceBar = false;
+			}
 		}
-	}
-
-	if (startCoolSpaceBar) {
-		currSpaceBarCool -= DeltaTime;
-		kaya->CyphersGameMode->playerWidget->UpdateSpaceBarCoolTime(currSpaceBarCool, spaceBarCool);
-		if (currSpaceBarCool < 0) {
-			kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Hidden);
-			startCoolSpaceBar = false;
-		}
-	}
 
 	if (IsNoComboAttacking == true) {
 		currPowerAttackCheck += DeltaTime;
@@ -562,7 +567,9 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 		bDashOn = false;
 		DashEndComboState();
 		startCoolSpaceBar = true;
-		kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Visible);
+		if (kaya->CyphersGameMode) {
+			kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 	kaya->bDamageState = false;
 	IsAttacking = false;

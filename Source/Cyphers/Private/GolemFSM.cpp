@@ -116,14 +116,17 @@ void UGolemFSM::MoveState(float DeltaTime) {
 
 void UGolemFSM::JumpAttackState()
 {
-	jumpAttackDeltaTime += GetWorld()->DeltaTimeSeconds;
-
-	float alpha = jumpAttackDeltaTime/JM_Point_BetweentMoveTime;
-	if (alpha<1) {
-		me->SetActorLocation(FMath::Lerp(me->lineLoc[jumpAttackIdx], me->lineLoc[jumpAttackIdx+1], alpha));
+	PtoPCurrTime += GetWorld()->DeltaTimeSeconds;
+//0.1214..(Bn궤적 포인트부터 Bn+1궤적 포인트 까지 걸리는 시간) = 0.85(Player까지 도달하는 시간) / 7(베지어 곡선 포인트 갯수)
+	float PointToPointMoveTime = jumpMovingTime / me->curvePointCount;
+	
+	if (PtoPCurrTime < PointToPointMoveTime) {
+		float alpha = PtoPCurrTime / PointToPointMoveTime;
+		//궤적 포인트 구간별로 캐릭터가 부드럽게 이동하기 위해 Lerp를 활용하였음
+		me->SetActorLocation(FMath::Lerp(me->lineLoc[jumpAttackIdx], me->lineLoc[jumpAttackIdx + 1], alpha));
 	}
 	else {
-		jumpAttackDeltaTime = 0;
+		PtoPCurrTime = 0;
 		jumpAttackIdx++;
 		if (jumpAttackIdx + 1 == me->lineLoc.Num())
 		{
@@ -215,7 +218,7 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 	{//점프공격 체크
 		if (jumpAttackCurrentTime > jumpAttackCoolTime) {
 			anim->bAttackPlay = true;
-			me->MoveJumpAttack();
+			me->MakeJumpAttackTrajectory();
 			mState = EGolemState::JumpAttack;
 			anim->animState = mState;
 			FString sectionName = "JumpAttack";
@@ -247,7 +250,7 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 			if (UKismetMathLibrary::RandomIntegerInRange(0, 99) > 49) {
 				if (jumpAttackCurrentTime > jumpAttackCoolTime) {
 					anim->bAttackPlay = true;
-					me->MoveJumpAttack();
+					me->MakeJumpAttackTrajectory();
 					mState = EGolemState::JumpAttack;
 					anim->animState = mState;
 					FString sectionName = "JumpAttack";
@@ -323,41 +326,32 @@ bool UGolemFSM::LookAtPlayerAfterAttack()
 //타겟을 향해 회전 계산
 void UGolemFSM::SetNewGoalDirection()
 {
-	bTurnComplete = true;
-	GoalPosition = target->GetActorLocation();
-	PrevTurnAngle = me->GetTransform().GetRotation().Euler().Z;
+ 	bTurnComplete = true;
+	PlayerPosition = target->GetActorLocation();
+	PrevTurnAngle = me->GetActorRotation().Yaw;
 
-	FVector Dest = FVector(GoalPosition.X, GoalPosition.Y, 0.0f);
-	FVector Start = FVector(me->GetTransform().GetLocation().X, me->GetTransform().GetLocation().Y, 0.0f);
-	FVector dir = Dest - Start;
-
-	GoalDirection = dir.GetSafeNormal();
-	//노말라이징한 두개의 백터를 dot한다. //여기서 축을 Z축으로 하기 위해 두백터의 Z값을 0.0f로 넣어 주었다.
-	float dot = FVector::DotProduct(me->GetActorForwardVector(), GoalDirection);
-	float AcosAngle = FMath::Acos(dot);    // dot한 값을 아크코사인 계산해 주면 0 ~ 180도 사이의 값 (0 ~ 1)의 양수 값만 나온다.
-	float angle = FMath::RadiansToDegrees(AcosAngle); //그값은 degrees 값인데 이것에 1라디안을 곱해주면 60분법의 도가 나온다.
-
-	//여기서 두 백터를 크로스 하여 회전할 축을 얻게 된다.
-	//이 크로스 백터는 Axis회전의 회전축이 되며 , 그 양수 음수로 회전 방향 왼쪽(음수), 오른쪽(양수)를 알수 있다.
-	FVector cross = FVector::CrossProduct(me->GetActorForwardVector(), GoalDirection);
-	FString lr = "center    //";
-	if (cross.Z > 0)
-	{
-		lr = "Right    //";
-		
-		NextTurnAngle = angle;
+	// 골렘 기준으로 플레이어가 있는 방향을 구함
+	FVector Dir = PlayerPosition - me->GetActorLocation();
+	// 방향만 필요하기 때문에 정규화를 해줌
+	ToPlayerDir = Dir.GetSafeNormal();
+	float Dot = FVector::DotProduct(me->GetActorForwardVector(), ToPlayerDir);
+	//cos 세타의 세타 값을 구하기 위해 arccos(0 ~ 파이(3.14))사이 라디안 값으로 반환 해줌
+	float Radian = FMath::Acos(Dot); 
+	// 라디안 값을 다음 공식을 사용하여 각도로 변환을 해줌
+	float AngleToPlayer = Radian * 180 / 3.141592f; // 언리얼 내장함수로도 사용 가능
+	// 플레이어가 있는 방향으로 적게 도는 방향을 구하기 위해 외적 공식을 사용하여
+	// 골렘 기준으로 플레이어 위치가 시계 방향에 있는지 반시계 방향에 있는지 체크
+	FVector cross = FVector::CrossProduct(me->GetActorForwardVector(), ToPlayerDir);
+	if (cross.Z >= 0)
+	{ // 오른쪽(시계 방향)으로 회전
+	//GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Cross : %f / Dot : %f / Radian : %f / angle : %f / Right Rotate"), cross.Z, Dot, Radian, AngleToPlayer), true, FVector2D(1.5f, 1.5f));
+		NextTurnAngle = AngleToPlayer;
 	}
 	else if (cross.Z < 0)
-	{
-		lr = "Left    //";
-		//TurnAngle = 360 - angle; //360에서 뺴게되면 양수로 각을 리턴하게 된다.
-		NextTurnAngle = -angle;
+	{ // 왼쪽(반시계 방향)으로 회전
+	//GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Cross : %f / Dot : %f / Radian : %f / angle : %f/ Left Rotate"), cross.Z, Dot, Radian, AngleToPlayer), true, FVector2D(1.5f, 1.5f));
+		NextTurnAngle = -AngleToPlayer;
 	}
-	FString str = FString::Printf(TEXT("AcosAngle : %f, angle : %f // "), AcosAngle, angle);
-
-	//출력해보기
-	/*GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Green, str + lr + GoalDirection.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("AcosAngle : %f, angle : %f // "), AcosAngle, angle)*/
 }
 
 void UGolemFSM::KnockDownAttackCheck()

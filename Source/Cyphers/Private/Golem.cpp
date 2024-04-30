@@ -153,7 +153,9 @@ void AGolem::BeginPlay()
 
 void AGolem::Tick(float DeltaTime)
 { 
-	CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
+	if (CyphersGameMode) {
+		CyphersGameMode->playerWidget->UpdateBossCurrHP(currHP, maxHP);
+	}
 }
 
 void AGolem::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -174,8 +176,7 @@ void AGolem::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	
 }
 
-void AGolem::MoveJumpAttack() {
-
+void AGolem::MakeJumpAttackTrajectory() {
 	startPos = GetActorLocation();
 	originEndPos = mainPlayer->GetActorLocation();
 	
@@ -201,23 +202,21 @@ void AGolem::PlayGroundAttackSound()
 }
 
 void AGolem::JumpAttackPath(FVector start, FVector between, FVector end) {
-	lineLoc.Empty();
-
+	lineLoc.Empty(); // TArray<FVector> lineLoc
 	float ratio = 1 / curvePointCount;
 	for (int32 i = 0; i <= (int32)curvePointCount; i++)
 	{
-		FVector p = CalculateBezier(ratio * i, start, between, end);
-		lineLoc.Add(p);
+		FVector B = CalculateBezier(ratio * i, start, between, end);
+		lineLoc.Add(B);
 	}
 }
 
-FVector AGolem::CalculateBezier(float ratio, FVector start, FVector between, FVector end)
+FVector AGolem::CalculateBezier(float ratio, FVector P0, FVector P1, FVector P2)
 {
-	FVector p01 = FMath::Lerp<FVector, float>(start, between, ratio);
-	FVector p12 = FMath::Lerp<FVector, float>(between, end, ratio);
-	FVector p = FMath::Lerp<FVector, float>(p01, p12, ratio);
-
-	return p;
+	FVector M0 = FMath::Lerp<FVector, float>(P0, P1, ratio);
+	FVector M1 = FMath::Lerp<FVector, float>(P1, P2, ratio);
+	FVector B = FMath::Lerp<FVector, float>(M0, M1, ratio);
+	return B;
 }
 
 void AGolem::PlayFootSound()

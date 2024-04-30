@@ -80,10 +80,10 @@ public:
 		float betweenHeight = 4000;
 	UPROPERTY(EditAnywhere, Category = Bezier)
 		float curvePointCount = 7;
-	FVector CalculateBezier(float ratio, FVector startPos, FVector betweenPos, FVector endPos);
+	FVector CalculateBezier(float ratio, FVector P0, FVector P1, FVector P2);
 	//베지어 오브젝트 경로 만들기
 	void JumpAttackPath(FVector startPos, FVector betweenPos, FVector endPos);
-	void MoveJumpAttack();
+	void MakeJumpAttackTrajectory();
 
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* jumpAttackEffect;

@@ -77,9 +77,9 @@ public:
 public:
 	//타겟 있는 곳으로 회전
 	bool LookAtPlayerAfterAttack();
-	FVector GoalPosition;
+	FVector PlayerPosition;
 	float TurnAngle;
-	FVector GoalDirection;
+	FVector ToPlayerDir;
 	// Called every frame
 	float PrevTurnAngle;
 	float NextTurnAngle;
@@ -106,15 +106,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackDamage = 40;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		float JM_Point_BetweentMoveTime = 0.129f;
-	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		float jumpMovingTime = 0.015f;
+		float jumpMovingTime = 0.85f;
+		//float jumpMovingTime = 0.129f;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
 		float jumpAttackCoolTime = 3.8;
 	//fix
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = JumpAttack)
 		float jumpAttackCurrentTime = 0;
-	float jumpAttackDeltaTime = 0;
+	float PtoPCurrTime = 0;
 	int32 jumpAttackIdx = 0;
 	bool jumpAttackOn = false;
 public:
