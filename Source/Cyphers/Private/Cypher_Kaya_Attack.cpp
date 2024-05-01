@@ -48,18 +48,15 @@ void UCypher_Kaya_Attack::BeginPlay()
 
 	kayaAnim->OnNextDashCheck.AddLambda([this]()->void {
 		if (kaya->bDamageState == false) {
-			if (bDashComboOn) {
-				UE_LOG(LogTemp, Warning, TEXT("NextDash"))
-					UE_LOG(LogTemp, Warning, TEXT("CurrentDashCombo : %d"), CurrentDashCombo)
-					if (CurrentDashCombo < 1) {
-						bNextDirValCheck = false;
-						DashStartComboState();
-						kayaAnim->PlayDashAnim();
-
-					}
+			if (bDashComboOn) { // 현재 1단 스텝 중이라면 2단 스텝 실행
+				if (CurrentDashCombo < 1) {
+					bNextDirValCheck = false;
+					DashStartComboState();
+					kayaAnim->PlayDashAnim();
+				}
 			}
 		}
-		});
+	});
 }
 
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -106,48 +103,48 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 
 	}
-		if (kaya->CyphersGameMode) {
+	if (kaya->CyphersGameMode) {
 		//쿨타임 처리
-			if (startCoolBothMouse) {
-				currbothMouseAttackCool -= DeltaTime;
-				kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
-				if (currbothMouseAttackCool < 0) {
-					kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-					startCoolBothMouse = false;
-				}
-			}
-
-			if (startCoolKeyE) {
-				currkeyECool -= DeltaTime;
-				kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
-				if (currkeyECool < 0) {
-					kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-					startCoolKeyE = false;
-				}
-			}
-
-			if (startCoolKeyF) {
-				currkeyFCool -= DeltaTime;
-				kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
-				if (currkeyFCool < 0) {
-					kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
-					startCoolKeyF = false;
-				}
+		if (startCoolBothMouse) {
+			currbothMouseAttackCool -= DeltaTime;
+			kaya->CyphersGameMode->playerWidget->UpdateBothMouseCoolTime(currbothMouseAttackCool, bothMouseAttackCool);
+			if (currbothMouseAttackCool < 0) {
+				kaya->CyphersGameMode->playerWidget->BothMouseCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+				startCoolBothMouse = false;
 			}
 		}
 
-		if (startCoolSpaceBar) {
-			currSpaceBarCool -= DeltaTime;
+		if (startCoolKeyE) {
+			currkeyECool -= DeltaTime;
+			kaya->CyphersGameMode->playerWidget->UpdateKeyECoolTime(currkeyECool, keyECool);
+			if (currkeyECool < 0) {
+				kaya->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+				startCoolKeyE = false;
+			}
+		}
+
+		if (startCoolKeyF) {
+			currkeyFCool -= DeltaTime;
+			kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
+			if (currkeyFCool < 0) {
+				kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Hidden);
+				startCoolKeyF = false;
+			}
+		}
+	}
+
+	if (startCoolSpaceBar) {
+		currSpaceBarCool -= DeltaTime;
+		if (kaya->CyphersGameMode) {
+			kaya->CyphersGameMode->playerWidget->UpdateSpaceBarCoolTime(currSpaceBarCool, spaceBarCool);
+		}
+		if (currSpaceBarCool < 0) {
 			if (kaya->CyphersGameMode) {
-				kaya->CyphersGameMode->playerWidget->UpdateSpaceBarCoolTime(currSpaceBarCool, spaceBarCool);
+				kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Hidden);
 			}
-			if (currSpaceBarCool < 0) {
-				if (kaya->CyphersGameMode) {
-					kaya->CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Hidden);
-				}
-				startCoolSpaceBar = false;
-			}
+			startCoolSpaceBar = false;
 		}
+	}
 
 	if (IsNoComboAttacking == true) {
 		currPowerAttackCheck += DeltaTime;
@@ -169,13 +166,13 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			}
 			MouseLRCheckCurrentTime += DeltaTime;
 			if (MouseLRCheckCurrentTime > MouseLRCheckTime) {
-				if(bGripAttack == true)return;
+				if (bGripAttack == true)return;
 				if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
 					if (bGripAttack == true)return;
 					InitInput();
 					if (startCoolBothMouse) return;
 					if (IsAttacking == true) return;
-					if(bDash == true)return;
+					if (bDash == true)return;
 					AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
 					//마우스 양클릭 공격실행	
 					UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
@@ -317,24 +314,24 @@ void UCypher_Kaya_Attack::DashAttackCheck()
 		3
 	);
 
-		if (bResult)
+	if (bResult)
+	{
+		for (int32 i = 0; i < OutHits.Num(); i++)
 		{
-			for (int32 i = 0; i < OutHits.Num(); i++)
+			AActor* hitActor = OutHits[i].GetActor();
+			AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+			if (sentinel != nullptr)
 			{
-				AActor* hitActor = OutHits[i].GetActor();
-				AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
-				if (sentinel != nullptr)
-				{
-					sentinel->ReceiveDamage();
-				}
-				AGolem* golem = Cast<AGolem>(hitActor);
+				sentinel->ReceiveDamage();
+			}
+			AGolem* golem = Cast<AGolem>(hitActor);
 
-				if (golem != nullptr)
-				{
-					golem->ReceiveDamage(OutHits[i].ImpactPoint);
-				}
+			if (golem != nullptr)
+			{
+				golem->ReceiveDamage(OutHits[i].ImpactPoint);
 			}
 		}
+	}
 	kaya->PlayDashAttackSound();
 }
 
@@ -562,7 +559,7 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 	if (bInterrupted == true) return;
 	bGripAttack = false;
 	bDash = false;
-//대쉬 상태였다면
+	//대쉬 상태였다면
 	if (bDashOn) {
 		bDashOn = false;
 		DashEndComboState();
@@ -597,7 +594,7 @@ void UCypher_Kaya_Attack::InputKeyF()
 	if (bDash == true)return;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
 		bGripAttack = true;
-		startCoolKeyF = true;
+	startCoolKeyF = true;
 	currkeyFCool = keyFCool;
 	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	//잡기 공격 거리 계산
@@ -649,7 +646,7 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 	if (bAttackCharge == false) return;
 	UE_LOG(LogTemp, Warning, TEXT("E Release"))
 		kaya->Camera->bSkillReady = false;
-		IsAttacking = true;
+	IsAttacking = true;
 	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {
 		powerAttackStartCheck = false;
@@ -664,9 +661,8 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 }
 
 void UCypher_Kaya_Attack::InputKeySpaceBar()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Spacebar!"))
-		if (startCoolSpaceBar)return;
+{ // 스페이스바
+	if (startCoolSpaceBar)return;
 	if (IsAttacking == true) return;
 	if (IsNoComboAttacking == true) return;
 	if (bGripAttack == true)return;

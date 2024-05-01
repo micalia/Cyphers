@@ -171,7 +171,9 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 	me->compKayaAttack->decal->bPowerAttackEnd = true;
 	me->compKayaAttack->startCoolKeyE = true;
 	me->compKayaAttack->currkeyECool = me->compKayaAttack->keyECool;
-	me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	if (me->CyphersGameMode) {
+		me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	}
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
 	FVector currLocation = me->GetActorLocation();

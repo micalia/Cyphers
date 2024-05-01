@@ -269,7 +269,9 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		compKayaAttack->bAttackCharge = false;
 		compKayaAttack->startCoolKeyE = true;
 		compKayaAttack->currkeyECool = compKayaAttack->keyECool;
-		CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+		if (CyphersGameMode) {
+			CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 
 	compKayaAttack->IsComboInputOn = false;

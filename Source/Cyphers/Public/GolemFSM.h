@@ -76,14 +76,15 @@ public:
 
 public:
 	//타겟 있는 곳으로 회전
-	bool LookAtPlayerAfterAttack();
+	void LookAtPlayerToAttack();
 	FVector PlayerPosition;
 	float TurnAngle;
 	FVector ToPlayerDir;
 	// Called every frame
 	float PrevTurnAngle;
 	float NextTurnAngle;
-	float TurnSpeedForDeltaTime = 550;
+	UPROPERTY(EditAnywhere)
+	float RotationTime = 0.3f;
 	float CurrentRotationTime;
 	bool bTurnComplete = false;
 	void SetNewGoalDirection();

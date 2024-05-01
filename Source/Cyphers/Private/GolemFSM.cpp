@@ -74,10 +74,8 @@ void UGolemFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	CheckAttackRangeAndCoolTime();
 
-	if (bTurnComplete != true) return;
-	if (LookAtPlayerAfterAttack()) {
-		//UE_LOG(LogTemp, Warning, TEXT("turning End!"))
-	}
+	if (bTurnComplete == false) return;
+	LookAtPlayerToAttack();
 }
 void UGolemFSM::IdleState() {
 
@@ -284,42 +282,23 @@ void UGolemFSM::CheckAttackRangeAndCoolTime()
 
 
 //타겟을 향해 회전 실행
-bool UGolemFSM::LookAtPlayerAfterAttack()
+void UGolemFSM::LookAtPlayerToAttack()
 {
-	//먼저 받아온 NextTurnAngle을 절대값으로 바꾼다.
-	float absNextTurnAngle = FMath::Abs(NextTurnAngle);
-	// 총 회전할 시간 =  최종회전각 / 초당회전 스피드
-	float RotationTime = absNextTurnAngle / TurnSpeedForDeltaTime;
-	// 현재 회전 시간을 계속 더해준다.
 	CurrentRotationTime += GetWorld()->GetDeltaSeconds();
-	// 현재 lerp에 들어갈 알파값 = 현재 시간 / 총 회전할 시간
-	float t = CurrentRotationTime / RotationTime;
-
-	//1보다 작을 경우 아직 회전중이라는 의미이다.
-	if (t < 1)
+	float alpha = CurrentRotationTime / RotationTime;
+	//alpha가 1보다 작을 경우 아직 회전중
+	if (alpha < 1)
 	{
-		// 이전에 즉 회전하기전 가지고 있는 Angle을 기본으로 두고 그값에 보간된 값을 더한다.
+		// 회전하기 전 Angle 부터 회전한 후 Angle까지 선형 보간함
 		float angle = PrevTurnAngle;
-		//받아온 angle값이 음수일 경우 왼쪽으로 회전 양수일경우 오른쪽으로 회전하기위해 구분하여 준다.
-		if (NextTurnAngle < 0)
-		{
-			angle += -1 * (FMath::Lerp<float, float>(0, absNextTurnAngle, t));
-		}
-		else if (NextTurnAngle > 0)
-		{
-			angle += FMath::Lerp<float, float>(0, absNextTurnAngle, t);
-		}
-
+		angle += FMath::Lerp<float, float>(0, NextTurnAngle, alpha);
 		me->SetActorRotation(FRotator(0.0f, angle, 0.0f).Quaternion());
-		return false;
 	}
 	else
-	{
-		//시간이 1을 이상일 경우 각도(기존에 가지고 있던값 + 회전 해야할 값)를 그냥 넣어준다. 
+	{		
 		me->SetActorRotation(FRotator(0.0f, PrevTurnAngle + NextTurnAngle, 0.0f).Quaternion());
 		CurrentRotationTime = 0;
 		bTurnComplete = false;
-		return true;
 	}
 }
 
@@ -341,15 +320,13 @@ void UGolemFSM::SetNewGoalDirection()
 	float AngleToPlayer = Radian * 180 / 3.141592f; // 언리얼 내장함수로도 사용 가능
 	// 플레이어가 있는 방향으로 적게 도는 방향을 구하기 위해 외적 공식을 사용하여
 	// 골렘 기준으로 플레이어 위치가 시계 방향에 있는지 반시계 방향에 있는지 체크
-	FVector cross = FVector::CrossProduct(me->GetActorForwardVector(), ToPlayerDir);
-	if (cross.Z >= 0)
+	FVector Cross = FVector::CrossProduct(me->GetActorForwardVector(), ToPlayerDir);
+	if (Cross.Z >= 0)
 	{ // 오른쪽(시계 방향)으로 회전
-	//GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Cross : %f / Dot : %f / Radian : %f / angle : %f / Right Rotate"), cross.Z, Dot, Radian, AngleToPlayer), true, FVector2D(1.5f, 1.5f));
 		NextTurnAngle = AngleToPlayer;
 	}
-	else if (cross.Z < 0)
+	else if (Cross.Z < 0)
 	{ // 왼쪽(반시계 방향)으로 회전
-	//GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Cross : %f / Dot : %f / Radian : %f / angle : %f/ Left Rotate"), cross.Z, Dot, Radian, AngleToPlayer), true, FVector2D(1.5f, 1.5f));
 		NextTurnAngle = -AngleToPlayer;
 	}
 }

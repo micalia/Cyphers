@@ -50,7 +50,7 @@ void UEnemy_SentinelFSM::BeginPlay()
 void UEnemy_SentinelFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	if (target != nullptr) {
 		distWithPlayer = target->GetActorLocation() - me->GetActorLocation();
 	}
