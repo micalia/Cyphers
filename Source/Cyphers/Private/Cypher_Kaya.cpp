@@ -259,6 +259,9 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
 	bDamageState = true;
 	
+	*compKayaAttack->bUsingSkill = false;
+	*compKayaAttack->bUsingSkill = compKayaAttack->bDefaultUsingSkill;
+
 	if (compKayaAttack->bNotDamageMotion == false) {
 		PlayDamageSound();
 	}
