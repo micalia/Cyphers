@@ -80,6 +80,7 @@ private:
 	int32 MaxCombo = 3;
 public:
 //양클릭 : 대쉬 공격
+	bool bDashAttackOn = false;
 	bool startCoolBothMouse;
 	UPROPERTY(EditAnywhere)
 	float bothMouseAttackCool = 3;
@@ -131,6 +132,7 @@ public:
 	float dashHorizontal;
 	bool bNextDirValCheck;
 	void Dash();
+	bool bDash;
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 	int32 CurrentDashCombo;
@@ -138,7 +140,7 @@ private:
 	int32 MaxDashCombo = 2;
 public:
 	//키보드F : 잡기 스킬
-	bool bDash;
+	bool bGripAttack;
 	bool startCoolKeyF;
 	UPROPERTY(EditAnywhere)
 	float keyFCool = 2;
@@ -176,5 +178,4 @@ public:
 	void GripAttackCheck2();
 	UPROPERTY(EditAnywhere)
 	float moveHitEnemyPos = 500;
-	bool bGripAttack;
 };

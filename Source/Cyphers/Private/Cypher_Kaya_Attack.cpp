@@ -711,6 +711,8 @@ void UCypher_Kaya_Attack::InputMouseRight()
 void UCypher_Kaya_Attack::DashAttack()
 {
 	if (*bUsingSkill) return;
+	bDashAttackOn = true;
+	bUsingSkill = &bDashAttackOn;
 	startCoolBothMouse = true;
 	currbothMouseAttackCool = bothMouseAttackCool;
 	if (kaya->CyphersGameMode != nullptr) {
