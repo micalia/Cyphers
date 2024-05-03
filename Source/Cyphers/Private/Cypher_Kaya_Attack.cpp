@@ -18,6 +18,7 @@
 #include "Enemy_SentinelFSM.h"
 #include "Enemy_SentinelAnim.h"
 #include <Kismet/KismetMathLibrary.h>
+#include "UMG/Public/Components/Overlay.h"
 
 UCypher_Kaya_Attack::UCypher_Kaya_Attack()
 {
@@ -146,30 +147,12 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		else {
 			currPowerAttackCheck += DeltaTime;
 		}
-		if (powerAttackStartCheck) {
-			GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("powerAttackStartCheck : true / currPowerAttackCheck: %f"), currPowerAttackCheck), true, FVector2D(1.5f, 1.5f));
-
-		}
-		else {
-			GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("powerAttackStartCheck : false / currPowerAttackCheck: %f"), currPowerAttackCheck), true, FVector2D(1.5f, 1.5f));
-
-		}
 		// 궁극기 차징 최소시간 1초가 지나면 궁극기 바로 시작할 수 있는 bool을 true
 		if (PowerAttackStartTime < currPowerAttackCheck) {
 			powerAttackStartCheck = true;
 		}
 	}
-	//if (IsNoComboAttacking == true) {
-	/*currPowerAttackCheck += DeltaTime;
-	if (powerAttackStartCheck)return;
-	if (PowerAttackStartTime < currPowerAttackCheck) {
-		powerAttackStartCheck = true;
-		bUsingSkill = &powerAttackStartCheck;
-	}*/
-	//}
-	/*else {
-		currPowerAttackCheck = 0;
-	}*/
+
 	//궁극기 사용 후 카메라 월드좌표에서 캐릭터 기존 카메라 위치로 이동
 	if (bBackCameraOringinPos) {
 		if (CameraBackTime > currCameraBackTime) {
@@ -198,8 +181,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 						AttackEndComboState(); // 만약 평타 1회 또는 2회 후에 양클릭을 한경우에는 기본 콤보를 0으로 만듦
 						//마우스 양클릭 공격실행	
 						UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
-							//IsNoComboAttacking = true;
-							DashAttack();
+						DashAttack();
 					}
 				}
 				else if (bLeftMouseButtonPressed) {
@@ -284,22 +266,21 @@ void UCypher_Kaya_Attack::AttackCheck()
 	if (bResult)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OutHitNum : %d"), OutHits.Num())
-			for (int32 i = 0; i < OutHits.Num(); i++)
+		for (int32 i = 0; i < OutHits.Num(); i++)
+		{
+			AActor* hitActor = OutHits[i].GetActor();
+			AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
+			if (sentinel != nullptr)
 			{
-				AActor* hitActor = OutHits[i].GetActor();
-				AEnemy_Sentinel* sentinel = Cast<AEnemy_Sentinel>(hitActor);
-				if (sentinel != nullptr)
-				{
-					sentinel->ReceiveDamage();
-				}
-				AGolem* golem = Cast<AGolem>(hitActor);
-
-				if (golem != nullptr)
-				{
-					golem->ReceiveDamage(OutHits[i].ImpactPoint);
-				}
-
+				sentinel->ReceiveDamage();
 			}
+			AGolem* golem = Cast<AGolem>(hitActor);
+
+			if (golem != nullptr)
+			{
+				golem->ReceiveDamage(OutHits[i].ImpactPoint);
+			}
+		}
 	}
 }
 
@@ -420,10 +401,9 @@ void UCypher_Kaya_Attack::GripAttackCheck()
 		FLinearColor::Green,
 		3
 	);
-	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
-		AActor* hitActor = HitResult.GetActor();
-	if (hitActor != nullptr) {
 
+	AActor* hitActor = HitResult.GetActor();
+	if (hitActor != nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
 	}
 
@@ -485,8 +465,8 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 		FLinearColor::Green,
 		3
 	);
-	UE_LOG(LogTemp, Warning, TEXT("TraceSingCall!!"))
-		AActor* hitActor = HitResult.GetActor();
+
+	AActor* hitActor = HitResult.GetActor();
 	if (hitActor != nullptr) {
 
 		UE_LOG(LogTemp, Warning, TEXT("hitActor: %s"), *hitActor->GetName())
@@ -523,14 +503,6 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 	}
 }
 
-bool UCypher_Kaya_Attack::CheckCurrState()
-{
-	/*if (IsNoComboAttacking == true || IsAttacking == true) {
-		return true;
-	}*/
-	return false;
-}
-
 void UCypher_Kaya_Attack::StartPowerAttack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("start powerAttack"))
@@ -538,6 +510,9 @@ void UCypher_Kaya_Attack::StartPowerAttack()
 	kaya->bCameraPosFix = true;
 	kaya->DetachCameraActor();
 	kayaAnim->PowerAttackPlayAnim();
+	if (kaya->CyphersGameMode) {
+		kaya->CyphersGameMode->playerWidget->OverlayKeyEPressing->SetRenderOpacity(0);
+	}
 }
 
 void UCypher_Kaya_Attack::BasicAttack()
@@ -547,7 +522,6 @@ void UCypher_Kaya_Attack::BasicAttack()
 			IsComboInputOn = true;
 		}
 		else { //첫번째 공격
-			GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("first basic attack")), true, FVector2D(1.5f, 1.5f));
 			AttackStartComboState();
 			kayaAnim->BasicAttackPlayAnim();
 			kayaAnim->BasicAttackMontageSection(CurrentCombo);
@@ -580,7 +554,6 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 	if (bInterrupted == true) return;
 	*bUsingSkill = false;
 	*bUsingSkill = bDefaultUsingSkill;
-	//bGripAttack = false;
 	bDash = false;
 	//대쉬 상태였다면
 	if (bDashOn) {
@@ -592,8 +565,6 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 		}
 	}
 	kaya->bDamageState = false;
-	//	powerAttackStartCheck = false;
-		//IsNoComboAttacking = false;
 	bNotDamageMotion = false;
 	AttackEndComboState();
 }
@@ -610,21 +581,12 @@ void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 
 void UCypher_Kaya_Attack::InputKeyF()
 {
-	if (*bUsingSkill) {
-		GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Input F: true")), true, FVector2D(1.5f, 1.5f));
-
-	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 999, FColor::Purple, FString::Printf(TEXT("Input F: false")), true, FVector2D(1.5f, 1.5f));
-
-	}
 	if (startCoolKeyF || *bUsingSkill)return;
-	*bUsingSkill = true;
-	//if (IsNoComboAttacking == true) return;
+	bGripAttack = true;
+	*bUsingSkill = bGripAttack;
 	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
-		//bGripAttack = true;
 
-		startCoolKeyF = true;
+	startCoolKeyF = true;
 	currkeyFCool = keyFCool;
 	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	//잡기 공격 거리 계산
@@ -655,13 +617,15 @@ void UCypher_Kaya_Attack::InputKeyF()
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
 	if (startCoolKeyE || bAttackCharge)return;
-	//if (IsNoComboAttacking == true) return;
 	if (*bUsingSkill)return;
+	if (kaya->CyphersGameMode) {
+		kaya->CyphersGameMode->playerWidget->OverlayKeyEPressing->SetRenderOpacity(1);
+	}
 	bAttackCharge = true;
+	bUsingSkill = &bAttackCharge;
 	UE_LOG(LogTemp, Warning, TEXT("E press"))
 		kaya->PlayPowerAttackSwordReadySound();
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
-	//IsNoComboAttacking = true;
 	kayaAnim->PowerAttackReadyAnim();
 	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, kaya->footPos->GetComponentLocation(), kaya->footPos->GetComponentRotation());
 
@@ -673,7 +637,8 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 {
 	// 궁극기 외 입력은 무시
 	if (bAttackCharge == false) return;
-	if (*bUsingSkill)return;
+	if (bUsingSkill != &bAttackCharge)return;
+	
 	bAttackCharge = false;
 	bPowerAttackOn = true;
 	bUsingSkill = &bPowerAttackOn;

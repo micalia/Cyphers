@@ -24,6 +24,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include "WhiteScreen.h"
 #include <UMG/Public/Components/WidgetComponent.h>
+#include "UMG/Public/Components/Overlay.h"
 
 ACypher_Kaya::ACypher_Kaya() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -84,7 +85,6 @@ ACypher_Kaya::ACypher_Kaya() {
 	powerAttackColl->SetRelativeRotation(FRotator(90,0,0));
 	powerAttackColl->SetCapsuleHalfHeight(154);
 	powerAttackColl->SetCapsuleRadius(154);
-	//powerAttackColl->SetSphereRadius(120);
 
 	static ConstructorHelpers::FObjectFinder<USoundBase> tempPowerAttackStartVoice(TEXT("/Script/Engine.SoundWave'/Game/Resources/Sounds/PowerAttackStartVoice.PowerAttackStartVoice'"));
 	if (tempPowerAttackStartVoice.Succeeded()) {
@@ -213,13 +213,12 @@ void ACypher_Kaya::BeginPlay()
 
 	maxHP = health;
 	currHP = health;
-
 }
 
 void ACypher_Kaya::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
-
+	
 	if(bRise)RiseCheck();
 	if(bPlayerAppear)PlayerAppear();
 	if (bCameraShake == true)CameraShakeRandom();
@@ -257,39 +256,54 @@ void ACypher_Kaya::PlayerAppear()
 
 void ACypher_Kaya::ReceiveDamage(int32 damage)
 {
-	bDamageState = true;
-	
-	*compKayaAttack->bUsingSkill = false;
-	*compKayaAttack->bUsingSkill = compKayaAttack->bDefaultUsingSkill;
-
 	if (compKayaAttack->bNotDamageMotion == false) {
 		PlayDamageSound();
 	}
-	//¸¸¾à ±Ã±Ø±â Â÷Â¡ÁßÀÌ¿´´Ù¸é ±ÃÄµ½½ µÇ¸é¼­ ÄðÅ¸ÀÓ
+#pragma region If Using SuperSkill Keyboard(E)
 	if (compKayaAttack->bAttackCharge) {
 		Camera->bSkillReady = false;
 		compKayaAttack->decal->bPowerAttackEnd = true;
 		compKayaAttack->bAttackCharge = false;
 		compKayaAttack->startCoolKeyE = true;
 		compKayaAttack->currkeyECool = compKayaAttack->keyECool;
+		compKayaAttack->currPowerAttackCheck = 0;
+	}
+	if (CyphersGameMode) { 
+		CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+		CyphersGameMode->playerWidget->OverlayKeyEPressing->SetRenderOpacity(0);
+	}
+#pragma endregion
+#pragma region If Using Dash Skill
+	if (compKayaAttack->bDashOn) {
+		compKayaAttack->bDashOn = false;
+		compKayaAttack->DashEndComboState();
+		compKayaAttack->startCoolSpaceBar = true;
 		if (CyphersGameMode) {
-			CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+			CyphersGameMode->playerWidget->SpaceBarCoolTimerBar->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
-
+#pragma endregion
+#pragma region If Using BasicAttack
 	compKayaAttack->IsComboInputOn = false;
-
 	compKayaAttack->AttackEndComboState();
 	compKayaAttack->InitInput();
+#pragma endregion
+#pragma region If Using GripAttack	
+	compKayaAttack->gripMoveCurrTime = 0;
+	compKayaAttack->gripIndex = 0;
+	compKayaAttack->bIsGripAttacking = false;
+	compKayaAttack->GAMovePoints.Empty();
+#pragma endregion
+
 	currHP= currHP- damage;
 	if(currHP>0){
 		if (compKayaAttack->bNotDamageMotion == false) {
 			compKayaAttack->kayaAnim->DamagePlayAnim();
 		}
-		
 	}
 	else {
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		compKayaAttack->kayaAnim->AttachCamera();
 		compKayaAttack->kayaAnim->DiePlayAnim();
 		currHP = 0;
 		APlayerController* controller = GetWorld()->GetFirstPlayerController();
@@ -299,6 +313,10 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 		gamemode->OpacityOnCheck = true;
 		gamemode->ActiveWhiteScreenOpacity = true;
 	}
+
+	*compKayaAttack->bUsingSkill = false;
+	bDamageState = true;
+	compKayaAttack->bUsingSkill = &bDamageState;
 }
 
 void ACypher_Kaya::DetachCameraActor()

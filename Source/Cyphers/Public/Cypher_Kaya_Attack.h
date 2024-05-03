@@ -50,7 +50,6 @@ public:
 	//현재 스킬 사용중
 	bool bDefaultUsingSkill = false;
 	bool* bUsingSkill = &bDefaultUsingSkill;
-	bool CheckCurrState();
 public:
 // 마우스 좌클릭 : 평타
 	void BasicAttack();
@@ -61,10 +60,6 @@ public:
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
 	bool IsComboInputOn;
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-	bool IsAttacking;*/
-	/*UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack)
-	bool IsNoComboAttacking;*/
 	bool bBasicAttackOn = false;
 	// 평타 범위 감지 체크
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BasicAttack)

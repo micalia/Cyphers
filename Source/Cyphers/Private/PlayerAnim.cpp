@@ -79,7 +79,7 @@ void UPlayerAnim::AttachCamera()
 	me->AttachCameraActor();
 	me->beforeActCameraPos = me->Camera->GetActorLocation();
 	//공격이 끝난 시점 카메라 상대좌표를 가져온다
-		//카메라 액터가 ChildActorComponent까지 가기 위해 움직여야 하는 거리
+	//카메라 액터가 ChildActorComponent까지 가기 위해 움직여야 하는 거리
 	FVector moveCameraRange = me->CameraActorComponent->GetComponentLocation() - me->Camera->GetActorLocation();
 	//카메라 액터의 목적지 월드 위치
 	me->afterActCameraPos = me->Camera->GetActorLocation() + moveCameraRange;

@@ -20,6 +20,8 @@ public:
 	class UTextBlock* BossHPtxt = nullptr;
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PlayerHpBar = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* OverlayKeyEPressing = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* BothMouseCoolTimeBar = nullptr;

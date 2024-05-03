@@ -5,6 +5,7 @@
 #include "Components/ProgressBar.h"
 #include <UMG/Public/Components/CanvasPanel.h>
 #include <UMG/Public/Components/TextBlock.h>
+#include "UMG/Public/Components/Overlay.h"
 
 void UPlayerWidget::NativeConstruct()
 {
@@ -14,6 +15,7 @@ void UPlayerWidget::NativeConstruct()
 	BothMouseCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("BothMouseCoolTimeBar")));
 	KeyECoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("KeyECoolTimeBar")));
 	KeyFCoolTimeBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("KeyFCoolTimeBar")));
+	OverlayKeyEPressing = Cast<UOverlay>(GetWidgetFromName(TEXT("OverlayKeyEPressing")));
 	BossUI = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("BossUI")));
 	GolemHP = Cast<UProgressBar>(GetWidgetFromName(TEXT("GolemHP")));
 	BossHPtxt = Cast<UTextBlock>(GetWidgetFromName(TEXT("BossHPtxt")));

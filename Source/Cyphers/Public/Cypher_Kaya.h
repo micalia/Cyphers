@@ -39,7 +39,9 @@ public:
 	bool bPlayerAppear;
 	void PlayerAppear();
 
+	UPROPERTY(EditAnywhere)
 	float maxHP;
+	UPROPERTY(EditAnywhere)
 	float currHP;
 
 	bool bDamageState;
@@ -89,7 +91,6 @@ public:
 	class USceneComponent* footPos;
 
 	bool bBossCameraEffect;
-
 	bool bRise;
 	UPROPERTY(EditAnywhere)
 	float riseTime = 2.7;

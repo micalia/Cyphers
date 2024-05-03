@@ -44,7 +44,6 @@ void APowerAttackDecal::BeginPlay()
 void APowerAttackDecal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 	if (bPowerAttackEnd == false) {
 		if (currSize > MaxScale) {
 			currSize = MaxScale;

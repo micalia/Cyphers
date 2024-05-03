@@ -131,8 +131,10 @@ AGolem::AGolem()
 
 	leftPunchCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("leftPunchCollision"));
 	leftPunchCollision->SetupAttachment(GetMesh(), TEXT("Bip001-L-Hand"));
-	leftPunchCollision->SetCapsuleRadius(80);
-	leftPunchCollision->SetCapsuleHalfHeight(113);
+	leftPunchCollision->SetRelativeLocation(FVector(67,47,-7));
+	leftPunchCollision->SetRelativeRotation(FRotator(0, 0, 90));
+	leftPunchCollision->SetCapsuleRadius(150);
+	leftPunchCollision->SetCapsuleHalfHeight(167);
 	leftPunchCollision->SetCollisionProfileName(TEXT("EnemyAtkCollision"));
 	leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -164,14 +166,17 @@ void AGolem::OnAttackOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	
 	if (kaya != nullptr)
 	{ 
-		UGameplayStatics::PlaySound2D(GetWorld(), dashAtkSound);
 		kaya->ReceiveDamage(2);
-		kaya->bCameraShake = true;
-		UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), dashAttackEffect, kaya->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))), GetActorRotation());
-		PAC->SetWorldScale3D(dashAtkEffectSize);
-		leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		kaya->compKayaAttack->kayaAnim->KnockBackFlyAnim();
-		kaya->bRise = true;
+		UGameplayStatics::PlaySound2D(GetWorld(), dashAtkSound);
+		// 플레이어가 무적상태(슈퍼아머)가 아니라면 데미지 애니메이션 실행
+		if (kaya->compKayaAttack->bNotDamageMotion == false) {
+			kaya->bCameraShake = true;
+			UParticleSystemComponent* PAC = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), dashAttackEffect, kaya->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))), GetActorRotation());
+			PAC->SetWorldScale3D(dashAtkEffectSize);
+			leftPunchCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			kaya->compKayaAttack->kayaAnim->KnockBackFlyAnim();
+			kaya->bRise = true;
+		}
 	} 
 	
 }
