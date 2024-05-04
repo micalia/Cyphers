@@ -97,7 +97,7 @@ UPROPERTY()
 	class APowerAttackDecal* decal;
 	bool startCoolKeyE;
 	UPROPERTY(EditAnywhere)
-	float keyECool = 5;
+	float keyECool = 4;
 	float currkeyECool;
 	//궁극기 사용이후 카메라 원래 위치로 Lerp 이동
 	bool bBackCameraOringinPos;
@@ -116,11 +116,11 @@ UPROPERTY()
 public:
 	//대쉬 : 스페이스바 스킬
 	UPROPERTY(EditAnywhere)
-	float spaceBarCool = 4;
+	float spaceBarCool = 3;
 	UPROPERTY(VisibleAnywhere)
 	float currSpaceBarCool;
 	bool startCoolSpaceBar;
-	bool bDashOn;
+	//bool bDashOn;
 	bool bDashComboOn;
 	void DashStartComboState();
 	void DashEndComboState();

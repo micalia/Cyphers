@@ -46,18 +46,15 @@ void UCypher_Kaya_Attack::BeginPlay()
 			}
 		}
 		});
-
+	//UCypher_Kaya_Attack::BeginPlay()
 	kayaAnim->OnNextDashCheck.AddLambda([this]()->void {
-		if (kaya->bDamageState == false) {
-			if (bDashComboOn) { // 현재 1단 스텝 중이라면 2단 스텝 실행
-				if (CurrentDashCombo < 1) {
-					bNextDirValCheck = false;
-					DashStartComboState();
-					kayaAnim->PlayDashAnim();
-				}
+		if (bDashComboOn) { // 현재 1단 스텝 중이라면 2단 스텝 실행
+			if (CurrentDashCombo < 1) {
+				DashStartComboState();
+				kayaAnim->PlayDashAnim();
 			}
 		}
-		});
+	});
 }
 
 void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -347,14 +344,15 @@ void UCypher_Kaya_Attack::DashEndComboState()
 
 void UCypher_Kaya_Attack::Dash()
 {
-	if (bDashOn) {
-		bDashComboOn = true;
-		if (bNextDirValCheck == false) {
-			bNextDirValCheck = true;
-		}
+	if (bDash == true) {
+		// 대쉬가 입력된경우 2번째 대쉬 실행
+ 		bDashComboOn = true;
 	}
-	else {
-		bDashOn = true;
+	else { // 대쉬 시작
+		bDash = true;
+		bUsingSkill = &bDash;
+//왼쪽 화살표는 -1 / 오른쪽 화살표는 1 / 앞 화살표만 누를경우 0 반환
+//플레이어 대쉬 방향을 정하기 위한 함수
 		kayaAnim->PlayDashAnim();
 	}
 }
@@ -552,12 +550,9 @@ void UCypher_Kaya_Attack::InputMouseLeft()
 void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (bInterrupted == true) return;
-	*bUsingSkill = false;
-	*bUsingSkill = bDefaultUsingSkill;
-	bDash = false;
 	//대쉬 상태였다면
-	if (bDashOn) {
-		bDashOn = false;
+  	if (bDash) {
+		bDash = false;
 		DashEndComboState();
 		startCoolSpaceBar = true;
 		if (kaya->CyphersGameMode) {
@@ -567,6 +562,9 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 	kaya->bDamageState = false;
 	bNotDamageMotion = false;
 	AttackEndComboState();
+	// 사용중인 스킬 
+	*bUsingSkill = false;
+	bUsingSkill = &bDefaultUsingSkill;
 }
 
 void UCypher_Kaya_Attack::InputMouseLeftAndRight()
@@ -656,14 +654,15 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 
 void UCypher_Kaya_Attack::InputKeySpaceBar()
 { // 스페이스바
-	if (startCoolSpaceBar)return;
+ 	if (startCoolSpaceBar)return;
 	if (CurrentDashCombo > MaxDashCombo) return;
+//현재 스킬 사용중이 아니거나 또는
+//현재 사용중인 스킬의 주소가 스페이스바 스킬(대쉬) 주소와 같다면
+//if 문 안에 로직을 실행함
 	if (!*bUsingSkill || bUsingSkill == &bDash) {
-		bDash = true;
-		bUsingSkill = &bDash;
 		currSpaceBarCool = spaceBarCool;
 		dashHorizontal = kaya->compPlayerMove->GetH();
-		Dash();
+ 		Dash();
 	}
 }
 

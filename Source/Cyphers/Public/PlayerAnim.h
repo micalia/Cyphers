@@ -104,14 +104,6 @@ public:
 	UFUNCTION()
 	void AnimNotify_PowerAttackCombo2();
 	UFUNCTION()
-	void AnimNotify_PowerAttackCombo3();
-	UFUNCTION()
-	void AnimNotify_PowerAttackCombo4();
-	UFUNCTION()
-	void AnimNotify_PowerAttackCombo5();
-	UFUNCTION()
-	void AnimNotify_PowerAttackCombo6();
-	UFUNCTION()
 	void AnimNotify_PowerAttackCombo7();
 	UFUNCTION()
 	void AnimNotify_PowerAttackEnd();

@@ -140,26 +140,6 @@ void UPlayerAnim::AnimNotify_PowerAttackCombo2()
 	me->compNiagra->Activate(true);
 }
 
-void UPlayerAnim::AnimNotify_PowerAttackCombo3()
-{
-	me->compNiagra->Activate(true);
-}
-
-void UPlayerAnim::AnimNotify_PowerAttackCombo4()
-{
-	me->compNiagra->Activate(true);
-}
-
-void UPlayerAnim::AnimNotify_PowerAttackCombo5()
-{
-	me->compNiagra->Activate(true);
-}
-
-void UPlayerAnim::AnimNotify_PowerAttackCombo6()
-{
-	me->compNiagra->Activate(true);
-}
-
 void UPlayerAnim::AnimNotify_PowerAttackCombo7()
 {
 	me->compNiagra->Activate(true);

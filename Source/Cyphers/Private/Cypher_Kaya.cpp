@@ -274,8 +274,8 @@ void ACypher_Kaya::ReceiveDamage(int32 damage)
 	}
 #pragma endregion
 #pragma region If Using Dash Skill
-	if (compKayaAttack->bDashOn) {
-		compKayaAttack->bDashOn = false;
+	if (compKayaAttack->bDash) {
+		compKayaAttack->bDash = false;
 		compKayaAttack->DashEndComboState();
 		compKayaAttack->startCoolSpaceBar = true;
 		if (CyphersGameMode) {
