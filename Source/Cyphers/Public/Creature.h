@@ -23,17 +23,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float power=1;
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float fatal=1;
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float health=1;
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float avoid=1;
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float defence=1;
-	UPROPERTY(EditAnywhere, Category = Stat)
-	float moveSpeed=1;
 };

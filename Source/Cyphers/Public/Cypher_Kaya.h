@@ -40,7 +40,7 @@ public:
 	void PlayerAppear();
 
 	UPROPERTY(EditAnywhere)
-	float maxHP;
+	float maxHP = 34;
 	UPROPERTY(EditAnywhere)
 	float currHP;
 

@@ -155,10 +155,6 @@ void UPlayerAnim::AnimNotify_PowerAttackEnd()
 		me->CyphersGameMode->playerWidget->KeyECoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	}
 	me->powerAttackColl->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	FVector MeshLocation = me->GetMesh()->GetSocketLocation("Bip001");
-	FVector currLocation = me->GetActorLocation();
-
-	me->SetActorLocation(FVector(MeshLocation.X, MeshLocation.Y, currLocation.Z));
 
 	AttachCamera();
 }

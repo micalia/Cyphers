@@ -61,6 +61,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 #pragma region GripAttack
+	//UCypher_Kaya_Attack::TickComponent
 	if (bIsGripAttacking) {
 		gripMoveCurrTime += DeltaTime;
 		switch (gripIndex)
@@ -108,7 +109,6 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 #pragma endregion
-
 #pragma region Dash
 	// 스페이스바 쿨타임 UI
 	if (startCoolSpaceBar) {
@@ -124,7 +124,6 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 #pragma endregion
-
 #pragma region Keyboard(E) Super Skill 
 	// 궁극기 쿨타임 UI
 	if (kaya->CyphersGameMode) {
@@ -137,19 +136,20 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			}
 		}
 	}
-	if (bAttackCharge) { // 차지 중이면 시간을 잰다.
+	//UCypher_Kaya_Attack::TickComponent
+	if (bAttackCharge) { // 차지 중이면 시간을 잰다
 		if (powerAttackStartCheck) {
-			currPowerAttackCheck = 0;
+			currPowerAttackCheck = 0; //차징 시간 초기화
 		}
 		else {
 			currPowerAttackCheck += DeltaTime;
 		}
-		// 궁극기 차징 최소시간 1초가 지나면 궁극기 바로 시작할 수 있는 bool을 true
+		// 궁극기 차징 최소시간 1초가 지나면 손가락 떼자마자 궁극기 공격이 실행됨
 		if (PowerAttackStartTime < currPowerAttackCheck) {
 			powerAttackStartCheck = true;
 		}
 	}
-
+	//UCypher_Kaya_Attack::TickComponent
 	//궁극기 사용 후 카메라 월드좌표에서 캐릭터 기존 카메라 위치로 이동
 	if (bBackCameraOringinPos) {
 		if (CameraBackTime > currCameraBackTime) {
@@ -362,7 +362,7 @@ FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
 	FHitResult hitInfo;
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(kaya);
-
+	//전방에 벽이 있는지 체크
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
 
 	if (isHit) {
@@ -503,7 +503,6 @@ void UCypher_Kaya_Attack::GripAttackCheck2()
 
 void UCypher_Kaya_Attack::StartPowerAttack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("start powerAttack"))
 	kaya->Camera->bSkillReady = false;
 	kaya->bCameraPosFix = true;
 	kaya->DetachCameraActor();
@@ -580,21 +579,19 @@ void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 void UCypher_Kaya_Attack::InputKeyF()
 {
 	if (startCoolKeyF || *bUsingSkill)return;
-	bGripAttack = true;
-	*bUsingSkill = bGripAttack;
-	UE_LOG(LogTemp, Warning, TEXT("InputF()!!!"))
-
+	// F스킬 쿨타임 시작
 	startCoolKeyF = true;
 	currkeyFCool = keyFCool;
 	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
+	
+	bGripAttack = true;
+	*bUsingSkill = bGripAttack;
 	//잡기 공격 거리 계산
-	//전방에 벽이 있는지 체크
 
-	FVector P0 = kaya->GetActorLocation();
-	FVector dir = kaya->GetActorForwardVector();
-	dir.Z = P0.Z;
+	FVector P0 = kaya->GetActorLocation(); // 현재 위치를 넣어줌
+	FVector dir = kaya->GetActorForwardVector(); // 캐릭터가 가야할 방향을 넣어줌
 	FVector distance;
-
+	//TArray<FVector> GAMovePoints; 전역변수
 	GAMovePoints.Insert(P0, 0);
 
 	distance = P0 + FVector(dir.X * grip1MoveDistance, dir.Y * grip1MoveDistance, 0);
@@ -614,19 +611,24 @@ void UCypher_Kaya_Attack::InputKeyF()
 
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
-	if (startCoolKeyE || bAttackCharge)return;
-	if (*bUsingSkill)return;
+	if (startCoolKeyE || bAttackCharge)return; // 쿨타임이거나 또는 공격 차징이 이미 되고 있는 상태라면 리턴
+	if (*bUsingSkill)return; // 현재 다른 스킬을 실행하고 있는 상태라면 리턴
+// E키를 누르고 있을 때 ([E]꾸~욱)UI를 화면에 띄움
 	if (kaya->CyphersGameMode) {
 		kaya->CyphersGameMode->playerWidget->OverlayKeyEPressing->SetRenderOpacity(1);
 	}
 	bAttackCharge = true;
 	bUsingSkill = &bAttackCharge;
-	UE_LOG(LogTemp, Warning, TEXT("E press"))
-		kaya->PlayPowerAttackSwordReadySound();
-	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
 	kayaAnim->PowerAttackReadyAnim();
-	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, kaya->footPos->GetComponentLocation(), kaya->footPos->GetComponentRotation());
-
+// 궁극기 시전 사운드 : "거슬리는 것들"(출처 : 벨져 2차 궁극기 사운드 / 효과음 다운받고 사운드 프로그램으로 피치만 올려서 사용)
+	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
+	// 궁극기 시전 사운드 : "팟~칭"(칼 꺼낼 준비 효과음)
+	kaya->PlayPowerAttackSwordReadySound();
+	// 궁극기 시전 효과 : 마법진
+	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, 
+						kaya->footPos->GetComponentLocation(), 
+						kaya->footPos->GetComponentRotation());
+	// 궁극기 시전 효과 : 카메라 줌인 줌아웃
 	kaya->Camera->bSkillCamMove = true;
 	kaya->Camera->bSkillReady = true;
 }
@@ -640,13 +642,17 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 	bAttackCharge = false;
 	bPowerAttackOn = true;
 	bUsingSkill = &bPowerAttackOn;
+	// 궁극기 사용 도중에 슈퍼아머 상태(데미지는 들어오지만 데미지 애니메이션을 실행하지 않음. 
+	// 그러나 죽음 애니메이션은 제외)를 만들기 위한 변수
 	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {
-		StartPowerAttack();
+		StartPowerAttack(); // 궁극기 즉시 실행
 	}
-	else {
+	else { // E키를 누르자마자 손가락을 떼더라도 궁극기 시전하기 전 모션을 확실히 보여주기 위해 
+			//최소 1초간 궁극기 시전하기 전 모션을 보여준 다음 궁극기 공격 실행. (궁극기 지연 실행)
 		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, 
+									this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
 	}
 	powerAttackStartCheck = false;
 	currPowerAttackCheck = 0;

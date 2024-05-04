@@ -110,7 +110,7 @@ public:
 		float jumpMovingTime = 0.85f;
 		//float jumpMovingTime = 0.129f;
 	UPROPERTY(EditAnywhere, Category = JumpAttack)
-		float jumpAttackCoolTime = 3.8;
+		float jumpAttackCoolTime = 8;
 	//fix
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = JumpAttack)
 		float jumpAttackCurrentTime = 0;
@@ -120,13 +120,13 @@ public:
 public:
 	//custom
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwStoneAttackRangeStart = 4000;
+		float throwStoneAttackRangeStart = 1500;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwStoneAttackRangeEnd = 13000;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwStoneAttackDamage = 40;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwStoneAttackCoolTime = 4.2;
+		float throwStoneAttackCoolTime = 3.8;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwPower = 600000.0f;
 	//fix
@@ -135,11 +135,11 @@ public:
 public:
 	//custom
 	UPROPERTY(EditAnywhere, Category = GroundAttack)
-		float groundAttackRangeStart = 1500;
+		float groundAttackRangeStart = 400;
 	UPROPERTY(EditAnywhere, Category = GroundAttack)
 		float groundAttackRangeEnd = 3000;
 	UPROPERTY(EditAnywhere, Category = GroundAttack)
-		float groundAttackCoolTime = 3;
+		float groundAttackCoolTime = 3.5;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = GroundAttack)
 		float groundAttackCurrentTime = 0;
 public:
@@ -156,7 +156,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
 		float closeKnockDownAttackRangeEnd = 1200;
 	UPROPERTY(EditAnywhere, Category = CloseKnockDownAttack)
-		float closeKnockDownAttackCoolTime = 3;
+		float closeKnockDownAttackCoolTime = 4.5;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = CloseKnockDownAttack)
 		float closeKnockDownAttackCurrentTime = 0;
 	void KnockDownAttackCheck();
@@ -164,7 +164,7 @@ public:
 public:
 //대쉬어택
 	UPROPERTY(EditAnywhere, Category = DashAttack)
-		float DashAttackCoolTime = 4;
+		float DashAttackCoolTime = 8.5;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = DashAttack)
 		float DashAttackCurrentTime = 0;
 	UPROPERTY(EditAnywhere, Category = DashAttack)

@@ -144,7 +144,6 @@ void AGolem::BeginPlay()
 	Super::BeginPlay();
 	mainPlayer = Cast<ACypher_Kaya>(UGameplayStatics::GetActorOfClass(GetWorld(), ACypher_Kaya::StaticClass()));
 	CyphersGameMode = Cast<ACyphersGameModeBase>(GetWorld()->GetAuthGameMode());
-	maxHP = health;
 	currHP = maxHP;
 
 	endPoint = Cast<AEndPoint>(UGameplayStatics::GetActorOfClass(GetWorld(), AEndPoint::StaticClass()));
@@ -251,7 +250,7 @@ void AGolem::ReceiveDamage(FVector hitLocation)
 		DamageNumber(criticalDamage, hitLocation, true);
 	}
 
-	if (currHP < 0)
+	if (currHP <= 0)
 	{
 		FVector orginPos = GetMesh()->GetRelativeLocation();
 		FRotator orginRot = GetMesh()->GetRelativeRotation();

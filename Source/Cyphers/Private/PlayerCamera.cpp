@@ -70,7 +70,8 @@ void APlayerCamera::CameraShakeRandom()
 void APlayerCamera::SkillCamMove()
 {
 	if (bSkillReady) {
-		prevCamPos = FMath::Lerp(prevCamPos, powerAttackCamMove->GetRelativeLocation(), GetWorld()->GetDeltaSeconds() * SkillCamSpeed);
+		prevCamPos = FMath::Lerp(prevCamPos, powerAttackCamMove->GetRelativeLocation(), 
+									GetWorld()->GetDeltaSeconds() * SkillCamSpeed);
 		CameraComponent->SetRelativeLocation(prevCamPos);
 	}
 	else {

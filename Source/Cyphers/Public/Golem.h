@@ -40,7 +40,8 @@ public:
 	UPROPERTY()
 		class UDamageIndicator* damageIndicator;
 	/////////////
-	float maxHP;
+	UPROPERTY(EditAnywhere)
+	float maxHP = 45000;
 	float currHP;
 
 	UPROPERTY(EditAnywhere, Category = Sound)

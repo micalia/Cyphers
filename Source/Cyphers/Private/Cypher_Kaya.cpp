@@ -210,9 +210,8 @@ void ACypher_Kaya::BeginPlay()
 		Camera->SetAsMainCamera();
 	}
 	powerAttackColl->OnComponentBeginOverlap.AddDynamic(this, &ACypher_Kaya::OnPowerAttackOverlap);
-
-	maxHP = health;
-	currHP = health;
+	// kaya Ã¼·Â : 34
+	currHP = maxHP;
 }
 
 void ACypher_Kaya::Tick(float DeltaTime)
@@ -356,7 +355,7 @@ void ACypher_Kaya::RiseCheck()
 
 void ACypher_Kaya::PlayPowerAttackSwordReadySound()
 {
-	UGameplayStatics::PlaySound2D(GetWorld(), powerAttackSwordReday);
+	UGameplayStatics::PlaySound2D(GetWorld(), powerAttackSwordReday, 2);
 }
 
 void ACypher_Kaya::PlayPowerAttackGroundSound()

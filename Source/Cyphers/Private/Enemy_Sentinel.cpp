@@ -97,8 +97,8 @@ void AEnemy_Sentinel::BeginPlay()
 	GetWorldTimerManager().SetTimer(TimerHandle_UpdateWidgetRotation, this, &AEnemy_Sentinel::UpdateWidgetRotation, 0.1f, true);
 
 	sentinelHpUI = Cast<UEnemy_SentinelHpUI>(hpWidget->GetWidget());
-	maxHP = health;
-	currHP = health;
+	// 에너미 체력 : 12000
+	currHP = maxHP;
 
 	attackCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy_Sentinel::OnAttackOverlap);
 

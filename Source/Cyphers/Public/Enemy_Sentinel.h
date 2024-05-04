@@ -58,7 +58,8 @@ public:
 	FVector atKCollisionSize = FVector(92, 58, 86);
 	UPROPERTY()
 	class UEnemy_SentinelHpUI* sentinelHpUI;
-	float maxHP;
+	UPROPERTY(EditAnywhere)
+	float maxHP = 12000;
 	float currHP;
 
 	UFUNCTION()
