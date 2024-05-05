@@ -76,8 +76,14 @@ void AStoneObj::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	autoDestroyCurrTime += DeltaTime;
+	if (bThrowOn && !bIsCrash) {
+		FVector P0 = GetActorLocation();
+		FVector VT = ThrowDir * Speed * DeltaTime;
+		FVector P = P0 + VT;
+		SetActorLocation(P);
+	}
 
+	autoDestroyCurrTime += DeltaTime;
 	if(autoDestroyCurrTime > autoDestroyTime) Destroy();
 
 	if (bIsCrash == true)

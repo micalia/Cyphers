@@ -70,4 +70,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	float autoDestroyTime = 12;
 	float autoDestroyCurrTime;
+
+	bool bThrowOn;
+	UPROPERTY(EditAnywhere)
+	float Speed = 9200;  
+	FVector ThrowDir;
+	
 };

@@ -128,7 +128,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
 		float throwStoneAttackCoolTime = 3.8;
 	UPROPERTY(EditAnywhere, Category = ThrowAttack)
-		float throwPower = 600000.0f;
+		float throwPower = 6000.0f;
 	//fix
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = ThrowAttack)
 		float throwStoneAttackCurrentTime = 0;

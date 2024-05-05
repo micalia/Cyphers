@@ -237,6 +237,7 @@ void UGolemAnim::AnimNotify_StoneSpawn()
 
 void UGolemAnim::AnimNotify_ThrowStone()
 {
+	if(spawnStone == nullptr) return;
 	enemy->fsm->SetNewGoalDirection();
 	enemy->fsm->throwStoneAttackCurrentTime = 0;
 	
@@ -244,10 +245,10 @@ void UGolemAnim::AnimNotify_ThrowStone()
 	spawnStone->compCollision->SetCollisionProfileName(TEXT("StoneObj"));
 	spawnStone->compCollision->SetSimulatePhysics(true);
 
-	FVector distance = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - spawnStone->GetActorLocation();
-	FVector dir = distance.GetSafeNormal();
-	FVector force = spawnStone->compCollision->GetMass() * dir * enemy->fsm->throwPower;
-	spawnStone->compCollision->AddForceAtLocation(force, spawnStone->compCollision->GetCenterOfMass());
+	FVector VectorToPlayer = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - spawnStone->GetActorLocation();
+	FVector dir = VectorToPlayer.GetSafeNormal();
+	spawnStone->ThrowDir = dir;
+	spawnStone->bThrowOn = true;
 }
 
 void UGolemAnim::AnimNotify_GroundAttackEffect()
