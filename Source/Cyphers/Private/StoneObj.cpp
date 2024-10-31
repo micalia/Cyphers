@@ -93,7 +93,7 @@ void AStoneObj::Tick(float DeltaTime)
 		}
 		else {
 			currTime += DeltaTime;
-			return;
+			/* 돌 투명화 버전
 			if (transparentStartTime < currTime) {
 				if (bTransparent == true) {
 					compGcStone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -106,19 +106,19 @@ void AStoneObj::Tick(float DeltaTime)
 						UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), 0);
 					}
 				}
-			}
+			}*/
 		}
 	}
 }
 
-void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AStoneObj::CrashWithPlayer(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	ACypher_Kaya* player = Cast<ACypher_Kaya>(OtherActor);
 	if (player) {
 		compCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		player->bCameraShake = true;
-		bIsCrash = true;
-		bTransparent = true;
+		bIsCrash = true;		
 		compGcStone->SetVisibility(true);
 		compGcStone->SetSimulatePhysics(true);
 		compGcStone->ApplyExternalStrain(0, Hit.ImpactPoint, 0,0,100,100);

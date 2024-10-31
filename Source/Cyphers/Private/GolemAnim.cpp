@@ -215,16 +215,9 @@ void UGolemAnim::AnimNotify_SpawnSound()
 
 void UGolemAnim::AnimNotify_StoneSpawn()
 {
-	target->bCameraShake = true;
-
+	target->bCameraShake = true; // 돌을 땅에서 들어올릴때 카메라 흔들림 효과 연출
 	FName stoneSpawnSocketName(TEXT("SpawnStoneSocket"));
-	if (enemy->stoneOpacity != nullptr) {
-		UKismetMaterialLibrary::SetScalarParameterValue(GetWorld(), enemy->stoneOpacity, TEXT("StoneOpacity"), 1);
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Fail Set opacity"))
-	}
-
+	
 	if (enemy->GetMesh()->DoesSocketExist(stoneSpawnSocketName)) {
 		spawnStone = GetWorld()->SpawnActor<AStoneObj>(enemy->stoneFactory,
 			enemy->GetMesh()->GetSocketLocation(stoneSpawnSocketName),
@@ -240,11 +233,11 @@ void UGolemAnim::AnimNotify_ThrowStone()
 	if(spawnStone == nullptr) return;
 	enemy->fsm->SetNewGoalDirection();
 	enemy->fsm->throwStoneAttackCurrentTime = 0;
-	
+	// 돌을 던지는 순간 손에 있는 소켓과 분리시킴
 	spawnStone->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	spawnStone->compCollision->SetCollisionProfileName(TEXT("StoneObj"));
 	spawnStone->compCollision->SetSimulatePhysics(true);
-
+	//현재 돌의 위치를 기준으로 플레이어의 머리 방향을 구함
 	FVector VectorToPlayer = target->GetMesh()->GetBoneLocation(FName(TEXT("Bip001-Head"))) - spawnStone->GetActorLocation();
 	FVector dir = VectorToPlayer.GetSafeNormal();
 	spawnStone->ThrowDir = dir;
