@@ -1,4 +1,4 @@
-프로젝트명 : Cyphers World <br>
+프로젝트명 : Cyphers World (새싹 취업사관학교 Unreal Engine을 활용한 메타버스 개발자 양성과정 파이널 프로젝트)<br>
 개발기간 : 2023.03.02 - 2023.04.11 (40일)<br>
 개발인원 : 개인작품<br>
 시연 링크 : https://youtu.be/YJBgos8eCSs<br>
@@ -12,7 +12,6 @@
 [GolemFSM.cpp](https://github.com/micalia/Cyphers/blob/main/Source/Cyphers/Private/GolemFSM.cpp#L115)
 ![bezier](https://github.com/user-attachments/assets/060f54af-238e-4f31-9a33-f2760dc5f089)
 
-<br>
-새싹 취업사관학교 Unreal Engine을 활용한 메타버스 개발자 양성과정 파이널 프로젝트<br/> 
-(개발기간 : 2023.03.02 - 2023.04.11 )
-![media](https://github.com/user-attachments/assets/41cb19e3-0066-43df-9d20-e46f1de23de7)
+---------------
+![ppt](https://github.com/user-attachments/assets/30b2edc6-5217-435a-85ea-359b408d0172)
+
