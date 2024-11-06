@@ -8,7 +8,7 @@
 ![boss](https://github.com/user-attachments/assets/9a0c2b7c-cd0b-4a0e-b1ad-610f3d0bbb52)
 ![fsm](https://github.com/user-attachments/assets/47948a16-dd0b-4cf0-81da-f01ce90e2fe9)
 
-# Point 2. 2차 베지어 곡선을 활용한 점프 공
+# Point 2. 2차 베지어 곡선을 활용한 점프 공격
 [GolemFSM.cpp](https://github.com/micalia/Cyphers/blob/main/Source/Cyphers/Private/GolemFSM.cpp#L115)
 ![bezier](https://github.com/user-attachments/assets/060f54af-238e-4f31-9a33-f2760dc5f089)
 
