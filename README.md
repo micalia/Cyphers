@@ -1,6 +1,6 @@
 프로젝트명 : Cyphers World <br>
 개발기간 : 2023.03.02 - 2023.04.11 (40일)<br>
-개발인원 : 개인작<br>
+개발인원 : 개인작품<br>
 시연 링크 : https://youtu.be/YJBgos8eCSs<br>
 
 # Point 1. 보스 몬스터 FSM
