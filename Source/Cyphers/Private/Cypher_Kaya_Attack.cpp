@@ -48,7 +48,7 @@ void UCypher_Kaya_Attack::BeginPlay()
 		});
 	//UCypher_Kaya_Attack::BeginPlay()
 	kayaAnim->OnNextDashCheck.AddLambda([this]()->void {
-		if (bDashComboOn) { // ÇöÀç 1´Ü ½ºÅÜ ÁßÀÌ¶ó¸é 2´Ü ½ºÅÜ ½ÇÇà
+		if (bDashComboOn) { // í˜„ì¬ 1ë‹¨ ìŠ¤í… ì¤‘ì´ë¼ë©´ 2ë‹¨ ìŠ¤í… ì‹¤í–‰
 			if (CurrentDashCombo < 1) {
 				DashStartComboState();
 				kayaAnim->PlayDashAnim();
@@ -99,7 +99,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			break;
 		}
 	}
-	//Àâ±â ÄğÅ¸ÀÓ UI
+	//ì¡ê¸° ì¿¨íƒ€ì„ UI
 	if (startCoolKeyF) {
 		currkeyFCool -= DeltaTime;
 		kaya->CyphersGameMode->playerWidget->UpdateKeyFCoolTime(currkeyFCool, keyFCool);
@@ -110,7 +110,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 #pragma endregion
 #pragma region Dash
-	// ½ºÆäÀÌ½º¹Ù ÄğÅ¸ÀÓ UI
+	// ìŠ¤í˜ì´ìŠ¤ë°” ì¿¨íƒ€ì„ UI
 	if (startCoolSpaceBar) {
 		currSpaceBarCool -= DeltaTime;
 		if (kaya->CyphersGameMode) {
@@ -125,7 +125,7 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 #pragma endregion
 #pragma region Keyboard(E) Super Skill 
-	// ±Ã±Ø±â ÄğÅ¸ÀÓ UI
+	// ê¶ê·¹ê¸° ì¿¨íƒ€ì„ UI
 	if (kaya->CyphersGameMode) {
 		if (startCoolKeyE) {
 			currkeyECool -= DeltaTime;
@@ -137,20 +137,20 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		}
 	}
 	//UCypher_Kaya_Attack::TickComponent
-	if (bAttackCharge) { // Â÷Áö ÁßÀÌ¸é ½Ã°£À» Àé´Ù
+	if (bAttackCharge) { // ì°¨ì§€ ì¤‘ì´ë©´ ì‹œê°„ì„ ì°ë‹¤
 		if (powerAttackStartCheck) {
-			currPowerAttackCheck = 0; //Â÷Â¡ ½Ã°£ ÃÊ±âÈ­
+			currPowerAttackCheck = 0; //ì°¨ì§• ì‹œê°„ ì´ˆê¸°í™”
 		}
 		else {
 			currPowerAttackCheck += DeltaTime;
 		}
-		// ±Ã±Ø±â Â÷Â¡ ÃÖ¼Ò½Ã°£ 1ÃÊ°¡ Áö³ª¸é ¼Õ°¡¶ô ¶¼ÀÚ¸¶ÀÚ ±Ã±Ø±â °ø°İÀÌ ½ÇÇàµÊ
+		// ê¶ê·¹ê¸° ì°¨ì§• ìµœì†Œì‹œê°„ 1ì´ˆê°€ ì§€ë‚˜ë©´ ì†ê°€ë½ ë–¼ìë§ˆì ê¶ê·¹ê¸° ê³µê²©ì´ ì‹¤í–‰ë¨
 		if (PowerAttackStartTime < currPowerAttackCheck) {
 			powerAttackStartCheck = true;
 		}
 	}
 	//UCypher_Kaya_Attack::TickComponent
-	//±Ã±Ø±â »ç¿ë ÈÄ Ä«¸Ş¶ó ¿ùµåÁÂÇ¥¿¡¼­ Ä³¸¯ÅÍ ±âÁ¸ Ä«¸Ş¶ó À§Ä¡·Î ÀÌµ¿
+	//ê¶ê·¹ê¸° ì‚¬ìš© í›„ ì¹´ë©”ë¼ ì›”ë“œì¢Œí‘œì—ì„œ ìºë¦­í„° ê¸°ì¡´ ì¹´ë©”ë¼ ìœ„ì¹˜ë¡œ ì´ë™
 	if (bBackCameraOringinPos) {
 		if (CameraBackTime > currCameraBackTime) {
 			currCameraBackTime += DeltaTime;
@@ -166,37 +166,37 @@ void UCypher_Kaya_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FA
 #pragma endregion
 
 #pragma region MouseClickSkill_Left or Right or Both
-	// °æÁ÷ »óÅÂ¿¡¼­´Â °ø°İÇÒ ¼ö ¾øÀ½
+	// ê²½ì§ ìƒíƒœì—ì„œëŠ” ê³µê²©í•  ìˆ˜ ì—†ìŒ
 	if (kaya->bDamageState == false) {
 		if (bMouseClickChk == true) {
 			MouseLRCheckCurrentTime += DeltaTime;
-			// ÂªÀº ½Ã°£µ¿¾È µô·¹ÀÌ ÇÏ¿© ¸¶¿ì½º ¿ŞÂÊ, ¿À¸¥ÂÊ Å¬¸¯ ¿©ºÎ¿¡ µû¶ó ·ÎÁ÷ ½ÇÇà
+			// ì§§ì€ ì‹œê°„ë™ì•ˆ ë”œë ˆì´ í•˜ì—¬ ë§ˆìš°ìŠ¤ ì™¼ìª½, ì˜¤ë¥¸ìª½ í´ë¦­ ì—¬ë¶€ì— ë”°ë¼ ë¡œì§ ì‹¤í–‰
 			if (MouseLRCheckCurrentTime > MouseLRCheckTime) {
 				if (bLeftMouseButtonPressed == true && bRightMouseButtonPressed == true) {
 					InitInput();
 					if (!startCoolBothMouse) {
-						AttackEndComboState(); // ¸¸¾à ÆòÅ¸ 1È¸ ¶Ç´Â 2È¸ ÈÄ¿¡ ¾çÅ¬¸¯À» ÇÑ°æ¿ì¿¡´Â ±âº» ÄŞº¸¸¦ 0À¸·Î ¸¸µê
-						//¸¶¿ì½º ¾çÅ¬¸¯ °ø°İ½ÇÇà	
+						AttackEndComboState(); // ë§Œì•½ í‰íƒ€ 1íšŒ ë˜ëŠ” 2íšŒ í›„ì— ì–‘í´ë¦­ì„ í•œê²½ìš°ì—ëŠ” ê¸°ë³¸ ì½¤ë³´ë¥¼ 0ìœ¼ë¡œ ë§Œë“¦
+						//ë§ˆìš°ìŠ¤ ì–‘í´ë¦­ ê³µê²©ì‹¤í–‰	
 						UE_LOG(LogTemp, Warning, TEXT("Both Click!!"))
 						DashAttack();
 					}
 				}
 				else if (bLeftMouseButtonPressed) {
 					InitInput();
-					//¸¶¿ì½º ¿ŞÂÊ°ø°İ
+					//ë§ˆìš°ìŠ¤ ì™¼ìª½ê³µê²©
 					UE_LOG(LogTemp, Warning, TEXT("mouseLeft"))
 						BasicAttack();
 				}
 				else if (bRightMouseButtonPressed) {
 					InitInput();
-					//¸¶¿ì½º ¿À¸¥ÂÊ °ø°İ : ±¸Çö ¾ÈµÊ
+					//ë§ˆìš°ìŠ¤ ì˜¤ë¥¸ìª½ ê³µê²© : êµ¬í˜„ ì•ˆë¨
 					UE_LOG(LogTemp, Warning, TEXT("RightClick"))
 				}
 			}
 		}
 	}
 
-	// ¾çÅ¬¸¯ ÄğÅ¸ÀÓ UI
+	// ì–‘í´ë¦­ ì¿¨íƒ€ì„ UI
 	if (kaya->CyphersGameMode) {
 		if (startCoolBothMouse) {
 			currbothMouseAttackCool -= DeltaTime;
@@ -345,14 +345,14 @@ void UCypher_Kaya_Attack::DashEndComboState()
 void UCypher_Kaya_Attack::Dash()
 {
 	if (bDash == true) {
-		// ´ë½¬°¡ ÀÔ·ÂµÈ°æ¿ì 2¹øÂ° ´ë½¬ ½ÇÇà
+		// ëŒ€ì‰¬ê°€ ì…ë ¥ëœê²½ìš° 2ë²ˆì§¸ ëŒ€ì‰¬ ì‹¤í–‰
  		bDashComboOn = true;
 	}
-	else { // ´ë½¬ ½ÃÀÛ
+	else { // ëŒ€ì‰¬ ì‹œì‘
 		bDash = true;
 		bUsingSkill = &bDash;
-//¿ŞÂÊ È­»ìÇ¥´Â -1 / ¿À¸¥ÂÊ È­»ìÇ¥´Â 1 / ¾Õ È­»ìÇ¥¸¸ ´©¸¦°æ¿ì 0 ¹İÈ¯
-//ÇÃ·¹ÀÌ¾î ´ë½¬ ¹æÇâÀ» Á¤ÇÏ±â À§ÇÑ ÇÔ¼ö
+//ì™¼ìª½ í™”ì‚´í‘œëŠ” -1 / ì˜¤ë¥¸ìª½ í™”ì‚´í‘œëŠ” 1 / ì• í™”ì‚´í‘œë§Œ ëˆ„ë¥¼ê²½ìš° 0 ë°˜í™˜
+//í”Œë ˆì´ì–´ ëŒ€ì‰¬ ë°©í–¥ì„ ì •í•˜ê¸° ìœ„í•œ í•¨ìˆ˜
 		kayaAnim->PlayDashAnim();
 	}
 }
@@ -362,7 +362,7 @@ FVector UCypher_Kaya_Attack::GA_MoveNextPoint(FVector startPos, FVector endPos)
 	FHitResult hitInfo;
 	FCollisionQueryParams param;
 	param.AddIgnoredActor(kaya);
-	//Àü¹æ¿¡ º®ÀÌ ÀÖ´ÂÁö Ã¼Å©
+	//ì „ë°©ì— ë²½ì´ ìˆëŠ”ì§€ ì²´í¬
 	bool isHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, param);
 
 	if (isHit) {
@@ -515,10 +515,10 @@ void UCypher_Kaya_Attack::StartPowerAttack()
 void UCypher_Kaya_Attack::BasicAttack()
 {
 	if (!*bUsingSkill || bUsingSkill == &bBasicAttackOn) {
-		if (bBasicAttackOn) { //ÇöÀç ÀÌ¹Ì ÁÂÅ¬¸¯ °ø°İÀÌ ½ÇÇàÁßÀÎµ¥ ÀÔ·Â°ªÀÌ µé¾î¿À¸é
+		if (bBasicAttackOn) { //í˜„ì¬ ì´ë¯¸ ì¢Œí´ë¦­ ê³µê²©ì´ ì‹¤í–‰ì¤‘ì¸ë° ì…ë ¥ê°’ì´ ë“¤ì–´ì˜¤ë©´
 			IsComboInputOn = true;
 		}
-		else { //Ã¹¹øÂ° °ø°İ
+		else { //ì²«ë²ˆì§¸ ê³µê²©
 			AttackStartComboState();
 			kayaAnim->BasicAttackPlayAnim();
 			kayaAnim->BasicAttackMontageSection(CurrentCombo);
@@ -549,7 +549,7 @@ void UCypher_Kaya_Attack::InputMouseLeft()
 void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (bInterrupted == true) return;
-	//´ë½¬ »óÅÂ¿´´Ù¸é
+	//ëŒ€ì‰¬ ìƒíƒœì˜€ë‹¤ë©´
   	if (bDash) {
 		bDash = false;
 		DashEndComboState();
@@ -561,7 +561,7 @@ void UCypher_Kaya_Attack::OnAttackMontageEnded(UAnimMontage* Montage, bool bInte
 	kaya->bDamageState = false;
 	bNotDamageMotion = false;
 	AttackEndComboState();
-	// »ç¿ëÁßÀÎ ½ºÅ³ 
+	// ì‚¬ìš©ì¤‘ì¸ ìŠ¤í‚¬ 
 	*bUsingSkill = false;
 	bUsingSkill = &bDefaultUsingSkill;
 }
@@ -579,19 +579,19 @@ void UCypher_Kaya_Attack::InputKeyShiftAndMouseLeft()
 void UCypher_Kaya_Attack::InputKeyF()
 {
 	if (startCoolKeyF || *bUsingSkill)return;
-	// F½ºÅ³ ÄğÅ¸ÀÓ ½ÃÀÛ
+	// FìŠ¤í‚¬ ì¿¨íƒ€ì„ ì‹œì‘
 	startCoolKeyF = true;
 	currkeyFCool = keyFCool;
 	kaya->CyphersGameMode->playerWidget->KeyFCoolTimeBar->SetVisibility(ESlateVisibility::Visible);
 	
 	bGripAttack = true;
 	*bUsingSkill = bGripAttack;
-	//Àâ±â °ø°İ °Å¸® °è»ê
+	//ì¡ê¸° ê³µê²© ê±°ë¦¬ ê³„ì‚°
 
-	FVector P0 = kaya->GetActorLocation(); // ÇöÀç À§Ä¡¸¦ ³Ö¾îÁÜ
-	FVector dir = kaya->GetActorForwardVector(); // Ä³¸¯ÅÍ°¡ °¡¾ßÇÒ ¹æÇâÀ» ³Ö¾îÁÜ
+	FVector P0 = kaya->GetActorLocation(); // í˜„ì¬ ìœ„ì¹˜ë¥¼ ë„£ì–´ì¤Œ
+	FVector dir = kaya->GetActorForwardVector(); // ìºë¦­í„°ê°€ ê°€ì•¼í•  ë°©í–¥ì„ ë„£ì–´ì¤Œ
 	FVector distance;
-	//TArray<FVector> GAMovePoints; Àü¿ªº¯¼ö
+	//TArray<FVector> GAMovePoints; ì „ì—­ë³€ìˆ˜
 	GAMovePoints.Insert(P0, 0);
 
 	distance = P0 + FVector(dir.X * grip1MoveDistance, dir.Y * grip1MoveDistance, 0);
@@ -611,45 +611,45 @@ void UCypher_Kaya_Attack::InputKeyF()
 
 void UCypher_Kaya_Attack::InputKeyE_Pressed()
 {
-	if (startCoolKeyE || bAttackCharge)return; // ÄğÅ¸ÀÓÀÌ°Å³ª ¶Ç´Â °ø°İ Â÷Â¡ÀÌ ÀÌ¹Ì µÇ°í ÀÖ´Â »óÅÂ¶ó¸é ¸®ÅÏ
-	if (*bUsingSkill)return; // ÇöÀç ´Ù¸¥ ½ºÅ³À» ½ÇÇàÇÏ°í ÀÖ´Â »óÅÂ¶ó¸é ¸®ÅÏ
-// EÅ°¸¦ ´©¸£°í ÀÖÀ» ¶§ ([E]²Ù~¿í)UI¸¦ È­¸é¿¡ ¶ç¿ò
+	if (startCoolKeyE || bAttackCharge)return; // ì¿¨íƒ€ì„ì´ê±°ë‚˜ ë˜ëŠ” ê³µê²© ì°¨ì§•ì´ ì´ë¯¸ ë˜ê³  ìˆëŠ” ìƒíƒœë¼ë©´ ë¦¬í„´
+	if (*bUsingSkill)return; // í˜„ì¬ ë‹¤ë¥¸ ìŠ¤í‚¬ì„ ì‹¤í–‰í•˜ê³  ìˆëŠ” ìƒíƒœë¼ë©´ ë¦¬í„´
+// Eí‚¤ë¥¼ ëˆ„ë¥´ê³  ìˆì„ ë•Œ ([E]ê¾¸~ìš±)UIë¥¼ í™”ë©´ì— ë„ì›€
 	if (kaya->CyphersGameMode) {
 		kaya->CyphersGameMode->playerWidget->OverlayKeyEPressing->SetRenderOpacity(1);
 	}
 	bAttackCharge = true;
 	bUsingSkill = &bAttackCharge;
 	kayaAnim->PowerAttackReadyAnim();
-// ±Ã±Ø±â ½ÃÀü »ç¿îµå : "°Å½½¸®´Â °Íµé"(ÃâÃ³ : º§Á® 2Â÷ ±Ã±Ø±â »ç¿îµå / È¿°úÀ½ ´Ù¿î¹Ş°í »ç¿îµå ÇÁ·Î±×·¥À¸·Î ÇÇÄ¡¸¸ ¿Ã·Á¼­ »ç¿ë)
+// ê¶ê·¹ê¸° ì‹œì „ ì‚¬ìš´ë“œ : "ê±°ìŠ¬ë¦¬ëŠ” ê²ƒë“¤"(ì¶œì²˜ : ë²¨ì ¸ 2ì°¨ ê¶ê·¹ê¸° ì‚¬ìš´ë“œ / íš¨ê³¼ìŒ ë‹¤ìš´ë°›ê³  ì‚¬ìš´ë“œ í”„ë¡œê·¸ë¨ìœ¼ë¡œ í”¼ì¹˜ë§Œ ì˜¬ë ¤ì„œ ì‚¬ìš©)
 	UGameplayStatics::PlaySound2D(GetWorld(), kaya->powerAttackStart);
-	// ±Ã±Ø±â ½ÃÀü »ç¿îµå : "ÆÌ~Äª"(Ä® ²¨³¾ ÁØºñ È¿°úÀ½)
+	// ê¶ê·¹ê¸° ì‹œì „ ì‚¬ìš´ë“œ : ì¹¼ êº¼ë‚¼ ì¤€ë¹„ íš¨ê³¼ìŒ
 	kaya->PlayPowerAttackSwordReadySound();
-	// ±Ã±Ø±â ½ÃÀü È¿°ú : ¸¶¹ıÁø
+	// ê¶ê·¹ê¸° ì‹œì „ íš¨ê³¼ : ë§ˆë²•ì§„
 	decal = GetWorld()->SpawnActor<APowerAttackDecal>(kaya->decalFactory, 
 						kaya->footPos->GetComponentLocation(), 
 						kaya->footPos->GetComponentRotation());
-	// ±Ã±Ø±â ½ÃÀü È¿°ú : Ä«¸Ş¶ó ÁÜÀÎ ÁÜ¾Æ¿ô
+	// ê¶ê·¹ê¸° ì‹œì „ íš¨ê³¼ : ì¹´ë©”ë¼ ì¤Œì¸ ì¤Œì•„ì›ƒ
 	kaya->Camera->bSkillCamMove = true;
 	kaya->Camera->bSkillReady = true;
 }
 
 void UCypher_Kaya_Attack::InputKeyE_Released()
 {
-	// ±Ã±Ø±â ¿Ü ÀÔ·ÂÀº ¹«½Ã
+	// ê¶ê·¹ê¸° ì™¸ ì…ë ¥ì€ ë¬´ì‹œ
 	if (bAttackCharge == false) return;
 	if (bUsingSkill != &bAttackCharge)return;
 	
 	bAttackCharge = false;
 	bPowerAttackOn = true;
 	bUsingSkill = &bPowerAttackOn;
-	// ±Ã±Ø±â »ç¿ë µµÁß¿¡ ½´ÆÛ¾Æ¸Ó »óÅÂ(µ¥¹ÌÁö´Â µé¾î¿ÀÁö¸¸ µ¥¹ÌÁö ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ½ÇÇàÇÏÁö ¾ÊÀ½. 
-	// ±×·¯³ª Á×À½ ¾Ö´Ï¸ŞÀÌ¼ÇÀº Á¦¿Ü)¸¦ ¸¸µé±â À§ÇÑ º¯¼ö
+	// ê¶ê·¹ê¸° ì‚¬ìš© ë„ì¤‘ì— ìŠˆí¼ì•„ë¨¸ ìƒíƒœ(ë°ë¯¸ì§€ëŠ” ë“¤ì–´ì˜¤ì§€ë§Œ ë°ë¯¸ì§€ ì• ë‹ˆë©”ì´ì…˜ì„ ì‹¤í–‰í•˜ì§€ ì•ŠìŒ. 
+	// ê·¸ëŸ¬ë‚˜ ì£½ìŒ ì• ë‹ˆë©”ì´ì…˜ì€ ì œì™¸)ë¥¼ ë§Œë“¤ê¸° ìœ„í•œ ë³€ìˆ˜
 	bNotDamageMotion = true;
 	if (powerAttackStartCheck) {
-		StartPowerAttack(); // ±Ã±Ø±â Áï½Ã ½ÇÇà
+		StartPowerAttack(); // ê¶ê·¹ê¸° ì¦‰ì‹œ ì‹¤í–‰
 	}
-	else { // EÅ°¸¦ ´©¸£ÀÚ¸¶ÀÚ ¼Õ°¡¶ôÀ» ¶¼´õ¶óµµ ±Ã±Ø±â ½ÃÀüÇÏ±â Àü ¸ğ¼ÇÀ» È®½ÇÈ÷ º¸¿©ÁÖ±â À§ÇØ 
-			//ÃÖ¼Ò 1ÃÊ°£ ±Ã±Ø±â ½ÃÀüÇÏ±â Àü ¸ğ¼ÇÀ» º¸¿©ÁØ ´ÙÀ½ ±Ã±Ø±â °ø°İ ½ÇÇà. (±Ã±Ø±â Áö¿¬ ½ÇÇà)
+	else { // Eí‚¤ë¥¼ ëˆ„ë¥´ìë§ˆì ì†ê°€ë½ì„ ë–¼ë”ë¼ë„ ê¶ê·¹ê¸° ì‹œì „í•˜ê¸° ì „ ëª¨ì…˜ì„ í™•ì‹¤íˆ ë³´ì—¬ì£¼ê¸° ìœ„í•´ 
+			//ìµœì†Œ 1ì´ˆê°„ ê¶ê·¹ê¸° ì‹œì „í•˜ê¸° ì „ ëª¨ì…˜ì„ ë³´ì—¬ì¤€ ë‹¤ìŒ ê¶ê·¹ê¸° ê³µê²© ì‹¤í–‰. (ê¶ê·¹ê¸° ì§€ì—° ì‹¤í–‰)
 		float delayTime = PowerAttackStartTime - currPowerAttackCheck;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_PowerAttackStart, 
 									this, &UCypher_Kaya_Attack::StartPowerAttack, delayTime, false);
@@ -659,12 +659,12 @@ void UCypher_Kaya_Attack::InputKeyE_Released()
 }
 
 void UCypher_Kaya_Attack::InputKeySpaceBar()
-{ // ½ºÆäÀÌ½º¹Ù
+{ // ìŠ¤í˜ì´ìŠ¤ë°”
  	if (startCoolSpaceBar)return;
 	if (CurrentDashCombo > MaxDashCombo) return;
-//ÇöÀç ½ºÅ³ »ç¿ëÁßÀÌ ¾Æ´Ï°Å³ª ¶Ç´Â
-//ÇöÀç »ç¿ëÁßÀÎ ½ºÅ³ÀÇ ÁÖ¼Ò°¡ ½ºÆäÀÌ½º¹Ù ½ºÅ³(´ë½¬) ÁÖ¼Ò¿Í °°´Ù¸é
-//if ¹® ¾È¿¡ ·ÎÁ÷À» ½ÇÇàÇÔ
+//í˜„ì¬ ìŠ¤í‚¬ ì‚¬ìš©ì¤‘ì´ ì•„ë‹ˆê±°ë‚˜ ë˜ëŠ”
+//í˜„ì¬ ì‚¬ìš©ì¤‘ì¸ ìŠ¤í‚¬ì˜ ì£¼ì†Œê°€ ìŠ¤í˜ì´ìŠ¤ë°” ìŠ¤í‚¬(ëŒ€ì‰¬) ì£¼ì†Œì™€ ê°™ë‹¤ë©´
+//if ë¬¸ ì•ˆì— ë¡œì§ì„ ì‹¤í–‰í•¨
 	if (!*bUsingSkill || bUsingSkill == &bDash) {
 		currSpaceBarCool = spaceBarCool;
 		dashHorizontal = kaya->compPlayerMove->GetH();
