@@ -14,12 +14,12 @@
 
 # Point 3. 2차 베지어 곡선을 활용한 점프 공격
 [GolemFSM.cpp](https://github.com/micalia/Cyphers/blob/main/Source/Cyphers/Private/GolemFSM.cpp#L115)
-![bezier](https://github.com/user-attachments/assets/060f54af-238e-4f31-9a33-f2760dc5f089)
+![bezier](https://github.com/user-attachments/assets/82de518b-95c7-48b8-a2e6-48e102269e0b)
 
 # Point 4. 루트모션 없이 이동 구현
 [Cypher_Kaya_Attack.cpp](https://github.com/micalia/Cyphers/blob/main/Source/Cyphers/Private/Cypher_Kaya_Attack.cpp#L579)
-![Fskill1](https://github.com/user-attachments/assets/beff83e4-001f-4b14-9075-9a6c953b61a8)
-![Fskill2](https://github.com/user-attachments/assets/292dbaab-60bf-4e38-abd9-5b3c9a14bfb6)
+![problem](https://github.com/user-attachments/assets/237cc7f5-f56f-4bc3-9657-4af621468f9c)
+![inputF](https://github.com/user-attachments/assets/9e7e10bf-5372-4720-b977-6acb34d51c60)
 ![Fskill3](https://github.com/user-attachments/assets/b4138228-62c5-433c-ae04-01c17c609dc8)
 
 ---------------
